@@ -9,14 +9,16 @@
 import java.util.PriorityQueue;
 
 public class ProcessEvents {
-    private PriorityQueue<Event> eventQueue = new PriorityQueue<>(); // Event queue
-    private double now; // Current time
+    // Event queue to store all the event in the order of time
+    static PriorityQueue<Event> eventQueue = new PriorityQueue<>();
+    // Current time
+    private double now;
 
     public static void main() {
 
     }
 
-    private static void generateInputs() {
+    private static void generateEventsFromInput() {
 
     }
 }

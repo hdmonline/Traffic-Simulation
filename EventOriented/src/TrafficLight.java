@@ -7,42 +7,99 @@
  */
 
 public class TrafficLight {
-    public int id;
-    private final double SOUTH_RED_DURATION;
-    private final double SOUTH_GREEN_DURATION;
+    private int id;
+    private final double SOUTH_THROUGH_RED_DURATION;
+    private final double SOUTH_THROUGH_GREEN_DURATION;
     private final double SOUTH_LEFT_RED_DUATION;
     private final double SOUTH_LEFT_GREEN_DURATION;
+    private final double SOUTH_LEFT_TOTAL;
+    private final double SOUTH_THROUGH_TOTAL;
     private final double SOUTH_TOTAL;
 
-    public TrafficLight(int id, double southRed, double southGreen, double southLeftGreen, double southLeftRed) {
+    public TrafficLight(int id, double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
         this.id = id;
-        SOUTH_GREEN_DURATION = southGreen;
-        SOUTH_RED_DURATION = southRed;
+        SOUTH_THROUGH_GREEN_DURATION = southThroughGreen;
+        SOUTH_THROUGH_RED_DURATION = southThroughRed;
         SOUTH_LEFT_GREEN_DURATION = southLeftGreen;
         SOUTH_LEFT_RED_DUATION = southLeftRed;
-        SOUTH_TOTAL = southGreen + southRed;
+        SOUTH_LEFT_TOTAL = southLeftGreen + southLeftRed;
+        SOUTH_THROUGH_TOTAL = southThroughGreen + southThroughRed;
+        SOUTH_TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
     }
 
     /**
-     * Find next green light time. Green first in a period.
+     * Find next green light time.
+     * The period is leftGreen -> leftRed -> Green -> Red.
      *
      * @param time current time
+     * @param num number of green lights to skip
      * @return the next green light time
      */
-    public double nextSouthGreen(double time) {
-        double numGreens = Math.floor(time / SOUTH_TOTAL);
-        return (numGreens + 1) * SOUTH_TOTAL;
+    public double nextSouthThroughGreen(double time, double num) {
+        double mod = time % SOUTH_TOTAL;
+        double numGreens = mod < SOUTH_LEFT_TOTAL ? Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
+        numGreens += num;
+        return numGreens * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
     }
 
-    public double nextRed(double time) {
+    public double nextSouthThroughGreen(double time) {
+        return nextSouthThroughGreen(time, 0);
+    }
+
+    public double nextSouthThroughRed(double time, double num) {
 
     }
 
-    public boolean isGreen(double time) {
+    public double nextSouthThroughRed(double time) {
+        return nextSouthThroughRed(time, 0);
+    }
+
+    public boolean isThroughGreen(double time) {
 
     }
 
-    public boolean isRed(double time) {
+    public boolean isThroughRed(double time) {
 
+    }
+
+    public boolean isLeftGreen(double time) {
+
+    }
+
+    public boolean isLeftRed(double time) {
+
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public double getSouthThroughRed() {
+        return SOUTH_THROUGH_RED_DURATION;
+    }
+
+    public double getSouthThroughGreen() {
+        return SOUTH_THROUGH_GREEN_DURATION;
+    }
+
+    public double getSouthLeftRad() {
+        return SOUTH_LEFT_RED_DUATION;
+    }
+
+    public double getSouthLeftGreen() {
+        return SOUTH_LEFT_GREEN_DURATION;
+    }
+
+    public double getSouthLeftTotal() {
+        return SOUTH_LEFT_TOTAL;
+    }
+
+    public double getSouthThroughTotal() {
+        return SOUTH_THROUGH_TOTAL;
+    }
+
+    public double getSouthTotal() {
+        return SOUTH_TOTAL;
     }
 }
