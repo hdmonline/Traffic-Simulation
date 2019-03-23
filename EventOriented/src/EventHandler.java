@@ -6,19 +6,19 @@ public class EventHandler {
             vehicleQueue12 = new LinkedList<>(),
             vehicleQueue14 = new LinkedList<>();
 
-    public static void handleEvent(double time, EventName event, Vehicle car) {
-        switch(event) {
+    public static void handleEvent(Event event) {
+        switch(event.name) {
             case TLArrival10:
-                arrival10(time, car);
+                arrival10(event.time, event.vehicle);
                 break;
             case TLArrival11:
-                arrival11(time, car);
+                arrival11(event.time, event.vehicle);
                 break;
             case TLArrival12:
-                arrival12(time, car);
+                arrival12(event.time, event.vehicle);
                 break;
             case TLArrival14:
-                arrival14(time, car);
+                arrival14(event.time, event.vehicle);
                 break;
             default:
                 System.out.println("Error - handleEvent: Wrong Event!");
