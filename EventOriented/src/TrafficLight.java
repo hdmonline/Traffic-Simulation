@@ -18,7 +18,8 @@ public class TrafficLight {
         this.id = id;
         SOUTH_GREEN_DURATION = southGreen;
         SOUTH_RED_DURATION = southRed;
-        SOUTH_ =
+        SOUTH_LEFT_GREEN_DURATION = southLeftGreen;
+        SOUTH_LEFT_RED_DUATION = southLeftRed;
         SOUTH_TOTAL = southGreen + southRed;
     }
 

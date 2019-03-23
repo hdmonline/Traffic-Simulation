@@ -15,4 +15,8 @@ public class ProcessEvents {
     public static void main() {
 
     }
+
+    private static void generateInputs() {
+
+    }
 }
