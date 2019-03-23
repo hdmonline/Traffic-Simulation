@@ -1,12 +1,24 @@
+/**
+ * TrafficLight.java
+ * @author Group 41: Chong Ye, Dongmin Han, Shan Xiong
+ * Georgia Institute of Technology, Spring 2019
+ *
+ * Class for traffic lights. Yellow lights are counted into greens.
+ */
+
 public class TrafficLight {
     public int id;
-    public final double SOUTH_RED_DURATION;
-    public final double SOUTH_GREEN_DURATION;
-    public final double SOUTH_TOTAL;
+    private final double SOUTH_RED_DURATION;
+    private final double SOUTH_GREEN_DURATION;
+    private final double SOUTH_LEFT_RED_DUATION;
+    private final double SOUTH_LEFT_GREEN_DURATION;
+    private final double SOUTH_TOTAL;
 
-    public TrafficLight(int id, double southRed, double southGreen) {
+    public TrafficLight(int id, double southRed, double southGreen, double southLeftGreen, double southLeftRed) {
+        this.id = id;
         SOUTH_GREEN_DURATION = southGreen;
         SOUTH_RED_DURATION = southRed;
+        SOUTH_ =
         SOUTH_TOTAL = southGreen + southRed;
     }
 
