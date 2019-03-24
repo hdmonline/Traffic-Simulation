@@ -56,7 +56,7 @@ public class EventHandler {
     }
 
     private void arrivalSouth(int street, double time, Vehicle car) {
-        int index = street - 10;
+        int index = getStreedIndex(street);
         int numVehicleToPass = southVehicleQueues.get(index).size();
         TrafficLight tl = trafficLights[index];
         // Number of cars can go through the traffic light in an entire green light duration
@@ -86,5 +86,21 @@ public class EventHandler {
 
     private void departure(int street, double time, Vehicle car) {
 
+    }
+
+    private int getStreedIndex(int street) {
+        switch(street) {
+            case 10:
+                return 0;
+            case 11:
+                return 1;
+            case 12:
+                return 2;
+            case 14:
+                return 3;
+            default:
+                System.out.println("Error - EventHandler.handleEvent: Wrong Street!");
+                return -1;
+        }
     }
 }
