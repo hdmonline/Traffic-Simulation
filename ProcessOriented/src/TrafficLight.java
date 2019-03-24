@@ -10,7 +10,7 @@ public class TrafficLight {
     private int id;
     private final double SOUTH_THROUGH_RED_DURATION;
     private final double SOUTH_THROUGH_GREEN_DURATION;
-    private final double SOUTH_LEFT_RED_DUATION;
+    private final double SOUTH_LEFT_RED_DURATION;
     private final double SOUTH_LEFT_GREEN_DURATION;
     private final double SOUTH_LEFT_TOTAL;
     private final double SOUTH_THROUGH_TOTAL;
@@ -21,7 +21,7 @@ public class TrafficLight {
         SOUTH_THROUGH_GREEN_DURATION = southThroughGreen;
         SOUTH_THROUGH_RED_DURATION = southThroughRed;
         SOUTH_LEFT_GREEN_DURATION = southLeftGreen;
-        SOUTH_LEFT_RED_DUATION = southLeftRed;
+        SOUTH_LEFT_RED_DURATION = southLeftRed;
         SOUTH_LEFT_TOTAL = southLeftGreen + southLeftRed;
         SOUTH_THROUGH_TOTAL = southThroughGreen + southThroughRed;
         SOUTH_TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
@@ -84,7 +84,7 @@ public class TrafficLight {
     }
 
     public double getSouthLeftRad() {
-        return SOUTH_LEFT_RED_DUATION;
+        return SOUTH_LEFT_RED_DURATION;
     }
 
     public double getSouthLeftGreen() {
