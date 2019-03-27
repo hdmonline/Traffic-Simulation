@@ -81,7 +81,7 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, street, car));
+        ProcessEvents.eventQueue.add(new Event(departureTime, SchedulerEventName.Departure, street, car));
     }
 
     private void departure(int street, double time, Vehicle car) {

@@ -2,6 +2,7 @@ public class Vehicle implements Runnable {
     private int id;
     private double startTime;
     private double endTime;
+    private Scheduler scheduler;
 
     // Constructors
     public Vehicle(int id) {
@@ -11,6 +12,7 @@ public class Vehicle implements Runnable {
     public Vehicle(int id, double startTime) {
         this.id = id;
         this.startTime = startTime;
+        scheduler = Scheduler.getInstance();
     }
 
     /**
