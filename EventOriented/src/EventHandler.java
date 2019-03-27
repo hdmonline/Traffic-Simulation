@@ -29,10 +29,10 @@ public class EventHandler {
         }
 
         // Initialize the traffic lights
-        trafficLights[0] = new TrafficLight(10, 10.6, 2.2, 38.3, 49.3);
-        trafficLights[1] = new TrafficLight(11, 0, 0, 44.7, 55.4);
-        trafficLights[2] = new TrafficLight(12, 0, 0, 64.6, 35.7);
-        trafficLights[3] = new TrafficLight(14, 15.2, 0.5, 39.8, 45.3);
+        trafficLights[0] = new TrafficLight(1, 10.6, 2.2, 38.3, 49.3);
+        trafficLights[1] = new TrafficLight(2, 0, 0, 44.7, 55.4);
+        trafficLights[2] = new TrafficLight(3, 0, 0, 64.6, 35.7);
+        trafficLights[3] = new TrafficLight(5, 15.2, 0.5, 39.8, 45.3);
     }
 
     public static EventHandler getInstance() {
@@ -45,18 +45,18 @@ public class EventHandler {
     public void handleEvent(Event event) {
         switch(event.name) {
             case ArrivalSouth:
-                arrivalSouth(event.street, event.time, event.vehicle);
+                arrivalSouth(event.intersection, event.time, event.vehicle);
                 break;
             case Departure:
-                departure(event.street, event.time, event.vehicle);
+                departure(event.intersection, event.time, event.vehicle);
                 break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
         }
     }
 
-    private void arrivalSouth(int street, double time, Vehicle car) {
-        int index = getStreedIndex(street);
+    private void arrivalSouth(int intersection, double time, Vehicle car) {
+        int index = getStreedIndex(intersection);
         int numVehicleToPass = southVehicleQueues.get(index).size();
         TrafficLight tl = trafficLights[index];
         // Number of cars can go through the traffic light in an entire green light duration
@@ -81,7 +81,7 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, street, car));
+        ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, intersection, car));
     }
 
     private void departure(int street, double time, Vehicle car) {
@@ -90,7 +90,7 @@ public class EventHandler {
 
     private int getStreedIndex(int street) {
         switch(street) {
-            case 10:
+            case 1:
                 return 0;
             case 11:
                 return 1;

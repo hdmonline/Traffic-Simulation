@@ -8,14 +8,14 @@
 public class Event implements Comparable<Event> {
     double time;
     EventName name;
-    int street;
+    int intersection;
     Vehicle vehicle;
 
     // Constructor
-    public Event(double time, EventName name, int street, Vehicle car) {
+    public Event(double time, EventName name, int intersection, Vehicle car) {
         this.time = time;
         this.name = name;
-        this.street = street;
+        this.intersection = intersection;
         this.vehicle = car;
     }
 
