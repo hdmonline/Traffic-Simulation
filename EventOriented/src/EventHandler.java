@@ -92,11 +92,11 @@ public class EventHandler {
         switch(street) {
             case 1:
                 return 0;
-            case 11:
+            case 2:
                 return 1;
-            case 12:
+            case 3:
                 return 2;
-            case 14:
+            case 5:
                 return 3;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Street!");
