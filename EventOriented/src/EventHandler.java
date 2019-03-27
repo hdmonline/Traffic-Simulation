@@ -19,6 +19,12 @@ public class EventHandler {
     // Waiting time for going through a traffic light per vehicle in (s)
     private static final double W = 1.0;
 
+    // Average Travelling time between intersections
+    private static final double BETWEEN_INTERSECTION_12 = 3;
+    private static final double BETWEEN_INTERSECTION_23 = 3;
+    private static final double BETWEEN_INTERSECTION_35 = 3;
+    private static final double AFTER_INTERSECTION_5 = 3;
+
     /**
      * Private constructor for this singleton class
      */
@@ -56,7 +62,7 @@ public class EventHandler {
     }
 
     private void arrivalSouth(int intersection, double time, Vehicle car) {
-        int index = getStreedIndex(intersection);
+        int index = getIntersectionIndex(intersection);
         int numVehicleToPass = southVehicleQueues.get(index).size();
         TrafficLight tl = trafficLights[index];
         // Number of cars can go through the traffic light in an entire green light duration
@@ -84,12 +90,12 @@ public class EventHandler {
         ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, intersection, car));
     }
 
-    private void departure(int street, double time, Vehicle car) {
-
+    private void departure(int intersection, double time, Vehicle car) {
+        ProcessEvents.eventQueue.add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
     }
 
-    private int getStreedIndex(int street) {
-        switch(street) {
+    private int getIntersectionIndex(int intersection) {
+        switch(intersection) {
             case 1:
                 return 0;
             case 2:
@@ -99,7 +105,23 @@ public class EventHandler {
             case 5:
                 return 3;
             default:
-                System.out.println("Error - EventHandler.handleEvent: Wrong Street!");
+                System.out.println("Error - EventHandler.handleEvent: Wrong Intersection!");
+                return -1;
+        }
+    }
+
+    private double getBetweenIntersectionTime(int intersection) {
+        switch(intersection) {
+            case 1:
+                return BETWEEN_INTERSECTION_12;
+            case 2:
+                return BETWEEN_INTERSECTION_23;
+            case 3:
+                return BETWEEN_INTERSECTION_35;
+            case 5:
+                return AFTER_INTERSECTION_5;
+            default:
+                System.out.println("Error - EventHandler.handleEvent: Wrong Intersection!");
                 return -1;
         }
     }
