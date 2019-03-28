@@ -1,0 +1,6 @@
+Data:
+1. average travel time between each intersection
+2. flow distribution from each direction per intersection
+3. length of road segments
+4. location of signals
+5. travel time from different intersection (or the first intersection) to the end
