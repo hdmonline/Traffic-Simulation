@@ -2,5 +2,34 @@ Data:
 1. average travel time between each intersection
 2. flow distribution from each direction per intersection
 3. length of road segments
-4. location of signals
+4. location of intersections
 5. travel time from different intersection (or the first intersection) to the end
+6. average entering speed for CA
+7. probabilities of departure at every intersection
+
+Input format:
+-------------
+entrance_intersection | entrance_direction | number_of_bins
+-------------
+inter_arrival | probability
+-------------
+s - 1, w - 2, e - 3
+example:
+1 1 5
+1 0.2
+2 0.2
+3 0.2
+4 0.2
+5 0.2
+2 2 5
+1 0.2
+2 0.2
+3 0.2
+4 0.2
+5 0.2
+...
+
+Output format:
+-------------
+id | start_time | end_time | entrance_intersection | entrance_direction | exit_intersection | exit_direction
+-------------
