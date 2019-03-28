@@ -1,3 +1,11 @@
+/**
+ * Ca.java
+ * @author Group 41: Chong Ye, Dongmin Han, Shan Xiong
+ * Georgia Institute of Technology, Spring 2019
+ *
+ * The main entry point for CSE6730 Project 2 - Cellular Automata Model
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,6 +20,7 @@ class Ca {
 
     static private final int END_POSITION = 300;
     static private final double TIME_INTERVAL = 1;
+    static public final double SIMULATION_TIME = 15; // minute
 
     public static void main() {
         // TODO: Initialize trafficLights
@@ -19,12 +28,15 @@ class Ca {
         // Sort the traffic lights by position
         Collections.sort(trafficLights);
 
-        // TODO: Read input file to get all cars into enteringVehs
+        // Read input file to get all cars into enteringVehs
+        FileIo ioHandler = new FileIo();
+        ioHandler.readFile();
+        ioHandler.generateFlow();
 
-        // Sort the enteringVehs by startTime
-        enteringVehs.sort((Vehicle o1, Vehicle o2)->Double.compare(o1.startTime, o2.startTime));
+        // Sort the enteringVehs by startTime in descending order
+        enteringVehs.sort((Vehicle o1, Vehicle o2)->Double.compare(o2.startTime, o1.startTime));
 
-        // Terminate when the time is over 15min, no car on the street, and no car is about to start
+        // Terminate when the interval is over 15min, no car on the street, and no car is about to start
         while (now < 15 * 60 || vehs.size() > 0 || enteringVehs.size() > 0) {
             // Put entering cars to the lanes
             enteringVehs();
@@ -35,7 +47,7 @@ class Ca {
             // Update vehicle's leaders, laggers and other information
             updateEnvironment();
 
-            // Increase time
+            // Increase interval
             now += TIME_INTERVAL;
         }
 
@@ -45,7 +57,17 @@ class Ca {
 
     // TODO: Put any vehicle entering the tracking area to the lanes
     private static void enteringVehs() {
+        if (enteringVehs.isEmpty()) {
+            return;
+        }
+        int i = enteringVehs.size() - 1;
+        Vehicle veh = enteringVehs.get(i);
+        while (veh.startTime <= now) {
+            // Remove vehicle from enteringVehs
+            enteringVehs.remove(i);
+            // Put the vehicle on road
 
+        }
     }
 
     /**
@@ -224,5 +246,9 @@ class Ca {
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
         }
+    }
+
+    public static ArrayList<Vehicle> getEnteringVehs() {
+        return enteringVehs;
     }
 }

@@ -11,6 +11,10 @@ class Vehicle implements Comparable<Vehicle> {
     int pos;
     int lane;
     int speed;
+    int entranceIntersection;
+    int entranceDirection;
+    int exitIntersection;
+    int exitDirection;
     Vehicle leader;
     Vehicle lagger;
     Vehicle leftLeader;
@@ -33,17 +37,20 @@ class Vehicle implements Comparable<Vehicle> {
      * @param speed
      * @param startTime
      */
-    public Vehicle(int id, int pos, int lane, int speed, double startTime) {
+    public Vehicle(int id, int pos, int lane, int speed, double startTime,
+                   int entranceIntersection, int entranceDirection) {
         this.id = id;
         this.pos = pos;
         this.lane = lane;
         this.speed = speed;
         this.startTime = startTime;
+        this.entranceIntersection = entranceIntersection;
+        this.entranceDirection = entranceDirection;
         this.isFollowingLight = false;
     }
 
     /**
-     * TODO: Update vechicle position, speed and lane based on current status
+     * TODO: Update vehicle position, speed and lane based on current status
      */
     public void update() {
 
