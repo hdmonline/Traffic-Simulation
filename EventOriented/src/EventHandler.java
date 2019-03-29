@@ -47,20 +47,30 @@ public class EventHandler {
 
     public void handleEvent(Event event) {
         switch(event.name) {
-            case ArrivalSouth:
-                arrivalSouth(event.intersection, event.time, event.vehicle);
+            case Arrival:
+                arrival(event.intersection, event.direction, event.time, event.vehicle);
                 break;
             case Departure:
                 departure(event.intersection, event.time, event.vehicle);
                 break;
-            case ArrivalEast:
-                // TODO: handle this.
-                break;
-            case ArrivalWest:
-                // TODO: handle this.
-                break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
+        }
+    }
+
+    private void arrival(int intersection, Direction direction, double time, Vehicle veh) {
+        switch (direction) {
+            case S:
+                arrivalSouth(intersection, time, veh);
+                break;
+            case W:
+                arrivalWest(intersection, time, veh);
+                break;
+            case E:
+                arrivalEast(intersection, time, veh);
+                break;
+            default:
+                System.out.println("Error - EventHandler.arrival: Wrong direction!");
         }
     }
 
@@ -73,14 +83,13 @@ public class EventHandler {
         double greenPass = Math.floor(tl.getSouthThroughGreen() / W);
         double departureTime;
 
+        southVehs.get(index).addFirst(veh);
         // Tell if the light is green.
         if (!tl.isThroughGreen(time)) {
-            southVehs.get(index).addFirst(veh);
             double numGreens = Math.floor(numVehicleToPass / greenPass);
             double resPass = numVehicleToPass % greenPass;
             departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
         } else {
-            southVehs.get(index).addFirst(veh);
             double currPass = Math.floor((tl.nextSouthThroughRed(time) - time)/ W);
             // If all vehicles can go through the traffic light in current green duration
             if (currPass >= numVehicleToPass) {
@@ -92,7 +101,7 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, veh));
+        ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, Direction.N, veh));
     }
 
     // TODO: handle arrival from other directions (west/east)
@@ -104,21 +113,33 @@ public class EventHandler {
 
     }
 
-    // TODO: rewrite this function
+    /**
+     * Depart from current intersection to the north
+     *
+     * @param intersection current intersection
+     * @param time current time
+     * @param veh current vehicle
+     */
     private void departure(int intersection, double time, Vehicle veh) {
         // Last departure -> exit
         int nextIntersection;
-        southVehs.get(getIntersectionIndex(intersection)).removeLast();
+        LinkedList<Vehicle> queue = southVehs.get(getIntersectionIndex(intersection));
+
+        // Check the departing vehicle for debugging.
+        Vehicle check = queue.getLast();
+        assert check.equals(veh);
+
+        queue.removeLast();
         if (intersection == 5) {
             veh.endTime = time + getBetweenIntersectionTime(intersection);
             veh.exitIntersection = intersection;
-            veh.exitDirection = 1;
+            veh.exitDirection = Direction.N;
             ProcessEvents.addFinishedvehs(veh);
             return;
         }
 
         nextIntersection = intersection == 3 ? 5 : intersection + 1;
-        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.ArrivalSouth, nextIntersection, veh));
+        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
     }
 
     private int getIntersectionIndex(int intersection) {

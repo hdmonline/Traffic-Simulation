@@ -7,10 +7,7 @@
  */
 
 public enum EventType {
-    ArrivalSouth,
-    ArrivalWest,
-    ArrivalEast,
-    Departure,
-    Exit
+    Arrival,
+    Departure
 }
 

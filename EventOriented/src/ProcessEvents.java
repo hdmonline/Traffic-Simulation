@@ -37,7 +37,7 @@ public class ProcessEvents {
             handler.handleEvent(currentEvent);
         }
 
-        // TODO: write results to file
+        // Write results to file
         ioHandler.writeResults();
     }
 
@@ -49,15 +49,12 @@ public class ProcessEvents {
         if (enteringVehs.isEmpty()) {
             return;
         }
-        // int i = enteringVehs.size() - 1;
-        for (int i = 0; i < enteringVehs.size(); i++) {
-            Vehicle veh = enteringVehs.get(i);
+
+        for (Vehicle veh : enteringVehs) {
             Event firstEvent;
-            if (veh.entranceIntersection == 1 && veh.exitDirection == 1) {
-                firstEvent = new Event(veh.startTime + Parameter.BETWEEN_START_INTERSECTION1, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
-            } else {
-                firstEvent = new Event(veh.startTime, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
-            }
+            // If it's entering from 10th south, add a traveling time (entering from south end of the area)
+            double delay = (veh.entranceIntersection == 1 && veh.entranceDirection == Direction.S) ? Parameter.BETWEEN_START_INTERSECTION1 : 0;
+            firstEvent = new Event(veh.startTime + delay, EventType.Arrival, veh.entranceIntersection, veh.entranceDirection, veh);
             eventQueue.add(firstEvent);
         }
         // Delete enteringVehs
@@ -67,20 +64,6 @@ public class ProcessEvents {
 
     public static PriorityQueue<Event> getEventQueue() {
         return eventQueue;
-    }
-
-    private static EventType getEventName(int EntranceDir) {
-        switch (EntranceDir) {
-            case 1:
-                return EventType.ArrivalSouth;
-            case 2:
-                return EventType.ArrivalEast;
-            case 3:
-                return EventType.ArrivalWest;
-            default:
-                System.out.println("Error - ProcessEvents.getEventName: Wrong entrance direction!");
-                return null;
-        }
     }
 
     public static ArrayList<Vehicle> getFinishedVehs() {

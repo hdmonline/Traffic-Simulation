@@ -11,11 +11,11 @@ public class Vehicle {
     public double startTime;
     public double endTime;
     int entranceIntersection;
-    int entranceDirection;
+    Direction entranceDirection;
     int exitIntersection;
-    int exitDirection;
+    Direction exitDirection;
 
-    public Vehicle(int id, double startTime, int entranceIntersection, int entranceDirection) {
+    public Vehicle(int id, double startTime, int entranceIntersection, Direction entranceDirection) {
         this.id = id;
         this.startTime = startTime;
         this.entranceIntersection = entranceIntersection;

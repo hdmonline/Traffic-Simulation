@@ -36,7 +36,7 @@ public class FileIo {
                 intersection = Integer.parseInt(strs[0]);
                 direction = Integer.parseInt(strs[1]);
                 numLines = Integer.parseInt(strs[2]);
-                Distribution distribution = new Distribution(intersection, direction, numLines);
+                Distribution distribution = new Distribution(intersection, parseDirection(direction), numLines);
                 // Read distribution bins
                 for (int i = 0; i < numLines; i++) {
                     currLine = br.readLine();
@@ -60,7 +60,7 @@ public class FileIo {
         }
     }
 
-    // TODO: write results to file
+    // Write results to file
     public void writeResults() {
         // Open the file and write finished vehicles
         BufferedWriter bw = null;
@@ -96,7 +96,7 @@ public class FileIo {
         for (Distribution distr : distributions) {
             double time = 0;
             int intersection = distr.intersection;
-            int direction = distr.direction;
+            Direction direction = distr.direction;
             double[] cumu = distr.cumuProb;
             double[] inter = distr.interval;
             double r;
@@ -114,6 +114,20 @@ public class FileIo {
                 ProcessEvents.getEnteringVehs().add(new Vehicle(
                         id++, time, intersection, direction));
             }
+        }
+    }
+
+    private Direction parseDirection(int d) {
+        switch (d) {
+            case 1:
+                return Direction.S;
+            case 2:
+                return Direction.W;
+            case 3:
+                return Direction.E;
+            default:
+                System.out.println("Error - FileIo.parseDirection: Wrong direction!");
+                return null;
         }
     }
 }
