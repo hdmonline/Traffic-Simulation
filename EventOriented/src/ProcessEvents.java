@@ -19,14 +19,6 @@ public class ProcessEvents {
     // Travelling time from starting point to Intersection 1
     private static final double BETWEEN_START_INTERSECTION1 = 15;
 
-    /**
-    public ProcessEvents() {
-        this.now = 0;
-        this.eventQueue = new PriorityQueue<>();
-        this.enteringVehs = new ArrayList<>();
-    }
-     */
-
     public static void main(String[] args) {
         // ProcessEvents processor = new ProcessEvents();
         // read the input file and generate the entering vehs/flow
@@ -35,7 +27,7 @@ public class ProcessEvents {
         ioHandler.generateFlow();
 
         EventHandler handler = EventHandler.getInstance();
-        setEnteringVehs();
+        initializeEventQueue();
 
         // processing loop
         Iterator itr = eventQueue.iterator();
@@ -52,19 +44,38 @@ public class ProcessEvents {
         return enteringVehs;
     }
 
-    private static void setEnteringVehs() {
+    private static void initializeEventQueue() {
         if (enteringVehs.isEmpty()) {
             return;
         }
         // int i = enteringVehs.size() - 1;
         for (int i = 0; i < enteringVehs.size(); i++) {
             Vehicle veh = enteringVehs.get(i);
-            Event depart = new Event(veh.startTime + BETWEEN_START_INTERSECTION1, EventName.Departure, veh.entranceIntersection + 1, veh);
-            eventQueue.add(depart);
+            Event firstEvent;
+            if (veh.entranceIntersection == 1 && veh.exitDirection == 1) {
+                firstEvent = new Event(veh.startTime + BETWEEN_START_INTERSECTION1, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
+            } else {
+                firstEvent = new Event(veh.startTime, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
+            }
+            eventQueue.add(firstEvent);
         }
     }
 
     public static PriorityQueue<Event> getEventQueue() {
         return eventQueue;
+    }
+
+    private static EventName getEventName(int EntranceDir) {
+        switch (EntranceDir) {
+            case 1:
+                return EventName.ArrivalSouth;
+            case 2:
+                return EventName.ArrivalEst;
+            case 3:
+                return EventName.ArrivalWest;
+            default:
+                System.out.println("Error - ProcessEvents.getEventName: Wrong entrance direction!");
+                return null;
+        }
     }
 }
