@@ -60,4 +60,18 @@ class Vehicle implements Comparable<Vehicle> {
     public int compareTo(Vehicle v) {
         return v.pos - this.pos;
     }
+
+    public String toString() {
+        String str = "";
+        str += id + " ";
+        str += lane + " ";
+        str += speed + " ";
+        str += String.format("%.2f", startTime) + " ";
+        str += String.format("%.2f", endTime) + " ";
+        str += entranceIntersection + " ";
+        str += entranceDirection + " ";
+        str += exitIntersection + " ";
+        str += exitDirection;
+        return str;
+    }
 }

@@ -83,8 +83,8 @@ public class FileIo {
 
         try {
             for (Vehicle veh : Ca.getFinishedVehs()) {
-                bw.write(Integer.toString(veh.id));
-                bw.
+                bw.write(veh.toString());
+                bw.newLine();
             }
             bw.close();
         } catch (IOException e) {
