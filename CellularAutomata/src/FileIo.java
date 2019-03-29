@@ -70,7 +70,7 @@ public class FileIo {
     }
 
     /**
-     * TODO: Write the results to output file
+     * Write the results to output file
      */
     public void writeResults() {
         // Open the file and write finished vehicles
@@ -82,9 +82,16 @@ public class FileIo {
         }
 
         try {
-            for (Vehicle veh : Ca.getFinishedVehs()) {
+            ArrayList<Vehicle> finishedVehs = Ca.getFinishedVehs();
+            if (finishedVehs.size() > 0) {
+                Vehicle veh;
+                for (int i = 0; i < finishedVehs.size() - 1; i++) {
+                    veh = finishedVehs.get(i);
+                    bw.write(veh.toString());
+                    bw.newLine();
+                }
+                veh = finishedVehs.get(finishedVehs.size() - 1);
                 bw.write(veh.toString());
-                bw.newLine();
             }
             bw.close();
         } catch (IOException e) {

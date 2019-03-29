@@ -33,3 +33,7 @@ Output format:
 -------------
 id | start_time | end_time | entrance_intersection | entrance_direction | exit_intersection | exit_direction
 -------------
+
+Code constants:
+-lanes:
+ left - 0, right - 1

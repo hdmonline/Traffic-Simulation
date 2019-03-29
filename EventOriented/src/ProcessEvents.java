@@ -3,7 +3,7 @@
  * @author Group 41: Chong Ye, Dongmin Han, Shan Xiong
  * Georgia Institute of Technology, Spring 2019
  *
- * The main entry point for CSE6730 Project 2
+ * The main entry point for CSE6730 Project 2 - Event Oriented Model
  */
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ProcessEvents {
     }
      */
 
-    public static void main() {
+    public static void main(String[] args) {
         // ProcessEvents processor = new ProcessEvents();
         // read the input file and generate the entering vehs/flow
         FileIo ioHandler = new FileIo();
@@ -67,6 +67,4 @@ public class ProcessEvents {
     public static PriorityQueue<Event> getEventQueue() {
         return eventQueue;
     }
-
-
 }

@@ -90,6 +90,15 @@ public class EventHandler {
         ProcessEvents.getEventQueue().add(new Event(departureTime, EventName.Departure, intersection, car));
     }
 
+    // TODO: handle arrival from other directions (west/east)
+    private void arrivalWest(int intersection, double time, Vehicle car) {
+
+    }
+
+    private void arrivalEast(int intersection, double time, Vehicle car) {
+
+    }
+
     private void departure(int intersection, double time, Vehicle car) {
         ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
     }

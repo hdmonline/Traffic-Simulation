@@ -6,8 +6,6 @@
  * Helper class for reading data, writing results and handling the input model
  */
 
-import com.sun.xml.internal.bind.v2.TODO;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
