@@ -8,6 +8,7 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 class Ca {
     static private ArrayList<Vehicle> vehs = new ArrayList<>();
@@ -34,10 +35,10 @@ class Ca {
         ioHandler.generateFlow();
 
         // Sort the enteringVehs by startTime in descending order
-        enteringVehs.sort((Vehicle o1, Vehicle o2)->Double.compare(o2.startTime, o1.startTime));
+        enteringVehs.sort(Comparator.comparing((Vehicle v) -> v.startTime));
 
         // Terminate when the interval is over 15min, no car on the street, and no car is about to start
-        while (now < 15 * 60 || vehs.size() > 0 || enteringVehs.size() > 0) {
+        while (now < SIMULATION_TIME * 60 || vehs.size() > 0 || enteringVehs.size() > 0) {
             // Put entering cars to the lanes
             enteringVehs();
 
@@ -55,18 +56,23 @@ class Ca {
 
     }
 
-    // TODO: Put any vehicle entering the tracking area to the lanes
+    // Put any vehicle entering the tracking area to the lanes
     private static void enteringVehs() {
         if (enteringVehs.isEmpty()) {
             return;
         }
         int i = enteringVehs.size() - 1;
-        Vehicle veh = enteringVehs.get(i);
+        Vehicle veh = enteringVehs.get(0);
         while (veh.startTime <= now) {
             // Remove vehicle from enteringVehs
-            enteringVehs.remove(i);
+            enteringVehs.remove(0);
             // Put the vehicle on road
-
+            veh.startTime = now;
+            vehs.add(veh);
+            if (enteringVehs.isEmpty()) {
+                break;
+            }
+            veh = enteringVehs.get(0);
         }
     }
 
@@ -250,5 +256,9 @@ class Ca {
 
     public static ArrayList<Vehicle> getEnteringVehs() {
         return enteringVehs;
+    }
+
+    public static ArrayList<Vehicle> getFinishedVehs() {
+        return finishedVehs;
     }
 }
