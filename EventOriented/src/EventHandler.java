@@ -117,11 +117,7 @@ public class EventHandler {
             return;
         }
 
-        if (intersection == 3) {
-            nextIntersection = 5;
-        } else {
-            nextIntersection = intersection + 1;
-        }
+        nextIntersection = intersection == 3 ? 5 : intersection + 1;
         ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.ArrivalSouth, nextIntersection, veh));
     }
 
