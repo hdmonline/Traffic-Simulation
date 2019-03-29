@@ -6,6 +6,8 @@
  * Helper class for reading data, writing results and handling the input model
  */
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,11 +24,13 @@ public class FileIo {
     private Random rand = new Random();
     // public static final int INITIAL_SPEED = 3;
 
+    /**
     private static final int INTERSECTION_POSITION_1 = 100;
     private static final int INTERSECTION_POSITION_2 = 200;
     private static final int INTERSECTION_POSITION_3 = 300;
     private static final int INTERSECTION_POSITION_4 = 400;
     private static final int INTERSECTION_POSITION_5 = 500;
+     */
     // total time to generate vehs
     private static final int GENERATING_VEHS_TIME = 15 * 60;
 
@@ -76,6 +80,7 @@ public class FileIo {
         }
     }
 
+    // TODO: write results to file
     public void writeResults() {
 
     }

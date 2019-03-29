@@ -12,12 +12,12 @@ import java.util.PriorityQueue;
 
 public class ProcessEvents {
     // Event queue to store all the event in the order of time
-    static private PriorityQueue<Event> eventQueue = new PriorityQueue<>();
-    static private ArrayList<Vehicle> enteringVehs = new ArrayList<>();
+    private static PriorityQueue<Event> eventQueue = new PriorityQueue<>();
+    private static ArrayList<Vehicle> enteringVehs = new ArrayList<>();
     // Current time
-    static private double now = 0;
+    private static double now = 0;
     // Travelling time from starting point to Intersection 1
-    static private final double BETWEEN_START_INTERSECTION1 = 15;
+    private static final double BETWEEN_START_INTERSECTION1 = 15;
 
     /**
     public ProcessEvents() {
@@ -35,7 +35,7 @@ public class ProcessEvents {
         ioHandler.generateFlow();
 
         EventHandler handler = EventHandler.getInstance();
-
+        setEnteringVehs();
 
         // processing loop
         Iterator itr = eventQueue.iterator();
@@ -44,13 +44,15 @@ public class ProcessEvents {
             now = currentEvent.time;
             handler.handleEvent(currentEvent);
         }
+
+        // TODO: write results to file
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {
         return enteringVehs;
     }
 
-    private void setEnteringVehs() {
+    private static void setEnteringVehs() {
         if (enteringVehs.isEmpty()) {
             return;
         }
