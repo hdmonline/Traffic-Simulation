@@ -13,28 +13,25 @@ public class EventHandler {
     private static EventHandler instance = null;
 
     // Vehicle queues, First -> In, Last -> Out
-    private ArrayList<LinkedList<Vehicle>> northBoundVehs;
+    private ArrayList<LinkedList<Vehicle>> southVehs;
     private TrafficLight[] trafficLights;
 
     // Waiting time for going through a traffic light per vehicle in (s)
     private static final double W = 1.0;
 
-    // Average Travelling time between intersections
-    private static final double BETWEEN_INTERSECTION_12 = 3;
-    private static final double BETWEEN_INTERSECTION_23 = 3;
-    private static final double BETWEEN_INTERSECTION_35 = 3;
-    private static final double AFTER_INTERSECTION_5 = 3;
 
     /**
      * Private constructor for this singleton class
      */
     private EventHandler() {
         // Initialize the vehicle queues for each traffic light
+        southVehs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            northBoundVehs.set(i, new LinkedList<>());
+            southVehs.add(new LinkedList<>());
         }
 
         // Initialize the traffic lights
+        trafficLights = new TrafficLight[4];
         trafficLights[0] = new TrafficLight(1, 49.3, 38.3, 10.6, 2.2);
         trafficLights[1] = new TrafficLight(2, 55.4, 44.7, 0, 0);
         trafficLights[2] = new TrafficLight(3, 35.7, 64.6, 0, 0);
@@ -56,28 +53,36 @@ public class EventHandler {
             case Departure:
                 departure(event.intersection, event.time, event.vehicle);
                 break;
+            case ArrivalEast:
+                // TODO: handle this.
+                break;
+            case ArrivalWest:
+                // TODO: handle this.
+                break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
         }
     }
 
-    private void arrivalSouth(int intersection, double time, Vehicle car) {
+    // TODO: may need to handle west/east departures
+    private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
-        int numVehicleToPass = northBoundVehs.get(index).size();
+        int numVehicleToPass = southVehs.get(index).size();
         TrafficLight tl = trafficLights[index];
-        // Number of cars can go through the traffic light in an entire green light duration
+        // Number of vehicles can go through the traffic light in an entire green light duration
         double greenPass = Math.floor(tl.getSouthThroughGreen() / W);
         double departureTime;
 
         // Tell if the light is green.
         if (!tl.isThroughGreen(time)) {
-            northBoundVehs.get(index).addFirst(car);
+            southVehs.get(index).addFirst(veh);
             double numGreens = Math.floor(numVehicleToPass / greenPass);
             double resPass = numVehicleToPass % greenPass;
             departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
         } else {
+            southVehs.get(index).addFirst(veh);
             double currPass = Math.floor((tl.nextSouthThroughRed(time) - time)/ W);
-            // If all cars can go through the traffic light in current green duration
+            // If all vehicles can go through the traffic light in current green duration
             if (currPass >= numVehicleToPass) {
                 departureTime = time + numVehicleToPass * W;
             } else {
@@ -87,20 +92,37 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.getEventQueue().add(new Event(departureTime, EventName.Departure, intersection, car));
+        ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, veh));
     }
 
     // TODO: handle arrival from other directions (west/east)
-    private void arrivalWest(int intersection, double time, Vehicle car) {
+    private void arrivalWest(int intersection, double time, Vehicle veh) {
 
     }
 
-    private void arrivalEast(int intersection, double time, Vehicle car) {
+    private void arrivalEast(int intersection, double time, Vehicle veh) {
 
     }
 
-    private void departure(int intersection, double time, Vehicle car) {
-        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
+    // TODO: rewrite this function
+    private void departure(int intersection, double time, Vehicle veh) {
+        // Last departure -> exit
+        int nextIntersection;
+        southVehs.get(getIntersectionIndex(intersection)).removeLast();
+        if (intersection == 5) {
+            veh.endTime = time + getBetweenIntersectionTime(intersection);
+            veh.exitIntersection = intersection;
+            veh.exitDirection = 1;
+            ProcessEvents.addFinishedvehs(veh);
+            return;
+        }
+
+        if (intersection == 3) {
+            nextIntersection = 5;
+        } else {
+            nextIntersection = intersection + 1;
+        }
+        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.ArrivalSouth, nextIntersection, veh));
     }
 
     private int getIntersectionIndex(int intersection) {
@@ -122,13 +144,13 @@ public class EventHandler {
     private double getBetweenIntersectionTime(int intersection) {
         switch(intersection) {
             case 1:
-                return BETWEEN_INTERSECTION_12;
+                return Parameter.BETWEEN_INTERSECTION_12;
             case 2:
-                return BETWEEN_INTERSECTION_23;
+                return Parameter.BETWEEN_INTERSECTION_23;
             case 3:
-                return BETWEEN_INTERSECTION_35;
+                return Parameter.BETWEEN_INTERSECTION_35;
             case 5:
-                return AFTER_INTERSECTION_5;
+                return Parameter.AFTER_INTERSECTION_5;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Intersection!");
                 return -1;

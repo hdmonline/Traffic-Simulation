@@ -6,31 +6,13 @@
  * Helper class for reading data, writing results and handling the input model
  */
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class FileIo {
-
-    private static final String INPUT_FILE = "input.txt";
-    private static final String OUTPUT_FILE = "output.txt";
-
     private ArrayList<Distribution> distributions = new ArrayList<>();
     private Random rand = new Random();
-    // public static final int INITIAL_SPEED = 3;
-
-    /**
-    private static final int INTERSECTION_POSITION_1 = 100;
-    private static final int INTERSECTION_POSITION_2 = 200;
-    private static final int INTERSECTION_POSITION_3 = 300;
-    private static final int INTERSECTION_POSITION_4 = 400;
-    private static final int INTERSECTION_POSITION_5 = 500;
-     */
-    // total time to generate vehs
-    private static final int GENERATING_VEHS_TIME = 15 * 60;
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -39,7 +21,7 @@ public class FileIo {
         // Open the file and read inter arrival interval of each intersection and direction
         BufferedReader br = null;
         try {
-            FileReader fr = new FileReader(INPUT_FILE);
+            FileReader fr = new FileReader(Parameter.INPUT_FILE);
             br = new BufferedReader(fr);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -80,7 +62,30 @@ public class FileIo {
 
     // TODO: write results to file
     public void writeResults() {
+        // Open the file and write finished vehicles
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(Parameter.OUTPUT_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        try {
+            ArrayList<Vehicle> finishedVehs = ProcessEvents.getFinishedVehs();
+            if (finishedVehs.size() > 0) {
+                Vehicle veh;
+                for (int i = 0; i < finishedVehs.size() - 1; i++) {
+                    veh = finishedVehs.get(i);
+                    bw.write(veh.toString());
+                    bw.newLine();
+                }
+                veh = finishedVehs.get(finishedVehs.size() - 1);
+                bw.write(veh.toString());
+            }
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -93,8 +98,9 @@ public class FileIo {
             int intersection = distr.intersection;
             int direction = distr.direction;
             double[] cumu = distr.cumuProb;
+            double[] inter = distr.interval;
             double r;
-            while (time < GENERATING_VEHS_TIME) {
+            while (time < Parameter.GENERATING_VEHS_TIME) {
                 r = rand.nextDouble();
                 int i;
                 for (i = 0; i < cumu.length; i++) {
@@ -102,48 +108,12 @@ public class FileIo {
                         break;
                     }
                 }
-                double lowerLimit = i == 0 ? 0 : cumu[i - 1];
-                double interval = rand.nextDouble() * (cumu[i] - lowerLimit) + lowerLimit;
+                double lowerLimit = i == 0 ? 0 : inter[i - 1];
+                double interval = rand.nextDouble() * (inter[i] - lowerLimit) + lowerLimit;
                 time += interval;
                 ProcessEvents.getEnteringVehs().add(new Vehicle(
                         id++, time, intersection, direction));
             }
         }
     }
-
-    /**
-    private int getPosition(int intersection) {
-        switch(intersection) {
-            case 1:
-                return INTERSECTION_POSITION_1;
-            case 2:
-                return INTERSECTION_POSITION_2;
-            case 3:
-                return INTERSECTION_POSITION_3;
-            case 4:
-                return INTERSECTION_POSITION_4;
-            case 5:
-                return INTERSECTION_POSITION_5;
-            default:
-                System.out.println("Error - FileIo.getDistribution: Wrong intersection!");
-                return -1;
-        }
-    }
-    */
-
-    /**
-    private int getLane(int direction) {
-        switch (direction) {
-            case 2:
-                return 1;
-            case 3:
-                return 0;
-            case 1:
-                return rand.nextDouble() > 0.5 ? 1 : 0;
-            default:
-                System.out.println("Error - FileIo.getLane: Wrong direction!");
-                return -1;
-        }
-    }
-    */
 }

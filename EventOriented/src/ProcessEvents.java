@@ -14,10 +14,10 @@ public class ProcessEvents {
     // Event queue to store all the event in the order of time
     private static PriorityQueue<Event> eventQueue = new PriorityQueue<>();
     private static ArrayList<Vehicle> enteringVehs = new ArrayList<>();
+    private static ArrayList<Vehicle> finishedVehs = new ArrayList<>();
     // Current time
     private static double now = 0;
-    // Travelling time from starting point to Intersection 1
-    private static final double BETWEEN_START_INTERSECTION1 = 15;
+
 
     public static void main(String[] args) {
         // ProcessEvents processor = new ProcessEvents();
@@ -38,6 +38,7 @@ public class ProcessEvents {
         }
 
         // TODO: write results to file
+        ioHandler.writeResults();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {
@@ -53,29 +54,40 @@ public class ProcessEvents {
             Vehicle veh = enteringVehs.get(i);
             Event firstEvent;
             if (veh.entranceIntersection == 1 && veh.exitDirection == 1) {
-                firstEvent = new Event(veh.startTime + BETWEEN_START_INTERSECTION1, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
+                firstEvent = new Event(veh.startTime + Parameter.BETWEEN_START_INTERSECTION1, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
             } else {
                 firstEvent = new Event(veh.startTime, getEventName(veh.entranceDirection), veh.entranceIntersection, veh);
             }
             eventQueue.add(firstEvent);
         }
+        // Delete enteringVehs
+        enteringVehs = null;
+        System.gc();
     }
 
     public static PriorityQueue<Event> getEventQueue() {
         return eventQueue;
     }
 
-    private static EventName getEventName(int EntranceDir) {
+    private static EventType getEventName(int EntranceDir) {
         switch (EntranceDir) {
             case 1:
-                return EventName.ArrivalSouth;
+                return EventType.ArrivalSouth;
             case 2:
-                return EventName.ArrivalEst;
+                return EventType.ArrivalEast;
             case 3:
-                return EventName.ArrivalWest;
+                return EventType.ArrivalWest;
             default:
                 System.out.println("Error - ProcessEvents.getEventName: Wrong entrance direction!");
                 return null;
         }
+    }
+
+    public static ArrayList<Vehicle> getFinishedVehs() {
+        return finishedVehs;
+    }
+
+    public static void addFinishedvehs(Vehicle veh) {
+        finishedVehs.add(veh);
     }
 }

@@ -21,4 +21,16 @@ public class Vehicle {
         this.entranceIntersection = entranceIntersection;
         this.entranceDirection = entranceDirection;
     }
+
+    public String toString() {
+        String str = "";
+        str += id + " ";
+        str += String.format("%.2f", startTime) + " ";
+        str += String.format("%.2f", endTime) + " ";
+        str += entranceIntersection + " ";
+        str += entranceDirection + " ";
+        str += exitIntersection + " ";
+        str += exitDirection;
+        return str;
+    }
 }
