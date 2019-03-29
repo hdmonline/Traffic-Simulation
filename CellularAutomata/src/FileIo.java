@@ -6,10 +6,7 @@
  * Helper class for reading data, writing results and handling the input model
  */
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -72,8 +69,27 @@ public class FileIo {
         }
     }
 
+    /**
+     * TODO: Write the results to output file
+     */
     public void writeResults() {
+        // Open the file and write finished vehicles
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(OUTPUT_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        try {
+            for (Vehicle veh : Ca.getFinishedVehs()) {
+                bw.write(veh.toString());
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -99,13 +115,19 @@ public class FileIo {
                 double interval = rand.nextDouble() * (cumu[i] - lowerLimit) + lowerLimit;
                 time += interval;
                 Ca.getEnteringVehs().add(new Vehicle(
-                        id++, getPosition(intersection),
+                        id++, getPosition(intersection) + 1,
                         getLane(direction), INITIAL_SPEED, time,
                         intersection, direction));
             }
         }
     }
 
+    /**
+     * Get intersection position
+     *
+     * @param intersection the intersection
+     * @return the position of the intersection
+     */
     private int getPosition(int intersection) {
         switch(intersection) {
             case 1:
