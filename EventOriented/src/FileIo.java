@@ -108,8 +108,7 @@ public class FileIo {
                 double interval = rand.nextDouble() * (cumu[i] - lowerLimit) + lowerLimit;
                 time += interval;
                 ProcessEvents.getEnteringVehs().add(new Vehicle(
-                        id++, time, 0, intersection,
-                        direction, 5, 1));
+                        id++, time, intersection, direction));
             }
         }
     }
