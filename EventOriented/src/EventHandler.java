@@ -87,11 +87,11 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, intersection, car));
+        ProcessEvents.getEventQueue().add(new Event(departureTime, EventName.Departure, intersection, car));
     }
 
     private void departure(int intersection, double time, Vehicle car) {
-        ProcessEvents.eventQueue.add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
+        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
     }
 
     private int getIntersectionIndex(int intersection) {
