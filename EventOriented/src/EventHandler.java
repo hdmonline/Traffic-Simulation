@@ -13,7 +13,7 @@ public class EventHandler {
     private static EventHandler instance = null;
 
     // Vehicle queues, First -> In, Last -> Out
-    private ArrayList<LinkedList<Vehicle>> southVehicleQueues;
+    private ArrayList<LinkedList<Vehicle>> northBoundVehs;
     private TrafficLight[] trafficLights;
 
     // Waiting time for going through a traffic light per vehicle in (s)
@@ -31,14 +31,14 @@ public class EventHandler {
     private EventHandler() {
         // Initialize the vehicle queues for each traffic light
         for (int i = 0; i < 4; i++) {
-            southVehicleQueues.set(i, new LinkedList<>());
+            northBoundVehs.set(i, new LinkedList<>());
         }
 
         // Initialize the traffic lights
-        trafficLights[0] = new TrafficLight(1, 10.6, 2.2, 38.3, 49.3);
-        trafficLights[1] = new TrafficLight(2, 0, 0, 44.7, 55.4);
-        trafficLights[2] = new TrafficLight(3, 0, 0, 64.6, 35.7);
-        trafficLights[3] = new TrafficLight(5, 15.2, 0.5, 39.8, 45.3);
+        trafficLights[0] = new TrafficLight(1, 49.3, 38.3, 10.6, 2.2);
+        trafficLights[1] = new TrafficLight(2, 55.4, 44.7, 0, 0);
+        trafficLights[2] = new TrafficLight(3, 35.7, 64.6, 0, 0);
+        trafficLights[3] = new TrafficLight(5, 46.1, 37.8, 12.4, 3.6);
     }
 
     public static EventHandler getInstance() {
@@ -63,7 +63,7 @@ public class EventHandler {
 
     private void arrivalSouth(int intersection, double time, Vehicle car) {
         int index = getIntersectionIndex(intersection);
-        int numVehicleToPass = southVehicleQueues.get(index).size();
+        int numVehicleToPass = northBoundVehs.get(index).size();
         TrafficLight tl = trafficLights[index];
         // Number of cars can go through the traffic light in an entire green light duration
         double greenPass = Math.floor(tl.getSouthThroughGreen() / W);
@@ -71,7 +71,7 @@ public class EventHandler {
 
         // Tell if the light is green.
         if (!tl.isThroughGreen(time)) {
-            southVehicleQueues.get(index).addFirst(car);
+            northBoundVehs.get(index).addFirst(car);
             double numGreens = Math.floor(numVehicleToPass / greenPass);
             double resPass = numVehicleToPass % greenPass;
             departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
@@ -87,11 +87,11 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.eventQueue.add(new Event(departureTime, EventName.Departure, intersection, car));
+        ProcessEvents.getEventQueue().add(new Event(departureTime, EventName.Departure, intersection, car));
     }
 
     private void departure(int intersection, double time, Vehicle car) {
-        ProcessEvents.eventQueue.add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
+        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventName.ArrivalSouth, intersection, car));
     }
 
     private int getIntersectionIndex(int intersection) {
