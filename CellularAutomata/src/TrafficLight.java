@@ -27,12 +27,12 @@ public class TrafficLight implements Comparable<TrafficLight> {
     }
 
     /**
-     * Find next green light time.
+     * Find next green light interval.
      * The period is leftGreen -> leftRed -> Green -> Red.
      *
-     * @param time current time
+     * @param time current interval
      * @param num number of green lights to skip
-     * @return the next green light time
+     * @return the next green light interval
      */
     public double nextSouthThroughGreen(double time, double num) {
         double mod = time % SOUTH_TOTAL;
