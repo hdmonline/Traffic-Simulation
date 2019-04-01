@@ -7,12 +7,15 @@
  */
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class FileIo {
     private ArrayList<Distribution> distributions = new ArrayList<>();
     private Random rand = new Random();
+    private BufferedWriter eventWriter = null;
+    private boolean wroteEvent = false;
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -60,12 +63,45 @@ public class FileIo {
         }
     }
 
+    public void initialEventWriter() {
+        try {
+            eventWriter = new BufferedWriter(new FileWriter(Parameter.OUTPUT_EVENT_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeEvnetWriter() {
+        try {
+            eventWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeEvent(Event event) {
+        if (eventWriter == null) {
+            initialEventWriter();
+        }
+        try {
+            if (!wroteEvent) {
+                eventWriter.write(event.toString());
+                wroteEvent = true;
+            } else {
+                eventWriter.newLine();
+                eventWriter.write(event.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Write results to file
-    public void writeResults() {
+    public void writeVehicles() {
         // Open the file and write finished vehicles
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter(Parameter.OUTPUT_FILE));
+            bw = new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -46,7 +46,7 @@ public class EventHandler {
     }
 
     public void handleEvent(Event event) {
-        switch(event.name) {
+        switch(event.type) {
             case Arrival:
                 arrival(event.intersection, event.direction, event.time, event.vehicle);
                 break;

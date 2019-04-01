@@ -34,11 +34,13 @@ public class ProcessEvents {
         while (itr.hasNext()) {
             Event currentEvent = eventQueue.poll();
             now = currentEvent.time;
+            ioHandler.writeEvent(currentEvent);
             handler.handleEvent(currentEvent);
         }
 
         // Write results to file
-        ioHandler.writeResults();
+        ioHandler.writeVehicles();
+        ioHandler.closeEvnetWriter();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {

@@ -19,5 +19,6 @@ public class Parameter {
     static final double AFTER_INTERSECTION_5 = 3;
 
     static final String INPUT_FILE = "event_input.txt";
-    static final String OUTPUT_FILE = "event_result.txt";
+    static final String OUTPUT_VEHICLE_FILE = "event_vehicles.txt";
+    static final String OUTPUT_EVENT_FILE = "event_events.txt";
 }
