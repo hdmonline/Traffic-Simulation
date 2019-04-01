@@ -8,11 +8,11 @@
 class Distribution {
     int intersection;
     Direction direction;
-    double interval[];
-    double prob[];
-    double cumuProb[];
+    double[] interval;
+    double[] prob;
+    double[] cumuProb;
 
-    public Distribution(int intersection, Direction direction, int numBins) {
+    Distribution(int intersection, Direction direction, int numBins) {
         this.intersection = intersection;
         this.direction = direction;
 
