@@ -12,18 +12,18 @@ import java.util.LinkedList;
 public class EventHandler {
     private static EventHandler instance = null;
 
-    // Vehicle queues, First -> In, Last -> Out
-    private ArrayList<LinkedList<Vehicle>> southVehicleQueues;
+    // VehicleProcess queues, First -> In, Last -> Out
+    private ArrayList<LinkedList<VehicleProcess>> southVehicleQueues;
     private TrafficLight[] trafficLights;
 
-    // Waiting time for going through a traffic light per vehicle in (s)
+    // Waiting time for going through a traffic light per vehicleProcess in (s)
     private static final double W = 1.0;
 
     /**
      * Private constructor for this singleton class
      */
     private EventHandler() {
-        // Initialize the vehicle queues for each traffic light
+        // Initialize the vehicleProcess queues for each traffic light
         for (int i = 0; i < 4; i++) {
             southVehicleQueues.set(i, new LinkedList<>());
         }
@@ -45,17 +45,17 @@ public class EventHandler {
     public void handleEvent(Event event) {
         switch(event.name) {
             case ArrivalSouth:
-                arrivalSouth(event.street, event.time, event.vehicle);
+                arrivalSouth(event.street, event.time, event.vehicleProcess);
                 break;
             case Departure:
-                departure(event.street, event.time, event.vehicle);
+                departure(event.street, event.time, event.vehicleProcess);
                 break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
         }
     }
 
-    private void arrivalSouth(int street, double time, Vehicle car) {
+    private void arrivalSouth(int street, double time, VehicleProcess car) {
         int index = street - 10;
         int numVehicleToPass = southVehicleQueues.get(index).size();
         TrafficLight tl = trafficLights[index];
@@ -81,10 +81,10 @@ public class EventHandler {
                 departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
             }
         }
-        ProcessEvents.eventQueue.add(new Event(departureTime, SchedulerEventName.Departure, street, car));
+        ProcessEvents.eventQueue.add(new Event(departureTime, SchedulerEventType.Departure, street, car));
     }
 
-    private void departure(int street, double time, Vehicle car) {
+    private void departure(int street, double time, VehicleProcess car) {
 
     }
 }

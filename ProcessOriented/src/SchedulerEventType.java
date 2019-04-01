@@ -1,4 +1,4 @@
-public enum SchedulerEventName {
+public enum SchedulerEventType {
     WaitUntil,
     AdvanceTime,
     Resume

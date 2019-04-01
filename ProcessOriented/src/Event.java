@@ -7,16 +7,16 @@
  */
 public class Event implements Comparable<Event> {
     double time;
-    EventName name;
+    EventType name;
     int street;
-    Vehicle vehicle;
+    VehicleProcess vehicleProcess;
 
     // Constructor
-    public Event(double time, EventName name, int street, Vehicle car) {
+    public Event(double time, EventType name, int street, VehicleProcess car) {
         this.time = time;
         this.name = name;
         this.street = street;
-        this.vehicle = car;
+        this.vehicleProcess = car;
     }
 
     @Override

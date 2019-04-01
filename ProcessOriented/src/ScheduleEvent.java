@@ -7,7 +7,7 @@
  */
 public class ScheduleEvent {
     double time;
-    SchedulerEventName name;
-    Vehicle vehicle;
+    SchedulerEventType name;
+    VehicleProcess vehicleProcess;
 
 }
