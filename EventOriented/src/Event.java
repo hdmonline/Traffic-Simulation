@@ -23,7 +23,7 @@ public class Event implements Comparable<Event> {
 
     public String toString() {
         String str = "";
-        str += time + " ";
+        str += String.format("%.2f", time) + " ";
         str += type + " ";
         str += intersection + " ";
         str += direction + " ";

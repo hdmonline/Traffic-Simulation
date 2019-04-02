@@ -1,0 +1,3 @@
+clear all;
+close all;
+fid = fopen('event_vehicles.txt');

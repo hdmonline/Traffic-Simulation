@@ -45,6 +45,7 @@ public class EventHandler {
         return instance;
     }
 
+    // TODO: add TurnRed & TurnGreen
     public void handleEvent(Event event) {
         switch(event.type) {
             case Arrival:
@@ -75,6 +76,7 @@ public class EventHandler {
     }
 
     // TODO: may need to handle west/east departures
+    // TODO: follow the logic of the example in the slides instead of hard coding the departure time.
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         int numVehicleToPass = southVehs.get(index).size();
@@ -120,6 +122,7 @@ public class EventHandler {
      * @param time current time
      * @param veh current vehicle
      */
+    // TODO: schedule next departure if the queue is not empty.
     private void departure(int intersection, double time, Vehicle veh) {
         // Last departure -> exit
         int nextIntersection;
