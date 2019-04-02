@@ -18,6 +18,9 @@ public class Parameter {
     static final double BETWEEN_INTERSECTION_35 = 15;
     static final double AFTER_INTERSECTION_5 = 3;
 
+    // Waiting time for going through a traffic light per vehicle in (s)
+    static final double W = 1.0;
+
     static final String INPUT_FILE = "event_input.txt";
     static final String OUTPUT_VEHICLE_FILE = "event_vehicles.txt";
     static final String OUTPUT_EVENT_FILE = "event_events.txt";

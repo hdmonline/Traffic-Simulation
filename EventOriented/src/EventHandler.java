@@ -16,10 +16,6 @@ public class EventHandler {
     private ArrayList<LinkedList<Vehicle>> southVehs;
     private TrafficLight[] trafficLights;
 
-    // Waiting time for going through a traffic light per vehicle in (s)
-    private static final double W = 1.0;
-
-
     /**
      * Private constructor for this singleton class
      */
@@ -80,7 +76,7 @@ public class EventHandler {
         int numVehicleToPass = southVehs.get(index).size();
         TrafficLight tl = trafficLights[index];
         // Number of vehicles can go through the traffic light in an entire green light duration
-        double greenPass = Math.floor(tl.getSouthThroughGreen() / W);
+        double greenPass = Math.floor(tl.getSouthThroughGreen() / Parameter.W);
         double departureTime;
 
         southVehs.get(index).addFirst(veh);
@@ -88,17 +84,17 @@ public class EventHandler {
         if (!tl.isThroughGreen(time)) {
             double numGreens = Math.floor(numVehicleToPass / greenPass);
             double resPass = numVehicleToPass % greenPass;
-            departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
+            departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * Parameter.W;
         } else {
-            double currPass = Math.floor((tl.nextSouthThroughRed(time) - time)/ W);
+            double currPass = Math.floor((tl.nextSouthThroughRed(time) - time)/ Parameter.W);
             // If all vehicles can go through the traffic light in current green duration
             if (currPass >= numVehicleToPass) {
-                departureTime = time + numVehicleToPass * W;
+                departureTime = time + numVehicleToPass * Parameter.W;
             } else {
                 numVehicleToPass -= currPass;
                 double numGreens = Math.floor(numVehicleToPass / greenPass);
                 double resPass = numVehicleToPass % greenPass;
-                departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * W;
+                departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * Parameter.W;
             }
         }
         ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, Direction.N, veh));
