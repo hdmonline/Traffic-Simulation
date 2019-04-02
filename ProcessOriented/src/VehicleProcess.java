@@ -15,9 +15,13 @@ public class VehicleProcess implements Runnable {
     Direction entranceDirection;
     int exitIntersection;
     Direction exitDirection;
+    boolean pause;
+    boolean arrive11;
 
     public VehicleProcess(int id) {
         this.id = id;
+        pause = false;
+        arrive11 = false;
     }
 
     public VehicleProcess(int id, double startTime, int entranceIntersection, Direction entranceDirection) {
@@ -25,6 +29,18 @@ public class VehicleProcess implements Runnable {
         this.startTime = startTime;
         this.entranceIntersection = entranceIntersection;
         this.entranceDirection = entranceDirection;
+        pause = false;
+        arrive11 = false;
+    }
+
+    private synchronized void moveToIntersection1() {
+        schedular.addSchedulerEvent(new ScheduleEvent(schedular.getTime(), SchedulerEventType.AdvanceTime, this));
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        arrive11 = true;
     }
 
     public String toString() {
@@ -41,6 +57,7 @@ public class VehicleProcess implements Runnable {
 
     @Override
     public void run() {
-
+        moveToIntersection1();
+        
     }
 }

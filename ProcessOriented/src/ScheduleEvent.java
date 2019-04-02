@@ -7,7 +7,12 @@
  */
 public class ScheduleEvent {
     double time;
-    SchedulerEventType name;
-    VehicleProcess vehicleProcess;
+    SchedulerEventType type;
+    VehicleProcess veh;
 
+    public ScheduleEvent(double time, SchedulerEventType type, VehicleProcess veh) {
+        this.time = time;
+        this.type = type;
+        this.veh = veh;
+    }
 }

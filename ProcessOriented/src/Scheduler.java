@@ -20,6 +20,8 @@ public class Scheduler implements Runnable {
     // Event queue to store all the event in the order of time
     private PriorityQueue<ScheduleEvent> eventQueue;
 
+    private double time;
+
     /**
      * Private constructor for this singleton class
      */
@@ -31,6 +33,7 @@ public class Scheduler implements Runnable {
         }
 
         eventQueue = new PriorityQueue<>();
+        time = 0;
     }
 
     public static Scheduler getInstance() {
@@ -60,20 +63,22 @@ public class Scheduler implements Runnable {
      * Add vehicleProcess to the south vehicleProcess queue of certain street.
      *
      * @param street the street number
-     * @param car the vehicleProcess
+     * @param veh the vehicleProcess
      */
-    public void addVehicleToSouthQueue(int street, VehicleProcess car) {
+    public void addVehicleToSouthQueue(int street, VehicleProcess veh) {
 
     }
 
     /**
      * Add a scheduler event to the event queue.
      *
-     * @param car the source object of the event
-     * @param name the name of the event
-     * @param time the scheduled time
+     * @param event event to be added
      */
-    public void addSchedulerEvent(ScheduleEvent event) {
+    public synchronized void addSchedulerEvent(ScheduleEvent event) {
 
+    }
+
+    public synchronized double getTime() {
+        return time;
     }
 }
