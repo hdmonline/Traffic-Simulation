@@ -18,7 +18,16 @@ public class Scheduler implements Runnable {
     private ArrayList<LinkedList<VehicleProcess>> southVehicleQueues;
 
     // Event queue to store all the event in the order of time
-    private PriorityQueue<ScheduleEvent> eventQueue;
+    private PriorityQueue<Event> eventQueue;
+
+    // Vehicles generated from flow generator
+    private ArrayList<VehicleProcess> enteringVehs = new ArrayList<>();
+    // Vehicles exited the measuring area
+    private ArrayList<VehicleProcess> finishedVehs = new ArrayList<>();
+
+    private EventHandler eventHandler;
+
+    private FileIo ioHandler;
 
     private double time;
 
@@ -31,7 +40,8 @@ public class Scheduler implements Runnable {
         for (int i = 0; i < 4; i++) {
             southVehicleQueues.set(i, new LinkedList<>());
         }
-
+        ioHandler = new FileIo();
+        eventHandler = EventHandler.getInstance();
         eventQueue = new PriorityQueue<>();
         time = 0;
     }
@@ -43,20 +53,41 @@ public class Scheduler implements Runnable {
         return instance;
     }
 
-    public static void main() {
+    public static void main(String args[]) {
         Scheduler scheduler = getInstance();
+        Thread schedulerThread = new Thread(scheduler);
+
+        // read the input file and generate the entering vehs/flow
+        scheduler.ioHandler.readFile();
+        scheduler.ioHandler.generateFlow();
+        scheduler.initializeEventQueue();
+
+        // Run the main thread
+        schedulerThread.start();
     }
 
     @Override
-    public void run() {
-
+    public synchronized void run() {
+        while(!eventQueue.isEmpty()) {
+            Event currEvent = eventQueue.poll();
+            time = currEvent.time;
+            ioHandler.writeEvent(currEvent);
+            eventHandler.handleEvent(currEvent);
+        }
     }
 
     /**
-     * Start event.
+     * Add start events of each vehicles to the event queue
      */
-    public synchronized void start() {
+    private void initializeEventQueue() {
+        if (enteringVehs.isEmpty()) {
+            return;
+        }
 
+        for (VehicleProcess veh : enteringVehs) {
+            Thread vehThread = new Thread(veh);
+            addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh, vehThread));
+        }
     }
 
     /**
@@ -74,11 +105,19 @@ public class Scheduler implements Runnable {
      *
      * @param event event to be added
      */
-    public synchronized void addSchedulerEvent(ScheduleEvent event) {
-
+    public synchronized void addScheduleEvent(Event event) {
+        eventQueue.add(event);
     }
 
     public synchronized double getTime() {
         return time;
+    }
+
+    public ArrayList<VehicleProcess> getEnteringVehs() {
+        return enteringVehs;
+    }
+
+    public ArrayList<VehicleProcess> getFinishedVehs() {
+        return finishedVehs;
     }
 }
