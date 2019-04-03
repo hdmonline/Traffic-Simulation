@@ -19,9 +19,27 @@ public class Parameter {
     static final double AFTER_INTERSECTION_5 = 3;
 
     // Waiting time for going through a traffic light per vehicle in (s)
-    static final double W = 1.0;
+    private static final double W = 1.0;
 
     static final String INPUT_FILE = "event_input.txt";
     static final String OUTPUT_VEHICLE_FILE = "event_vehicles.txt";
     static final String OUTPUT_EVENT_FILE = "event_events.txt";
+
+    public static double getBetweenIntersectionTime(int intersection) {
+        switch(intersection) {
+            case 1:
+                return BETWEEN_START_INTERSECTION1;
+            case 2:
+                return BETWEEN_INTERSECTION_12;
+            case 3:
+                return BETWEEN_INTERSECTION_23;
+            case 5:
+                return BETWEEN_INTERSECTION_35;
+            case 6:
+                return AFTER_INTERSECTION_5;
+            default:
+                System.out.println("Error - EventHandler.handleEvent: Wrong Intersection!");
+                return -1;
+        }
+    }
 }
