@@ -106,7 +106,7 @@ public class FileIo {
         }
 
         try {
-            ArrayList<VehicleProcess> finishedVehs = ProcessEvents.getFinishedVehs();
+            ArrayList<VehicleProcess> finishedVehs = Scheduler.getInstance().getFinishedVehs();
             if (finishedVehs.size() > 0) {
                 VehicleProcess veh;
                 for (int i = 0; i < finishedVehs.size() - 1; i++) {
@@ -146,7 +146,7 @@ public class FileIo {
                 double lowerLimit = i == 0 ? 0 : inter[i - 1];
                 double interval = rand.nextDouble() * (inter[i] - lowerLimit) + lowerLimit;
                 time += interval;
-                ProcessEvents.getEnteringVehs().add(new Vehicle(
+                Scheduler.getInstance().getEnteringVehs().add(new VehicleProcess(
                         id++, time, intersection, direction));
             }
         }
