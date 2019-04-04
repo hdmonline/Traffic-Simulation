@@ -99,34 +99,6 @@ public class EventHandler {
         isGreenSouth[index] = false;
     }
 
-   /* private void arrivalSouth(int intersection, double time, Vehicle veh) {
-        int index = getIntersectionIndex(intersection);
-        int numVehicleToPass = southVehs.get(index).size();
-        TrafficLight tl = trafficLights[index];
-        // Number of vehicles can go through the traffic light in an entire green light duration
-        double greenPass = Math.floor(tl.getSouthThroughGreen() / Parameter.W);
-        double departureTime;
-
-        southVehs.get(index).addFirst(veh);
-        // Tell if the light is green.
-        if (!tl.isThroughGreen(time)) {
-            double numGreens = Math.floor(numVehicleToPass / greenPass);
-            double resPass = numVehicleToPass % greenPass;
-            departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * Parameter.W;
-        } else {
-            double currPass = Math.floor((tl.nextSouthThroughRed(time) - time)/ Parameter.W);
-            // If all vehicles can go through the traffic light in current green duration
-            if (currPass >= numVehicleToPass) {
-                departureTime = time + numVehicleToPass * Parameter.W;
-            } else {
-                numVehicleToPass -= currPass;
-                double numGreens = Math.floor(numVehicleToPass / greenPass);
-                double resPass = numVehicleToPass % greenPass;
-                departureTime = tl.nextSouthThroughGreen(time, numGreens) + resPass * Parameter.W;
-            }
-        }
-        ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, Direction.N, veh));
-    }*/
 
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
@@ -158,30 +130,6 @@ public class EventHandler {
      * @param veh current vehicle
      */
     // TODO: schedule next departure if the queue is not empty.
-/*
-    private void departure(int intersection, double time, Vehicle veh) {
-        // Last departure -> exit
-        int nextIntersection;
-        LinkedList<Vehicle> queue = southVehs.get(getIntersectionIndex(intersection));
-
-        // Check the departing vehicle for debugging.
-        Vehicle check = queue.getLast();
-        assert check.equals(veh);
-
-        queue.removeLast();
-        if (intersection == 5) {
-            veh.endTime = time + getBetweenIntersectionTime(intersection);
-            veh.exitIntersection = intersection;
-            veh.exitDirection = Direction.N;
-            ProcessEvents.addFinishedvehs(veh);
-            return;
-        }
-
-        nextIntersection = intersection == 3 ? 5 : intersection + 1;
-        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
-    }
-*/
-
     private void departure(int intersection, double time, Vehicle veh) {
         // Last departure -> exit
         int nextIntersection;
