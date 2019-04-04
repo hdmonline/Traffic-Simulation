@@ -34,7 +34,11 @@ public class Event implements Comparable<Event> {
         str += type + " ";
         str += intersection + " ";
         str += direction + " ";
-        str += vehicle.id;
+        if (vehicle == null) {
+            str += -1;
+        } else {
+            str += vehicle.id;
+        }
         return str;
     }
 

@@ -108,7 +108,6 @@ public class EventHandler {
             // nextArrivalTime = getBetweenIntersectionTime(intersection) + Parameter.W;
             // ProcessEvents.getEventQueue().add(new Event(nextArrivalTime, EventType.Arrival, intersection+1, Direction.S, veh));
             ProcessEvents.getEventQueue().add(new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, veh));
-        } else {
             southVehs.get(index).addFirst(veh);
         }
     }
