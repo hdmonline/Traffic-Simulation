@@ -11,7 +11,7 @@ public class Parameter {
     static final double GENERATING_VEHS_TIME = 100 * 60;
 
     // Simulation time
-    static final double SIMULATION_TIME = 15 * 60;
+    static final double SIMULATION_TIME = 100 * 60;
 
     // Travelling time from starting point to Intersection 1
     static final double BETWEEN_START_INTERSECTION1 = 15;

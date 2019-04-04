@@ -102,13 +102,13 @@ public class EventHandler {
 
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
+        southVehs.get(index).addFirst(veh);
         int numInQuene = southVehs.get(index).size();
         double nextArrivalTime;
         if (numInQuene == 1 && isGreenSouth[index]) {
             // nextArrivalTime = getBetweenIntersectionTime(intersection) + Parameter.W;
             // ProcessEvents.getEventQueue().add(new Event(nextArrivalTime, EventType.Arrival, intersection+1, Direction.S, veh));
-            ProcessEvents.getEventQueue().add(new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, veh));
-            southVehs.get(index).addFirst(veh);
+            ProcessEvents.getEventQueue().add(new Event(time + Parameter.W, EventType.Departure, intersection, Direction.N, veh));
         }
     }
 
@@ -148,7 +148,7 @@ public class EventHandler {
             queue.removeLast();
             if (!queue.isEmpty()) {
                 Vehicle firstInQueue = queue.getLast();
-                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, firstInQueue);
+                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.N, firstInQueue);
                 ProcessEvents.getEventQueue().add(depart);
             }
         }
