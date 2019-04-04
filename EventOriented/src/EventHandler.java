@@ -22,7 +22,8 @@ public class EventHandler {
      * Private constructor for this singleton class
      */
     private EventHandler() {
-        // Initialize the vehicle queues for each traffic light and isGreenSouth
+        // Initialize the vehicle queues for each traffic light
+        // Initialize isGreenSouth in each intersection
         southVehs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             southVehs.add(new LinkedList<>());
@@ -88,7 +89,7 @@ public class EventHandler {
         LinkedList<Vehicle> vehQueue = southVehs.get(index);
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
-            ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection,
+            ProcessEvents.getEventQueue().add(new Event(time + Parameter.W, EventType.Departure, intersection,
                     Direction.S, firstVeh));
         }
     }
@@ -129,11 +130,12 @@ public class EventHandler {
 
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
-        int numVehicleToPass = southVehs.get(index).size();
+        int numInQuene = southVehs.get(index).size();
         double nextArrivalTime;
-        if (numVehicleToPass == 0 && isGreenSouth[index]) {
-            nextArrivalTime = getBetweenIntersectionTime(intersection);
-            ProcessEvents.getEventQueue().add(new Event(nextArrivalTime, EventType.Arrival, intersection+1, Direction.N, veh));
+        if (numInQuene == 1 && isGreenSouth[index]) {
+            // nextArrivalTime = getBetweenIntersectionTime(intersection) + Parameter.W;
+            // ProcessEvents.getEventQueue().add(new Event(nextArrivalTime, EventType.Arrival, intersection+1, Direction.S, veh));
+            ProcessEvents.getEventQueue().add(new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, veh));
         } else {
             southVehs.get(index).addFirst(veh);
         }
@@ -203,23 +205,6 @@ public class EventHandler {
                 ProcessEvents.getEventQueue().add(depart);
             }
         }
-
-        // Check the departing vehicle for debugging.
-/*
-        Vehicle check = queue.getLast();
-        assert check.equals(veh);
-*/
-        queue.removeLast();
-        if (intersection == 5) {
-            veh.endTime = time + getBetweenIntersectionTime(intersection);
-            veh.exitIntersection = intersection;
-            veh.exitDirection = Direction.N;
-            ProcessEvents.addFinishedvehs(veh);
-            return;
-        }
-
-        nextIntersection = intersection == 3 ? 5 : intersection + 1;
-        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
     }
 
     private int getIntersectionIndex(int intersection) {
