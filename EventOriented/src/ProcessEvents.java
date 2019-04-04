@@ -27,7 +27,7 @@ public class ProcessEvents {
         ioHandler.generateFlow();
 
         EventHandler handler = EventHandler.getInstance();
-        initializeEventQueue();
+        initializeEventQueue(handler);
 
         // processing loop
         Iterator itr = eventQueue.iterator();
@@ -48,7 +48,7 @@ public class ProcessEvents {
     }
 
     // TODO: add traffic light events
-    private static void initializeEventQueue() {
+    private static void initializeEventQueue(EventHandler eventHandler) {
         if (enteringVehs.isEmpty()) {
             return;
         }
@@ -62,8 +62,7 @@ public class ProcessEvents {
         }
 
         // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
-        EventHandler handler = EventHandler.getInstance();
-        TrafficLight[] trafficLights = handler.getTrafficLights();
+        TrafficLight[] trafficLights = eventHandler.getTrafficLights();
 
         for (TrafficLight tl : trafficLights) {
             tl.generateGreenSouth(0, tl.getId());

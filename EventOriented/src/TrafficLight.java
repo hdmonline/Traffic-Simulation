@@ -56,53 +56,6 @@ public class TrafficLight {
         }
     }
 
-    public double nextSouthThroughGreen(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numGreens = mod < SOUTH_LEFT_TOTAL ? Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
-        numGreens += num;
-        return numGreens * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
-    }
-
-    public double nextSouthThroughGreen(double time) {
-        return nextSouthThroughGreen(time, 0);
-    }
-
-    public double nextSouthThroughRed(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numReds = mod < (SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION) ?  Math.floor(time / SOUTH_TOTAL) :
-                Math.floor(time / SOUTH_TOTAL) + 1;
-        numReds += num;
-        return numReds * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
-    }
-
-    public double nextSouthThroughRed(double time) {
-        return nextSouthThroughRed(time, 0);
-    }
-
-    public boolean isThroughGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
-    }
-
-    public boolean isThroughRed(double time) {
-        return !isThroughGreen(time);
-    }
-
-    public boolean isLeftGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
-    }
-
-    public boolean isLeftRed(double time) {
-        return !isLeftGreen(time);
-    }
-
     // Getters
     public int getId() {
         return id;
