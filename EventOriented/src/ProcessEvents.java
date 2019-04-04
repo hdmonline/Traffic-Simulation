@@ -61,15 +61,15 @@ public class ProcessEvents {
             eventQueue.add(firstEvent);
         }
 
-        // Initialize turnRed and turnGreen events during the whole simulation time
-        double time = now;
-        Vehicle veh = enteringVehs.get(0);
-        // Generate TurnGreen event
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnGreen = new Event(time, EventType.TurnGreen, 1, Direction.S, veh);
-            eventQueue.add(turnGreen);
-            time +=
+        // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
+        EventHandler handler = EventHandler.getInstance();
+        TrafficLight[] trafficLights = handler.getTrafficLights();
+
+        for (TrafficLight tl : trafficLights) {
+            tl.generateGreenSouth(0, tl.getId());
+            tl.generateRedSouth(tl.getSouthLeftTotal() + tl.getSouthThroughGreen(), tl.getId());
         }
+
         // Delete enteringVehs
         enteringVehs = null;
         System.gc();

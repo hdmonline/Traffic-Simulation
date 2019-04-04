@@ -98,7 +98,7 @@ public class EventHandler {
         isGreenSouth[index] = false;
     }
 
-    private void arrivalSouth(int intersection, double time, Vehicle veh) {
+   /* private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         int numVehicleToPass = southVehs.get(index).size();
         TrafficLight tl = trafficLights[index];
@@ -125,6 +125,18 @@ public class EventHandler {
             }
         }
         ProcessEvents.getEventQueue().add(new Event(departureTime, EventType.Departure, intersection, Direction.N, veh));
+    }*/
+
+    private void arrivalSouth(int intersection, double time, Vehicle veh) {
+        int index = getIntersectionIndex(intersection);
+        int numVehicleToPass = southVehs.get(index).size();
+        double nextArrivalTime;
+        if (numVehicleToPass == 0 && isGreenSouth[index]) {
+            nextArrivalTime = getBetweenIntersectionTime(intersection);
+            ProcessEvents.getEventQueue().add(new Event(nextArrivalTime, EventType.Arrival, intersection+1, Direction.N, veh));
+        } else {
+            southVehs.get(index).addFirst(veh);
+        }
     }
 
     // TODO: handle arrival from other directions (west/east)
@@ -144,6 +156,7 @@ public class EventHandler {
      * @param veh current vehicle
      */
     // TODO: schedule next departure if the queue is not empty.
+/*
     private void departure(int intersection, double time, Vehicle veh) {
         // Last departure -> exit
         int nextIntersection;
@@ -153,6 +166,49 @@ public class EventHandler {
         Vehicle check = queue.getLast();
         assert check.equals(veh);
 
+        queue.removeLast();
+        if (intersection == 5) {
+            veh.endTime = time + getBetweenIntersectionTime(intersection);
+            veh.exitIntersection = intersection;
+            veh.exitDirection = Direction.N;
+            ProcessEvents.addFinishedvehs(veh);
+            return;
+        }
+
+        nextIntersection = intersection == 3 ? 5 : intersection + 1;
+        ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
+    }
+*/
+
+    private void departure(int intersection, double time, Vehicle veh) {
+        // Last departure -> exit
+        int nextIntersection;
+        int index = getIntersectionIndex(intersection);
+        LinkedList<Vehicle> queue = southVehs.get(index);
+
+        if (isGreenSouth[index]) {
+            if (intersection == 5) {
+                veh.endTime = time + getBetweenIntersectionTime((intersection));
+                veh.exitIntersection = intersection;
+                veh.exitDirection = Direction.N;
+                ProcessEvents.addFinishedvehs(veh);
+            } else {
+                nextIntersection = intersection == 3 ? 5 : intersection + 1;
+                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
+            }
+            queue.removeLast();
+            if (!queue.isEmpty()) {
+                Vehicle firstInQueue = queue.getLast();
+                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, firstInQueue);
+                ProcessEvents.getEventQueue().add(depart);
+            }
+        }
+
+        // Check the departing vehicle for debugging.
+/*
+        Vehicle check = queue.getLast();
+        assert check.equals(veh);
+*/
         queue.removeLast();
         if (intersection == 5) {
             veh.endTime = time + getBetweenIntersectionTime(intersection);
@@ -196,5 +252,9 @@ public class EventHandler {
                 System.out.println("Error - EventHandler.handleEvent: Wrong Intersection!");
                 return -1;
         }
+    }
+
+    public TrafficLight[] getTrafficLights() {
+        return trafficLights;
     }
 }

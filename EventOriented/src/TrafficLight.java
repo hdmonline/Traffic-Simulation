@@ -36,6 +36,26 @@ public class TrafficLight {
      * @param num number of green lights to skip
      * @return the next green light time
      */
+
+    // Generate the flow of TurnGreen & TurnRed events in northbound dir
+    public void generateGreenSouth(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreen, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
+    public void generateRedSouth(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRed, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
     public double nextSouthThroughGreen(double time, double num) {
         double mod = time % SOUTH_TOTAL;
         double numGreens = mod < SOUTH_LEFT_TOTAL ? Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
