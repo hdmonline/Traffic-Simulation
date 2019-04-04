@@ -15,15 +15,18 @@ public class EventHandler {
     // Vehicle queues, First -> In, Last -> Out
     private ArrayList<LinkedList<Vehicle>> southVehs;
     private TrafficLight[] trafficLights;
+    // Status i.e. isGreen of triffic northbound traffic lights at the four intersections
+    private boolean[] isGreenSouth = new boolean[4];
 
     /**
      * Private constructor for this singleton class
      */
     private EventHandler() {
-        // Initialize the vehicle queues for each traffic light
+        // Initialize the vehicle queues for each traffic light and isGreenSouth
         southVehs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             southVehs.add(new LinkedList<>());
+            isGreenSouth[i] = false;
         }
 
         // Initialize the traffic lights
@@ -41,7 +44,7 @@ public class EventHandler {
         return instance;
     }
 
-    // TODO: add TurnRed & TurnGreen
+
     public void handleEvent(Event event) {
         switch(event.type) {
             case Arrival:
@@ -49,6 +52,12 @@ public class EventHandler {
                 break;
             case Departure:
                 departure(event.intersection, event.time, event.vehicle);
+                break;
+            case TurnGreen:
+                turnGreen(event.intersection, event.time, event.direction);
+                break;
+            case TurnRed:
+                turnRed(event.intersection, event.direction);
                 break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
@@ -73,6 +82,22 @@ public class EventHandler {
 
     // TODO: may need to handle west/east departures
     // TODO: follow the logic of the example in the slides instead of hard coding the departure time.
+    private void turnGreen(int intersection, double time, Direction direction) {
+        int index = getIntersectionIndex(intersection);
+        isGreenSouth[index] = true;
+        LinkedList<Vehicle> vehQueue = southVehs.get(index);
+        if (!vehQueue.isEmpty()) {
+            Vehicle firstVeh = vehQueue.getLast();
+            ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection,
+                    Direction.S, firstVeh));
+        }
+    }
+
+    private void turnRed(int intersection, Direction direction) {
+        int index = getIntersectionIndex(intersection);
+        isGreenSouth[index] = false;
+    }
+
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         int numVehicleToPass = southVehs.get(index).size();

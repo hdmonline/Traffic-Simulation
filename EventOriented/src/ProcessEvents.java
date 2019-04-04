@@ -60,6 +60,16 @@ public class ProcessEvents {
             firstEvent = new Event(veh.startTime + delay, EventType.Arrival, veh.entranceIntersection, veh.entranceDirection, veh);
             eventQueue.add(firstEvent);
         }
+
+        // Initialize turnRed and turnGreen events during the whole simulation time
+        double time = now;
+        Vehicle veh = enteringVehs.get(0);
+        // Generate TurnGreen event
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen = new Event(time, EventType.TurnGreen, 1, Direction.S, veh);
+            eventQueue.add(turnGreen);
+            time +=
+        }
         // Delete enteringVehs
         enteringVehs = null;
         System.gc();
