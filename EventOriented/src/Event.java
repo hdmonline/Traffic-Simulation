@@ -21,13 +21,24 @@ public class Event implements Comparable<Event> {
         this.vehicle = car;
     }
 
+    public Event(double time, EventType type, int intersection, Direction direction) {
+        this.time = time;
+        this.type = type;
+        this.intersection = intersection;
+        this.direction = direction;
+    }
+
     public String toString() {
         String str = "";
         str += String.format("%.2f", time) + " ";
         str += type + " ";
         str += intersection + " ";
         str += direction + " ";
-        str += vehicle.id;
+        if (vehicle == null) {
+            str += -1;
+        } else {
+            str += vehicle.id;
+        }
         return str;
     }
 

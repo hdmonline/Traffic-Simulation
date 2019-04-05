@@ -36,51 +36,60 @@ public class TrafficLight {
      * @param num number of green lights to skip
      * @return the next green light time
      */
-    public double nextSouthThroughGreen(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numGreens = mod < SOUTH_LEFT_TOTAL ? Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
-        numGreens += num;
-        return numGreens * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
+
+    // Generate the flow of TurnGreenSouth & TurnRedSouth events in northbound dir
+    public void generateGreenSouth(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreenSouth, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
-    public double nextSouthThroughGreen(double time) {
-        return nextSouthThroughGreen(time, 0);
+    public void generateRedSouth(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRedSouth, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
-    public double nextSouthThroughRed(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numReds = mod < (SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION) ?  Math.floor(time / SOUTH_TOTAL) :
-                Math.floor(time / SOUTH_TOTAL) + 1;
-        numReds += num;
-        return numReds * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
+    public void generateGreenEast(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreenEast, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
-    public double nextSouthThroughRed(double time) {
-        return nextSouthThroughRed(time, 0);
+    public void generateRedeast(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRedEast, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
-    public boolean isThroughGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
+    public void generateGreenWest(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreenWest, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
-    public boolean isThroughRed(double time) {
-        return !isThroughGreen(time);
-    }
-
-    public boolean isLeftGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
-    }
-
-    public boolean isLeftRed(double time) {
-        return !isLeftGreen(time);
+    public void generateRedWest(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRedWest, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
     }
 
     // Getters

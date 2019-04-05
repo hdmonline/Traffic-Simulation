@@ -5,9 +5,16 @@
  *
  * The enum class of event names.
  */
-// TODO: add TurnRed & TurnGreen
+
 public enum EventType {
     Arrival,
-    Departure
+    Departure,
+    TurnRedSouth,
+    TurnGreenSouth,
+    TurnRedEast,
+    TurnGreenEast,
+    TurnRedWest,
+    TurnGreenWest,
+    Exit
 }
 
