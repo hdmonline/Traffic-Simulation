@@ -9,7 +9,12 @@
 public enum EventType {
     Arrival,
     Departure,
-    TurnRed,
-    TurnGreen
+    TurnRedSouth,
+    TurnGreenSouth,
+    TurnRedEast,
+    TurnGreenEast,
+    TurnRedWest,
+    TurnGreenWest,
+    Exit
 }
 

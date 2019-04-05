@@ -37,10 +37,10 @@ public class TrafficLight {
      * @return the next green light time
      */
 
-    // Generate the flow of TurnGreen & TurnRed events in northbound dir
+    // Generate the flow of TurnGreenSouth & TurnRedSouth events in northbound dir
     public void generateGreenSouth(double time, int id) {
         while (time < Parameter.SIMULATION_TIME) {
-            Event turnGreen  = new Event(time, EventType.TurnGreen, id, Direction.S);
+            Event turnGreen  = new Event(time, EventType.TurnGreenSouth, id, Direction.S);
             ProcessEvents.getEventQueue().add(turnGreen);
             double itrTime = getSouthTotal();
             time += itrTime;
@@ -49,7 +49,43 @@ public class TrafficLight {
 
     public void generateRedSouth(double time, int id) {
         while (time < Parameter.SIMULATION_TIME) {
-            Event turnRed = new Event(time, EventType.TurnRed, id, Direction.S);
+            Event turnRed = new Event(time, EventType.TurnRedSouth, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
+    public void generateGreenEast(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreenEast, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
+    public void generateRedeast(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRedEast, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnRed);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
+    public void generateGreenWest(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnGreen  = new Event(time, EventType.TurnGreenWest, id, Direction.S);
+            ProcessEvents.getEventQueue().add(turnGreen);
+            double itrTime = getSouthTotal();
+            time += itrTime;
+        }
+    }
+
+    public void generateRedWest(double time, int id) {
+        while (time < Parameter.SIMULATION_TIME) {
+            Event turnRed = new Event(time, EventType.TurnRedWest, id, Direction.S);
             ProcessEvents.getEventQueue().add(turnRed);
             double itrTime = getSouthTotal();
             time += itrTime;
