@@ -64,8 +64,8 @@ public class ProcessEvents {
         // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
         TrafficLight[] trafficLights = eventHandler.getTrafficLights();
         for (TrafficLight tl : trafficLights) {
-            tl.generateGreenSouth(0, tl.getId());
-            tl.generateRedSouth(tl.getSouthLeftTotal() + tl.getSouthThroughGreen(), tl.getId());
+            tl.generateGreenSouth(0);
+            tl.generateRedSouth(tl.getSouthLeftTotal() + tl.getSouthThroughGreen());
         }
 
         // Delete enteringVehs

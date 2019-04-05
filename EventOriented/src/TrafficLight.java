@@ -38,7 +38,7 @@ public class TrafficLight {
      */
 
     // Generate the flow of TurnGreenSouth & TurnRedSouth events in northbound dir
-    public void generateGreenSouth(double time, int id) {
+    public void generateGreenSouth(double time) {
         while (time < Parameter.SIMULATION_TIME) {
             Event turnGreen  = new Event(time, EventType.TurnGreenSouth, id, Direction.S);
             ProcessEvents.getEventQueue().add(turnGreen);
@@ -47,7 +47,7 @@ public class TrafficLight {
         }
     }
 
-    public void generateRedSouth(double time, int id) {
+    public void generateRedSouth(double time) {
         while (time < Parameter.SIMULATION_TIME) {
             Event turnRed = new Event(time, EventType.TurnRedSouth, id, Direction.S);
             ProcessEvents.getEventQueue().add(turnRed);
