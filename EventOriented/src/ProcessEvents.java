@@ -47,6 +47,7 @@ public class ProcessEvents {
         return enteringVehs;
     }
 
+    // TODO: add traffic light events
     private static void initializeEventQueue() {
         if (enteringVehs.isEmpty()) {
             return;
