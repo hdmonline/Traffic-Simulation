@@ -56,24 +56,26 @@ class Ca {
 
     }
 
-    // Put any vehicle entering the tracking area to the lanes
+    // Put any vehicle entering the tracking area to the lane
     private static void enteringVehs() {
         if (enteringVehs.isEmpty()) {
             return;
         }
-        int i = enteringVehs.size() - 1;
-        Vehicle veh = enteringVehs.get(0);
-        while (veh.startTime <= now) {
-            // Remove vehicle from enteringVehs
-            enteringVehs.remove(0);
-            // Put the vehicle on road
-            veh.startTime = now;
-            vehs.add(veh);
-            if (enteringVehs.isEmpty()) {
-                break;
+        Vehicle veh;
+        ArrayList<Vehicle> found = new ArrayList<>();
+        for (int i = 0; i < enteringVehs.size(); i++) {
+            veh = enteringVehs.get(i);
+            // Check if the entering pos is taken or not.
+            if (posAvailable(veh.pos, veh.lane)) {
+                // Remove vehicle from enteringVehs
+                enteringVehs.remove(veh);
+                // Put the vehicle on road
+                veh.startTime = now;
+                vehs.add(veh);
+                found.add(veh);
             }
-            veh = enteringVehs.get(0);
         }
+        enteringVehs.removeAll(found);
     }
 
     /**
@@ -252,6 +254,10 @@ class Ca {
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
         }
+    }
+
+    private static boolean posAvailable(int pos, int lane) {
+        return vehs.stream().filter(v -> v.pos == pos && v.lane == lane).findFirst().isPresent();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {
