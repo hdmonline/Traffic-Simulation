@@ -49,8 +49,8 @@ public class TrafficLight {
 
     public double nextSouthThroughRed(double time, double num) {
         double mod = time % SOUTH_TOTAL;
-        double numReds = mod < (SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION) ?  Math.floor(time / SOUTH_TOTAL) :
-                Math.floor(time / SOUTH_TOTAL) + 1;
+        double numReds = mod < (SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION) ?
+                Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
         numReds += num;
         return numReds * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
     }

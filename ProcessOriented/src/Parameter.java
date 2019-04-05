@@ -21,9 +21,9 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     private static final double W = 1.0;
 
-    static final String INPUT_FILE = "event_input.txt";
-    static final String OUTPUT_VEHICLE_FILE = "event_vehicles.txt";
-    static final String OUTPUT_EVENT_FILE = "event_events.txt";
+    static final String INPUT_FILE = "process_input.txt";
+    static final String OUTPUT_VEHICLE_FILE = "process_vehicles.txt";
+    static final String OUTPUT_EVENT_FILE = "process_events.txt";
 
     public static double getBetweenIntersectionTime(int intersection) {
         switch(intersection) {

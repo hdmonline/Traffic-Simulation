@@ -8,22 +8,10 @@
  */
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class Scheduler implements Runnable {
     private static Scheduler instance = null;
-
-    // VehicleProcess queues, First -> In, Last -> Out
-    private ArrayList<LinkedList<VehicleProcess>> southVehicleQueues;
-
-    // Event queue to store all the event in the order of time
-    private PriorityQueue<Event> eventQueue;
-
-    // Vehicles generated from flow generator
-    private ArrayList<VehicleProcess> enteringVehs = new ArrayList<>();
-    // Vehicles exited the measuring area
-    private ArrayList<VehicleProcess> finishedVehs = new ArrayList<>();
 
     private EventHandler eventHandler;
 
@@ -31,18 +19,18 @@ public class Scheduler implements Runnable {
 
     private double time;
 
+    ArrayList<VehicleProcess> enteringVehs;
+    ArrayList<VehicleProcess> finishedVehs;
+
+
     /**
      * Private constructor for this singleton class
      */
     private Scheduler() {
-        // Initialize the vehicleProcess queues for each traffic light
-        southVehicleQueues = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            southVehicleQueues.set(i, new LinkedList<>());
-        }
         ioHandler = new FileIo();
         eventHandler = EventHandler.getInstance();
-        eventQueue = new PriorityQueue<>();
+        enteringVehs = eventHandler.getEnteringVehs();
+        finishedVehs = eventHandler.getFinishedVehs();
         time = 0;
     }
 
@@ -68,11 +56,25 @@ public class Scheduler implements Runnable {
 
     @Override
     public synchronized void run() {
+        // TODO: Handle FEL, then PEL
+        PriorityQueue<Event> eventQueue = eventHandler.getEventQueue();
         while(!eventQueue.isEmpty()) {
             Event currEvent = eventQueue.poll();
             time = currEvent.time;
             ioHandler.writeEvent(currEvent);
             eventHandler.handleEvent(currEvent);
+
+            // Traverse the waiting vehicles
+            for (Event event : eventHandler.getWaitingVehs()) {
+                eventHandler.checkWait(event);
+            }
+
+            // Wait for notifying from other processes
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,44 +82,17 @@ public class Scheduler implements Runnable {
      * Add start events of each vehicles to the event queue
      */
     private void initializeEventQueue() {
-        if (enteringVehs.isEmpty()) {
+        if (eventHandler.getEnteringVehs().isEmpty()) {
             return;
         }
 
         for (VehicleProcess veh : enteringVehs) {
-            Thread vehThread = new Thread(veh);
-            addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh, vehThread));
+            // Thread vehThread = new Thread(veh);
+            eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh));
         }
     }
 
-    /**
-     * Add vehicleProcess to the south vehicleProcess queue of certain street.
-     *
-     * @param street the street number
-     * @param veh the vehicleProcess
-     */
-    public void addVehicleToSouthQueue(int street, VehicleProcess veh) {
-
-    }
-
-    /**
-     * Add a scheduler event to the event queue.
-     *
-     * @param event event to be added
-     */
-    public synchronized void addScheduleEvent(Event event) {
-        eventQueue.add(event);
-    }
-
-    public synchronized double getTime() {
+    public double getTime() {
         return time;
-    }
-
-    public ArrayList<VehicleProcess> getEnteringVehs() {
-        return enteringVehs;
-    }
-
-    public ArrayList<VehicleProcess> getFinishedVehs() {
-        return finishedVehs;
     }
 }

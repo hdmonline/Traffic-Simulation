@@ -1,3 +1,5 @@
+import java.util.PriorityQueue;
+
 /**
  * VehicleProcess.java
  * @author Group 41: Chong Ye, Dongmin Han, Shan Xiong
@@ -18,6 +20,8 @@ public class VehicleProcess implements Runnable {
     boolean pause;
     boolean entered;
 
+    private EventHandler eventHandler;
+
     public VehicleProcess(int id) {
         this.id = id;
         pause = false;
@@ -29,6 +33,7 @@ public class VehicleProcess implements Runnable {
         this.startTime = startTime;
         this.entranceIntersection = entranceIntersection;
         this.entranceDirection = entranceDirection;
+        eventHandler = EventHandler.getInstance();
         pause = false;
     }
 
@@ -78,21 +83,26 @@ public class VehicleProcess implements Runnable {
                     delay = entered ? Parameter.getBetweenIntersectionTime(intersection) : 0;
                 }
                 // Schedule resume event
-                scheduler.addScheduleEvent(new Event(scheduler.getTime() + delay,
+                eventHandler.addScheduleEvent(new Event(scheduler.getTime() + delay,
                         EventType.Resume,
                         intersection,
                         direction,
-                        this,
-                        currThread));
+                        this));
                 // Wait for resuming
+                synchronized(scheduler){
+                    scheduler.notify();
+                }
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 entered = true;
-                scheduler.addScheduleEvent(new Event(scheduler.getTime(), EventType.WaitUntil, intersection, direction));
+                eventHandler.addScheduleEvent(new Event(scheduler.getTime(), EventType.WaitUntil, intersection, direction));
                 // Wait for being able to cross the intersection
+                synchronized(scheduler){
+                    scheduler.notify();
+                }
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -102,11 +112,10 @@ public class VehicleProcess implements Runnable {
         }
         // Exit to the North
         double delay = Parameter.AFTER_INTERSECTION_5;
-        scheduler.addScheduleEvent(new Event(scheduler.getTime() + delay,
+        eventHandler.addScheduleEvent(new Event(scheduler.getTime() + delay,
                 EventType.Exit,
                 5,
                 Direction.N,
-                this,
-                currThread));
+                this));
     }
 }
