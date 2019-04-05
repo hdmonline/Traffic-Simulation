@@ -64,18 +64,24 @@ public class Scheduler implements Runnable {
             ioHandler.writeEvent(currEvent);
             eventHandler.handleEvent(currEvent);
 
-            // Traverse the waiting vehicles
-            for (Event event : eventHandler.getWaitingVehs()) {
+            // Traverse the waiting vehicle events
+            for (Event event : eventHandler.getWaitingVehEvents()) {
                 eventHandler.checkWait(event);
             }
 
             // Wait for notifying from other processes
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (currEvent.type == EventType.Resume || currEvent.type == EventType.Enter) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+        // Write results to file
+        ioHandler.writeVehicles();
+        ioHandler.closeEvnetWriter();
     }
 
     /**
@@ -89,6 +95,13 @@ public class Scheduler implements Runnable {
         for (VehicleProcess veh : enteringVehs) {
             // Thread vehThread = new Thread(veh);
             eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh));
+        }
+
+        // TODO: generate light events.
+        // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
+        TrafficLight[] trafficLights = eventHandler.getTrafficLights();
+        for (TrafficLight tl : trafficLights) {
+            tl.generateLightEvents();
         }
     }
 

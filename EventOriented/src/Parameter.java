@@ -7,9 +7,6 @@
  */
 public class Parameter {
 
-    // Total time to generate vehs
-    static final double GENERATING_VEHS_TIME = 100 * 60;
-
     // Simulation time
     static final double SIMULATION_TIME = 100 * 60;
 

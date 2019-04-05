@@ -7,7 +7,6 @@
  */
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -136,7 +135,7 @@ public class FileIo {
             double[] cumu = distr.cumuProb;
             double[] inter = distr.interval;
             double r;
-            while (time < Parameter.GENERATING_VEHS_TIME) {
+            while (time < Parameter.SIMULATION_TIME) {
                 r = rand.nextDouble();
                 int i;
                 for (i = 0; i < cumu.length; i++) {

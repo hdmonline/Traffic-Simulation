@@ -22,7 +22,7 @@ public class EventHandler {
     // Event queue to store all the event in the order of time
     private PriorityQueue<Event> eventQueue;
     // Waiting vehicles queue
-    private LinkedList<Event> waitingVehs;
+    private LinkedList<Event> waitingVehEvents;
     // Vehicles generated from flow generator
     private ArrayList<VehicleProcess> enteringVehs = new ArrayList<>();
     // Vehicles exited the measuring area
@@ -39,6 +39,7 @@ public class EventHandler {
         }
 
         eventQueue = new PriorityQueue<>();
+        waitingVehEvents = new LinkedList<>();
 
         // Initialize traffic light status
         isGreenSouth = new boolean[4];
@@ -58,13 +59,13 @@ public class EventHandler {
         return instance;
     }
 
-    public void handleEvent(Event event) {
+    public synchronized void handleEvent(Event event) {
         switch(event.type) {
             case Enter:
                 startThread(event.veh);
                 break;
             case Resume:
-                synchronized(event.veh){
+                synchronized (event.veh) {
                     event.veh.notify();
                 }
                 break;
@@ -85,21 +86,41 @@ public class EventHandler {
         }
     }
 
-    private void startThread(VehicleProcess veh) {
+    private synchronized void startThread(VehicleProcess veh) {
         Thread vehThread = new Thread(veh);
         vehThread.start();
     }
 
-    private void waitUntil(Event event) {
-        waitingVehs.add(event);
-    }
-
-    public void checkWait(Event event) {
+    private synchronized void waitUntil(Event event) {
+        waitingVehEvents.addFirst(event);
         int index = getIntersectionIndex(event.intersection);
         switch(event.direction) {
             case S:
-                if (isGreenSouth[index] && !southVehs.get(index).isEmpty()) {
-                    addScheduleEvent(new Event(event.time + , EventType.Resume, event.veh));
+                southVehs.get(index).addFirst(event.veh);
+                break;
+            case N:
+                // TODO
+                break;
+            case W:
+                // TODO
+                break;
+            case E:
+                // TODO
+                break;
+            default:
+                System.out.println("Error - EventHandler.checkWait: Wrong Direction!");
+        }
+    }
+
+    public synchronized void checkWait(Event event) {
+        int index = getIntersectionIndex(event.intersection);
+        switch(event.direction) {
+            case S:
+                // If light is green and it is the first vehicle in the queue
+                if (isGreenSouth[index] && southVehs.get(index).indexOf(event.veh) == southVehs.get(index).size() - 1) {
+                    addScheduleEvent(new Event(Scheduler.getInstance().getTime() + Parameter.W, EventType.Resume, event.veh));
+                    southVehs.get(index).removeLast();
+                    waitingVehEvents.remove(event);
                 }
                 break;
             case N:
@@ -117,13 +138,14 @@ public class EventHandler {
     }
 
     // TODO:
-    private void exitArea(Event event) {
+    private synchronized void exitArea(Event event) {
         event.veh.endTime = event.time;
         event.veh.exitDirection = event.direction;
         event.veh.exitIntersection = event.intersection;
+        finishedVehs.add(event.veh);
     }
 
-    private void turnLight(EventType type, int intersection, Direction direction) {
+    private synchronized void turnLight(EventType type, int intersection, Direction direction) {
         boolean green;
         switch(type) {
             case TurnGreen:
@@ -152,7 +174,7 @@ public class EventHandler {
         }
     }
 
-    private int getIntersectionIndex(int intersection) {
+    private synchronized int getIntersectionIndex(int intersection) {
         switch(intersection) {
             case 1:
                 return 0;
@@ -189,7 +211,11 @@ public class EventHandler {
         return finishedVehs;
     }
 
-    public LinkedList<Event> getWaitingVehs() {
-        return waitingVehs;
+    public LinkedList<Event> getWaitingVehEvents() {
+        return waitingVehEvents;
+    }
+
+    public TrafficLight[] getTrafficLights() {
+        return trafficLights;
     }
 }

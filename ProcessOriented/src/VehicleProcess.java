@@ -89,7 +89,7 @@ public class VehicleProcess implements Runnable {
                         direction,
                         this));
                 // Wait for resuming
-                synchronized(scheduler){
+                synchronized (scheduler) {
                     scheduler.notify();
                 }
                 try {
@@ -98,9 +98,9 @@ public class VehicleProcess implements Runnable {
                     e.printStackTrace();
                 }
                 entered = true;
-                eventHandler.addScheduleEvent(new Event(scheduler.getTime(), EventType.WaitUntil, intersection, direction));
+                eventHandler.addScheduleEvent(new Event(scheduler.getTime(), EventType.WaitUntil, intersection, direction, this));
                 // Wait for being able to cross the intersection
-                synchronized(scheduler){
+                synchronized (scheduler) {
                     scheduler.notify();
                 }
                 try {

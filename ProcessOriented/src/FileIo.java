@@ -135,7 +135,7 @@ public class FileIo {
             double[] cumu = distr.cumuProb;
             double[] inter = distr.interval;
             double r;
-            while (time < Parameter.GENERATING_VEHS_TIME) {
+            while (time < Parameter.SIMULATION_TIME) {
                 r = rand.nextDouble();
                 int i;
                 for (i = 0; i < cumu.length; i++) {

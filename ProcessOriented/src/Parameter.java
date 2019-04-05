@@ -7,8 +7,8 @@
  */
 public class Parameter {
 
-    // Total time to generate vehs
-    static final double GENERATING_VEHS_TIME = 100 * 60;
+    // Simulation time
+    static final double SIMULATION_TIME = 2 * 60;
 
     // Travelling time from starting point to Intersection 1
     static final double BETWEEN_START_INTERSECTION1 = 15;
@@ -19,7 +19,7 @@ public class Parameter {
     static final double AFTER_INTERSECTION_5 = 3;
 
     // Waiting time for going through a traffic light per vehicle in (s)
-    private static final double W = 1.0;
+    static final double W = 1.0;
 
     static final String INPUT_FILE = "process_input.txt";
     static final String OUTPUT_VEHICLE_FILE = "process_vehicles.txt";

@@ -8,7 +8,7 @@
 
 
 public class TrafficLight {
-    private int id;
+    private int intersection;
     private final double SOUTH_THROUGH_RED_DURATION;
     private final double SOUTH_THROUGH_GREEN_DURATION;
     private final double SOUTH_LEFT_RED_DURATION;
@@ -17,8 +17,8 @@ public class TrafficLight {
     private final double SOUTH_THROUGH_TOTAL;
     private final double SOUTH_TOTAL;
 
-    public TrafficLight(int id, double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
-        this.id = id;
+    public TrafficLight(int intersection,  double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
+        this.intersection = intersection;
         SOUTH_THROUGH_GREEN_DURATION = southThroughGreen;
         SOUTH_THROUGH_RED_DURATION = southThroughRed;
         SOUTH_LEFT_GREEN_DURATION = southLeftGreen;
@@ -28,64 +28,19 @@ public class TrafficLight {
         SOUTH_TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
     }
 
-    /**
-     * Find next green light time.
-     * The period is leftGreen -> leftRed -> Green -> Red.
-     *
-     * @param time current time
-     * @param num number of green lights to skip
-     * @return the next green light time
-     */
-    public double nextSouthThroughGreen(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numGreens = mod < SOUTH_LEFT_TOTAL ? Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
-        numGreens += num;
-        return numGreens * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
-    }
-
-    public double nextSouthThroughGreen(double time) {
-        return nextSouthThroughGreen(time, 0);
-    }
-
-    public double nextSouthThroughRed(double time, double num) {
-        double mod = time % SOUTH_TOTAL;
-        double numReds = mod < (SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION) ?
-                Math.floor(time / SOUTH_TOTAL) : Math.floor(time / SOUTH_TOTAL) + 1;
-        numReds += num;
-        return numReds * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
-    }
-
-    public double nextSouthThroughRed(double time) {
-        return nextSouthThroughRed(time, 0);
-    }
-
-    public boolean isThroughGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
-    }
-
-    public boolean isThroughRed(double time) {
-        return !isThroughGreen(time);
-    }
-
-    public boolean isLeftGreen(double time) {
-        double numLights = Math.floor(time / SOUTH_TOTAL);
-        double beforeGreen = numLights * SOUTH_TOTAL;
-        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_GREEN_DURATION;
-        boolean isGreen = beforeGreen <= time && time < afterGreen;
-        return isGreen;
-    }
-
-    public boolean isLeftRed(double time) {
-        return !isLeftGreen(time);
+    public void generateLightEvents() {
+        double time = 0;
+        while (time < Parameter.SIMULATION_TIME) {
+            EventHandler.getInstance().addScheduleEvent(new Event(time + SOUTH_LEFT_TOTAL, EventType.TurnGreen, intersection, Direction.S));
+            EventHandler.getInstance().addScheduleEvent(new Event(time + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION, EventType.TurnRed, intersection, Direction.S));
+            // TODO: generate other directions
+            time += SOUTH_TOTAL;
+        }
     }
 
     // Getters
-    public int getId() {
-        return id;
+    public int getIntersection() {
+        return intersection;
     }
 
     public double getSouthThroughRed() {
