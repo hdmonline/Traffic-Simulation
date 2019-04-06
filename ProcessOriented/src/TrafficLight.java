@@ -37,37 +37,4 @@ public class TrafficLight {
             time += SOUTH_TOTAL;
         }
     }
-
-    // Getters
-    public int getIntersection() {
-        return intersection;
-    }
-
-    public double getSouthThroughRed() {
-        return SOUTH_THROUGH_RED_DURATION;
-    }
-
-    public double getSouthThroughGreen() {
-        return SOUTH_THROUGH_GREEN_DURATION;
-    }
-
-    public double getSouthLeftRad() {
-        return SOUTH_LEFT_RED_DURATION;
-    }
-
-    public double getSouthLeftGreen() {
-        return SOUTH_LEFT_GREEN_DURATION;
-    }
-
-    public double getSouthLeftTotal() {
-        return SOUTH_LEFT_TOTAL;
-    }
-
-    public double getSouthThroughTotal() {
-        return SOUTH_THROUGH_TOTAL;
-    }
-
-    public double getSouthTotal() {
-        return SOUTH_TOTAL;
-    }
 }

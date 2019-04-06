@@ -58,7 +58,7 @@ public class Scheduler implements Runnable {
     public synchronized void run() {
         // TODO: Handle FEL, then PEL
         PriorityQueue<Event> eventQueue = eventHandler.getEventQueue();
-        while(!eventQueue.isEmpty() && time < Parameter.SIMULATION_TIME) {
+        while(!eventQueue.isEmpty() || time < Parameter.SIMULATION_TIME) {
             Event currEvent = eventQueue.poll();
             time = currEvent.time;
             ioHandler.writeEvent(currEvent);
