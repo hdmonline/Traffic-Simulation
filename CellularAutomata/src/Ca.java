@@ -65,10 +65,11 @@ class Ca {
         ArrayList<Vehicle> found = new ArrayList<>();
         for (int i = 0; i < enteringVehs.size(); i++) {
             veh = enteringVehs.get(i);
+            if (veh.startTime > now) {
+                break;
+            }
             // Check if the entering pos is taken or not.
             if (posAvailable(veh.pos, veh.lane)) {
-                // Remove vehicle from enteringVehs
-                enteringVehs.remove(veh);
                 // Put the vehicle on road
                 veh.startTime = now;
                 vehs.add(veh);
@@ -243,21 +244,41 @@ class Ca {
         veh.leftLagger = vehs.get(lagger);
     }
 
-    // Update isFollowingLight for ith vehicle
+    /**
+     * Update isFollowingLight for ith vehicle
+     */
     private static void updateFollowingLight() {
-        int i = 0;
-        int n = vehs.size();
         for (TrafficLight tl : trafficLights) {
-            while (vehs.get(i).pos >= tl.getPos()) {
+            // Traverse vehs (descending pos)
+            int i = 0;
+            int n = vehs.size();
+            // Find first veh before light
+            while (i < n && vehs.get(i).pos >= tl.getPos()) {
                 i++;
             }
+            // If not found
+            if (i == n) {
+                break;
+            }
+            // Update the found veh
+            vehs.get(i).isFollowingLight = true;
+            vehs.get(i).trafficLight = tl;
+            // Find the first veh before light on the other lane
+            int lane = 1 - vehs.get(i).lane;
+            while(i < n && vehs.get(i).lane != lane) {
+                i++;
+            }
+            if (i == n){
+                continue;
+            }
+            // Update the found veh
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
         }
     }
 
     private static boolean posAvailable(int pos, int lane) {
-        return vehs.stream().filter(v -> v.pos == pos && v.lane == lane).findFirst().isPresent();
+        return !vehs.stream().filter(v -> v.pos == pos && v.lane == lane).findFirst().isPresent();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {
