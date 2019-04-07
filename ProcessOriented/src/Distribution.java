@@ -5,6 +5,7 @@
  *
  * Helper class for inter arrival interval distributions
  */
+
 class Distribution {
     int intersection;
     Direction direction;

@@ -11,14 +11,11 @@ public class Event implements Comparable<Event> {
     int intersection;
     Direction direction;
     VehicleProcess veh;
-    //Thread thread;
 
-    // TODO: check if thread is necessary.
     public Event(double time, EventType type, VehicleProcess veh) {
         this.time = time;
         this.type = type;
         this.veh = veh;
-        //this.thread = thread;
     }
 
     // TurnRed or TurnGrean
@@ -36,10 +33,8 @@ public class Event implements Comparable<Event> {
         this.intersection = intersection;
         this.direction = direction;
         this.veh = veh;
-        //this.thread = thread;
     }
 
-    // TODO: check this function
     public String toString() {
         String str = "";
 

@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
-//TODO: Consider to include this class in the Scheduler
 public class EventHandler {
     private static EventHandler instance = null;
 
@@ -40,6 +39,7 @@ public class EventHandler {
             southVehs.add(new LinkedList<>());
         }
 
+        //Initialize FEL and PEL
         eventQueue = new PriorityQueue<>();
         waitingVehEvents = new LinkedList<>();
 
@@ -92,11 +92,21 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Start a new thread for the vehicle
+     *
+     * @param veh vehicle to be started
+     */
     private synchronized void startThread(VehicleProcess veh) {
         Thread vehThread = new Thread(veh);
         vehThread.start();
     }
 
+    /**
+     * Wait for a passing condition of a intersection
+     *
+     * @param event the WaitUntil event
+     */
     private synchronized void waitUntil(Event event) {
         waitingVehEvents.addFirst(event);
         int index = getIntersectionIndex(event.intersection);
@@ -118,6 +128,9 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Traverse the PEL to find any
+     */
     public synchronized void checkWait() {
         ArrayList<Event> handledSouth = new ArrayList<>();
         for (Event event : waitingVehEvents) {
@@ -148,7 +161,11 @@ public class EventHandler {
         waitingVehEvents.removeAll(handledSouth);
     }
 
-    // TODO:
+    /**
+     *  Add vehicle to {@link #finishedVehs}
+     *
+     * @param event The exit event
+     */
     private synchronized void exitArea(Event event) {
         event.veh.endTime = event.time;
         event.veh.exitDirection = event.direction;
@@ -156,6 +173,13 @@ public class EventHandler {
         finishedVehs.add(event.veh);
     }
 
+    /**
+     * Handle traffic light events. Change the corresponding variables.
+     *
+     * @param type TurnGreen or TurnRed
+     * @param intersection intersection of the event
+     * @param direction direction of the event
+     */
     private synchronized void turnLight(EventType type, int intersection, Direction direction) {
         boolean green;
         switch(type) {
@@ -185,6 +209,12 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Get the index of the intersection to access the array
+     *
+     * @param intersection Intersection number
+     * @return the index of the intersection
+     */
     public synchronized int getIntersectionIndex(int intersection) {
         switch(intersection) {
             case 1:
@@ -220,10 +250,6 @@ public class EventHandler {
 
     public ArrayList<VehicleProcess> getFinishedVehs() {
         return finishedVehs;
-    }
-
-    public LinkedList<Event> getWaitingVehEvents() {
-        return waitingVehEvents;
     }
 
     public TrafficLight[] getTrafficLights() {

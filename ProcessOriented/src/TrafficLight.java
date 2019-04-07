@@ -6,7 +6,6 @@
  * Class for traffic lights. Yellow lights are counted into greens.
  */
 
-
 public class TrafficLight {
     private int intersection;
     private final double SOUTH_THROUGH_RED_DURATION;

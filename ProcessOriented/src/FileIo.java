@@ -21,18 +21,11 @@ public class FileIo {
      */
     public void readFile() {
         // Open the file and read inter arrival interval of each intersection and direction
-        BufferedReader br = null;
-        try {
-            FileReader fr = new FileReader(Parameter.INPUT_FILE);
-            br = new BufferedReader(fr);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String currLine;
-
-        // Get read all lines
-        int intersection, direction, numLines;
-        try {
+        try (BufferedReader br =
+                     new BufferedReader(new FileReader(Parameter.INPUT_FILE))) {
+            String currLine;
+            int intersection, direction, numLines;
+            // Get read all lines
             while ((currLine = br.readLine()) != null) {
                 String[] strs = currLine.split(" ", 3);
                 intersection = Integer.parseInt(strs[0]);
@@ -55,8 +48,6 @@ public class FileIo {
                 }
                 distributions.add(distribution);
             }
-            // fr.close();
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,17 +86,13 @@ public class FileIo {
         }
     }
 
-    // Write results to file
+    /**
+     * Write vehicles to file
+     */
     public void writeVehicles() {
         // Open the file and write finished vehicles
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
+        try (BufferedWriter bw =
+                     new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE))) {
             ArrayList<VehicleProcess> finishedVehs = EventHandler.getInstance().getFinishedVehs();
             if (finishedVehs.size() > 0) {
                 VehicleProcess veh;
@@ -117,7 +104,6 @@ public class FileIo {
                 veh = finishedVehs.get(finishedVehs.size() - 1);
                 bw.write(veh.toString());
             }
-            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
