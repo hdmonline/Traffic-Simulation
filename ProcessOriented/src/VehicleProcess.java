@@ -88,7 +88,7 @@ public class VehicleProcess implements Runnable {
                         intersection,
                         direction,
                         this));
-                // Wait for resuming
+                // Wait for resuming (arrived intersection)
                 synchronized (scheduler) {
                     scheduler.notify();
                 }
@@ -108,6 +108,8 @@ public class VehicleProcess implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                // Leave the intersection, set availableSouth to true;
+                eventHandler.getAvailableSouth()[eventHandler.getIntersectionIndex(intersection)] = true;
             }
         }
         // Exit to the North
@@ -117,5 +119,9 @@ public class VehicleProcess implements Runnable {
                 5,
                 Direction.N,
                 this));
+        // Resume the scheduler
+        synchronized (scheduler) {
+            scheduler.notify();
+        }
     }
 }

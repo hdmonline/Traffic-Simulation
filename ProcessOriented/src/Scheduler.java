@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class Scheduler implements Runnable {
+
     private static Scheduler instance = null;
 
     private EventHandler eventHandler;
@@ -54,20 +55,21 @@ public class Scheduler implements Runnable {
         schedulerThread.start();
     }
 
+    /**
+     * The running method for the scheduler thread
+     */
     @Override
     public synchronized void run() {
-        // TODO: Handle FEL, then PEL
+        // Handle FEL, then PEL
         PriorityQueue<Event> eventQueue = eventHandler.getEventQueue();
-        while(!eventQueue.isEmpty()) {
+        while(!eventQueue.isEmpty() || time < Parameter.SIMULATION_TIME) {
             Event currEvent = eventQueue.poll();
             time = currEvent.time;
             ioHandler.writeEvent(currEvent);
             eventHandler.handleEvent(currEvent);
 
-            // Traverse the waiting vehicle events
-            for (Event event : eventHandler.getWaitingVehEvents()) {
-                eventHandler.checkWait(event);
-            }
+            // Check every waiting vehicles in the queue
+            eventHandler.checkWait();
 
             // Wait for notifying from other processes
             if (currEvent.type == EventType.Resume || currEvent.type == EventType.Enter) {
@@ -82,6 +84,8 @@ public class Scheduler implements Runnable {
         // Write results to file
         ioHandler.writeVehicles();
         ioHandler.closeEvnetWriter();
+
+        // All threads should be stopped here.
     }
 
     /**
@@ -97,7 +101,6 @@ public class Scheduler implements Runnable {
             eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh));
         }
 
-        // TODO: generate light events.
         // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
         TrafficLight[] trafficLights = eventHandler.getTrafficLights();
         for (TrafficLight tl : trafficLights) {
@@ -105,6 +108,11 @@ public class Scheduler implements Runnable {
         }
     }
 
+    /**
+     * Get current time from the scheduler
+     *
+     * @return current time
+     */
     public double getTime() {
         return time;
     }
