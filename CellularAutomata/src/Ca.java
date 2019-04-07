@@ -188,7 +188,7 @@ class Ca {
             veh.rightLagger = null;
             return;
         }
-        int lagger = i - 1;
+        int lagger = i + 1;
         boolean success = vehs.get(lagger).lane == 1;
         while (!success) {
             if (lagger == n - 1) {
@@ -232,7 +232,7 @@ class Ca {
         int lagger = i - 1;
         boolean success = vehs.get(lagger).lane == 0;
         while (!success) {
-            if (lagger == n - 1) {
+            if (lagger == n + 1) {
                 veh.leftLagger = null;
                 return;
             } else {
