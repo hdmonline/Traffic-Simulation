@@ -22,12 +22,6 @@ public class VehicleProcess implements Runnable {
 
     private EventHandler eventHandler;
 
-    public VehicleProcess(int id) {
-        this.id = id;
-        pause = false;
-        entered = false;
-    }
-
     public VehicleProcess(int id, double startTime, int entranceIntersection, Direction entranceDirection) {
         this.id = id;
         this.startTime = startTime;
@@ -35,11 +29,6 @@ public class VehicleProcess implements Runnable {
         this.entranceDirection = entranceDirection;
         eventHandler = EventHandler.getInstance();
         pause = false;
-    }
-
-    private void moveToIntersection1() {
-
-
     }
 
     public String toString() {
@@ -67,7 +56,6 @@ public class VehicleProcess implements Runnable {
 
     @Override
     public synchronized void run() {
-        Thread currThread = Thread.currentThread();
         // Iterate 4 intersections
         for (int i = 1; i < 5; i++) {
             // Get intersection number from loop index
@@ -76,7 +64,7 @@ public class VehicleProcess implements Runnable {
                 Direction direction = entered ? Direction.S : entranceDirection;
                 // First intersection is special
                 double delay;
-                if (entranceIntersection == 1) {
+                if (intersection == 1) {
                     // If coming from south, it need to travel a distance to arrive intersection 1
                     delay = entranceDirection == Direction.S ? Parameter.BETWEEN_START_INTERSECTION1 : 0;
                 } else {
