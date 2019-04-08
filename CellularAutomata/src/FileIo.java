@@ -17,13 +17,7 @@ public class FileIo {
 
     private ArrayList<Distribution> distributions = new ArrayList<>();
     private Random rand = new Random();
-    public static final int INITIAL_SPEED = 3;
 
-    private static final int INTERSECTION_POSITION_1 = 100;
-    private static final int INTERSECTION_POSITION_2 = 200;
-    private static final int INTERSECTION_POSITION_3 = 300;
-    private static final int INTERSECTION_POSITION_4 = 400;
-    private static final int INTERSECTION_POSITION_5 = 500;
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -110,7 +104,7 @@ public class FileIo {
             int direction = distr.direction;
             double[] cumu = distr.cumuProb;
             double r;
-            while (time < Ca.SIMULATION_TIME * 60) {
+            while (time < Parameter.SIMULATION_TIME * 60) {
                 r = rand.nextDouble();
                 int i;
                 for (i = 0; i < cumu.length; i++) {
@@ -122,8 +116,8 @@ public class FileIo {
                 double interval = rand.nextDouble() * (cumu[i] - lowerLimit) + lowerLimit;
                 time += interval;
                 Ca.getEnteringVehs().add(new Vehicle(
-                        id++, getPosition(intersection) + 1,
-                        getLane(direction), INITIAL_SPEED, time,
+                        id++, Parameter.VEH_LEN, getPosition(intersection) + 1,
+                        getLane(direction), Parameter.INITIAL_SPEED, time,
                         intersection, direction));
             }
         }
@@ -138,15 +132,15 @@ public class FileIo {
     private int getPosition(int intersection) {
         switch(intersection) {
             case 1:
-                return INTERSECTION_POSITION_1;
+                return Parameter.INTERSECTION_POSITION_1;
             case 2:
-                return INTERSECTION_POSITION_2;
+                return Parameter.INTERSECTION_POSITION_2;
             case 3:
-                return INTERSECTION_POSITION_3;
+                return Parameter.INTERSECTION_POSITION_3;
             case 4:
-                return INTERSECTION_POSITION_4;
+                return Parameter.INTERSECTION_POSITION_4;
             case 5:
-                return INTERSECTION_POSITION_5;
+                return Parameter.INTERSECTION_POSITION_5;
             default:
                 System.out.println("Error - FileIo.getDistribution: Wrong intersection!");
                 return -1;

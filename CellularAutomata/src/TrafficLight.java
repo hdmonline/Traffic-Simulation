@@ -7,15 +7,15 @@
  */
 
 public class TrafficLight implements Comparable<TrafficLight> {
-    private int id;
+    private int intersection;
 
     private int pos;
     private final double SOUTH_THROUGH_RED_DURATION, SOUTH_THROUGH_GREEN_DURATION, SOUTH_THROUGH_TOTAL;
     private final double SOUTH_LEFT_RED_DURATION, SOUTH_LEFT_GREEN_DURATION, SOUTH_LEFT_TOTAL;
     private final double SOUTH_TOTAL;
 
-    public TrafficLight(int id, int pos, double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
-        this.id = id;
+    public TrafficLight(int intersection, int pos, double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
+        this.intersection = intersection;
         this.pos = pos;
         SOUTH_THROUGH_GREEN_DURATION = southThroughGreen;
         SOUTH_THROUGH_RED_DURATION = southThroughRed;
@@ -58,57 +58,16 @@ public class TrafficLight implements Comparable<TrafficLight> {
     }
 
     public boolean isThroughGreen(double time) {
-
-
-    }
-
-    public boolean isThroughRed(double time) {
-
-    }
-
-    public boolean isLeftGreen(double time) {
-
-    }
-
-    public boolean isLeftRed(double time) {
-
+        return false;
     }
 
     // Getters
-    public int getId() {
-        return id;
+    public int getIntersection() {
+        return intersection;
     }
 
     public int getPos() {
         return pos;
-    }
-
-    public double getSouthThroughRed() {
-        return SOUTH_THROUGH_RED_DURATION;
-    }
-
-    public double getSouthThroughGreen() {
-        return SOUTH_THROUGH_GREEN_DURATION;
-    }
-
-    public double getSouthLeftRad() {
-        return SOUTH_LEFT_RED_DURATION;
-    }
-
-    public double getSouthLeftGreen() {
-        return SOUTH_LEFT_GREEN_DURATION;
-    }
-
-    public double getSouthLeftTotal() {
-        return SOUTH_LEFT_TOTAL;
-    }
-
-    public double getSouthThroughTotal() {
-        return SOUTH_THROUGH_TOTAL;
-    }
-
-    public double getSouthTotal() {
-        return SOUTH_TOTAL;
     }
 
     @Override

@@ -17,13 +17,9 @@ class Ca {
 
     static private ArrayList<TrafficLight> trafficLights = new ArrayList<>();
 
-    static private double now = 0; // in second
+    static private double time = 0; // in second
 
-    static private final int END_POSITION = 300;
-    static private final double TIME_INTERVAL = 1;
-    static public final double SIMULATION_TIME = 15; // minute
-
-    public static void main() {
+    public static void main(String[] args) {
         // TODO: Initialize trafficLights
 
         // Sort the traffic lights by position
@@ -38,7 +34,7 @@ class Ca {
         enteringVehs.sort(Comparator.comparing((Vehicle v) -> v.startTime));
 
         // Terminate when the interval is over 15min, no car on the street, and no car is about to start
-        while (now < SIMULATION_TIME * 60 || vehs.size() > 0 || enteringVehs.size() > 0) {
+        while (time < Parameter.SIMULATION_TIME || vehs.size() > 0 || enteringVehs.size() > 0) {
             // Put entering cars to the lanes
             enteringVehs();
 
@@ -49,7 +45,7 @@ class Ca {
             updateEnvironment();
 
             // Increase interval
-            now += TIME_INTERVAL;
+            time += Parameter.TIME_INTERVAL;
         }
 
         // TODO: Write the result to file
@@ -65,13 +61,13 @@ class Ca {
         ArrayList<Vehicle> found = new ArrayList<>();
         for (int i = 0; i < enteringVehs.size(); i++) {
             veh = enteringVehs.get(i);
-            if (veh.startTime > now) {
+            if (veh.startTime > time) {
                 break;
             }
             // Check if the entering pos is taken or not.
             if (posAvailable(veh.pos, veh.lane)) {
                 // Put the vehicle on road
-                veh.startTime = now;
+                veh.startTime = time;
                 vehs.add(veh);
                 found.add(veh);
             }
@@ -83,16 +79,17 @@ class Ca {
      * Update each vehicle's position, speed and lane
      */
     private static void updateVehs() {
+        ArrayList<Vehicle> finished = new ArrayList<>();
         for (Vehicle veh : vehs) {
             veh.update();
             // If the vehicle is exiting the tracking area
-            if (veh.pos > END_POSITION) {
-                veh.endTime = now;
-                vehs.remove(veh);
+            if (veh.pos > Parameter.END_POSITION) {
+                veh.endTime = time;
+                finished.add(veh);
                 finishedVehs.add(veh);
             }
         }
-
+        vehs.removeAll(finished);
         // TODO: check if this is the best place to sort the vehicle array
         Collections.sort(vehs);
     }

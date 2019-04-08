@@ -8,6 +8,7 @@
 
 class Vehicle implements Comparable<Vehicle> {
     int id;
+    int len;
     int pos;
     int lane;
     int speed;
@@ -32,12 +33,13 @@ class Vehicle implements Comparable<Vehicle> {
      * Constructor
      *
      * @param id
+     * @param len
      * @param pos
      * @param lane
      * @param speed
      * @param startTime
      */
-    public Vehicle(int id, int pos, int lane, int speed, double startTime,
+    public Vehicle(int id, int len, int pos, int lane, int speed, double startTime,
                    int entranceIntersection, int entranceDirection) {
         this.id = id;
         this.pos = pos;
@@ -53,7 +55,16 @@ class Vehicle implements Comparable<Vehicle> {
      * TODO: Update vehicle position, speed and lane based on current status
      */
     public void update() {
-
+        // TODO: 1. tell if change lane based on 4 rules:
+        //       1.0 pos is not following light
+        //       1.1 gap_i < l
+        //       1.2 gap_oi > l
+        //       1.3 gap_obacki > l_oback = v_oback + 1
+        //       1.4 random
+        // TODO: 2. if change lane, keep v_i, if keep lane:
+        //       2.1 if v_i < v_max, v_i += 1
+        //       2.2 if v_i > gap_i, v = gap_i (consider light: if green, treat like following car)
+        //       2.3 if v_i > 0, randomly v_i -= 1
     }
 
     @Override
