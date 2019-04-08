@@ -16,7 +16,7 @@ public class FileIo {
     private static final String OUTPUT_FILE = "output.txt";
 
     private ArrayList<Distribution> distributions = new ArrayList<>();
-    private Random rand = new Random();
+    static Random rand = new Random();
 
 
     /**

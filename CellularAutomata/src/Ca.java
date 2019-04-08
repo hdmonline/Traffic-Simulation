@@ -9,6 +9,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 class Ca {
     static private ArrayList<Vehicle> vehs = new ArrayList<>();
@@ -81,7 +82,11 @@ class Ca {
     private static void updateVehs() {
         ArrayList<Vehicle> finished = new ArrayList<>();
         for (Vehicle veh : vehs) {
-            veh.update();
+            veh.lastPos = veh.pos;
+            veh.lastSpeed = veh.speed;
+        }
+        for (Vehicle veh : vehs) {
+            veh.update(time);
             // If the vehicle is exiting the tracking area
             if (veh.pos > Parameter.END_POSITION) {
                 veh.endTime = time;

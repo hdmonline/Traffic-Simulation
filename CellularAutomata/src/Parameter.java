@@ -14,9 +14,14 @@ public class Parameter {
 
     static final double TIME_INTERVAL = 1; // second
 
+    static final double PROB_CHANGE_LANE = 0.7;
+
+
     // Vehicle length
     static final int VEH_LEN = 14;
     static final int INITIAL_SPEED = 3;
+    static final int MAX_SPEED = 40; // feet/sec
+    static final double PROB_BRAKE = 0.5;
 
     static final int INTERSECTION_POSITION_1 = 100;
     static final int INTERSECTION_POSITION_2 = 200;
