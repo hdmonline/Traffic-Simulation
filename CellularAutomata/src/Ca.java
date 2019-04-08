@@ -34,6 +34,8 @@ class Ca {
         FileIo ioHandler = new FileIo();
         ioHandler.readFile();
         ioHandler.generateFlow();
+//        enteringVehs.add(new Vehicle(0, Parameter.VEH_LEN, 1,
+//                0, 25, 10.1, 1, Direction.S));
 
         // Sort the enteringVehs by startTime in descending order
         enteringVehs.sort(Comparator.comparing((Vehicle v) -> v.startTime));

@@ -103,8 +103,8 @@ class Vehicle implements Comparable<Vehicle> {
         } else {
             gap = leader == null ? Integer.MAX_VALUE : leader.lastPos - leader.len - lastPos;
         }
-        if (speed > gap) {
-            speed = gap;
+        if (speed >= gap) {
+            speed = gap - 1;
         }
         pos += speed;
     }

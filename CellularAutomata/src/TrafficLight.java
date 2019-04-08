@@ -25,9 +25,12 @@ public class TrafficLight implements Comparable<TrafficLight> {
         SOUTH_TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
     }
 
-    // TODO
     public boolean isThroughGreen(double time) {
-        return false;
+        double numLights = Math.floor(time / SOUTH_TOTAL);
+        double beforeGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL;
+        double afterGreen = numLights * SOUTH_TOTAL + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION;
+        boolean isGreen = beforeGreen <= time && time < afterGreen;
+        return isGreen;
     }
 
     // Getters
