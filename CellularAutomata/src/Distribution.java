@@ -5,14 +5,15 @@
  *
  * Helper class for inter arrival interval distributions
  */
+
 class Distribution {
     int intersection;
-    int direction;
-    double interval[];
-    double prob[];
-    double cumuProb[];
+    Direction direction;
+    double[] interval;
+    double[] prob;
+    double[] cumuProb;
 
-    public Distribution(int intersection, int direction, int numBins) {
+    Distribution(int intersection, Direction direction, int numBins) {
         this.intersection = intersection;
         this.direction = direction;
 

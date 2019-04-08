@@ -22,6 +22,10 @@ class Ca {
 
     public static void main(String[] args) {
         // TODO: Initialize trafficLights
+        trafficLights.add(new TrafficLight(1, 144, 49.3, 38.3, 10.6, 2.2));
+        trafficLights.add(new TrafficLight(2, 662, 55.4, 44.7, 0, 0));
+        trafficLights.add(new TrafficLight(3, 1204, 35.7, 64.6, 0, 0));
+        trafficLights.add(new TrafficLight(5, 2041, 46.1, 37.8, 12.4, 3.6));
 
         // Sort the traffic lights by position
         Collections.sort(trafficLights);
@@ -49,8 +53,8 @@ class Ca {
             time += Parameter.TIME_INTERVAL;
         }
 
-        // TODO: Write the result to file
-
+        // Write the result to file
+        ioHandler.writeVehicles();
     }
 
     // Put any vehicle entering the tracking area to the lane
@@ -95,7 +99,6 @@ class Ca {
             }
         }
         vehs.removeAll(finished);
-        // TODO: check if this is the best place to sort the vehicle array
         Collections.sort(vehs);
     }
 
@@ -207,7 +210,7 @@ class Ca {
 
     private static void updateLeaderLeft(int i) {
         Vehicle veh = vehs.get(i);
-        if (i == 1 || veh.lane == 0) {
+        if (i == 0 || veh.lane == 0) {
             veh.leftLeader = null;
             return;
         }
@@ -232,10 +235,10 @@ class Ca {
             veh.leftLagger = null;
             return;
         }
-        int lagger = i - 1;
+        int lagger = i + 1;
         boolean success = vehs.get(lagger).lane == 0;
         while (!success) {
-            if (lagger == n + 1) {
+            if (lagger == n - 1) {
                 veh.leftLagger = null;
                 return;
             } else {
@@ -280,7 +283,7 @@ class Ca {
     }
 
     private static boolean posAvailable(int pos, int lane) {
-        return !vehs.stream().filter(v -> v.pos == pos && v.lane == lane).findFirst().isPresent();
+        return !vehs.stream().filter(v -> v.pos >= pos && v.pos - v.len < pos && v.lane == lane).findFirst().isPresent();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {
