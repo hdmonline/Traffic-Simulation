@@ -68,9 +68,6 @@ public class Scheduler implements Runnable {
             ioHandler.writeEvent(currEvent);
             eventHandler.handleEvent(currEvent);
 
-            // Check every waiting vehicles in the queue
-            eventHandler.checkWait();
-
             // Wait for notifying from other processes
             if (currEvent.type == EventType.Resume || currEvent.type == EventType.Enter) {
                 try {
@@ -79,6 +76,8 @@ public class Scheduler implements Runnable {
                     e.printStackTrace();
                 }
             }
+            // Check every waiting vehicles in the queue
+            eventHandler.checkWait();
         }
 
         // Write results to file
