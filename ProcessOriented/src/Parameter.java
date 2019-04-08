@@ -12,15 +12,15 @@ public class Parameter {
     static final double SIMULATION_TIME = VEHICLE_TIME + 5 * 60;
 
     // Travelling time from starting point to Intersection 1
-    static final double BETWEEN_START_INTERSECTION1 = 15;
+    static final double BETWEEN_START_INTERSECTION1 = 14.136;
     // Average Travelling time between intersections
-    static final double BETWEEN_INTERSECTION_12 = 15;
-    static final double BETWEEN_INTERSECTION_23 = 15;
-    static final double BETWEEN_INTERSECTION_35 = 15;
-    static final double AFTER_INTERSECTION_5 = 3;
+    static final double BETWEEN_INTERSECTION_12 = 26.116;
+    static final double BETWEEN_INTERSECTION_23 = 36.073;
+    static final double BETWEEN_INTERSECTION_35 = 55.634;
+    static final double AFTER_INTERSECTION_5 = 6.136;
 
     // Waiting time for going through a traffic light per vehicle in (s)
-    static final double W = 1.0;
+    static final double W = 0.5;
 
     static final String INPUT_FILE = "process_input.txt";
     static final String OUTPUT_VEHICLE_FILE = "process_vehicles.txt";
