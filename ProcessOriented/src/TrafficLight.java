@@ -16,14 +16,27 @@ public class TrafficLight {
     private final double NORTH_BOUND_THROUGH_TOTAL;
     private final double NORTH_BOUND_TOTAL;
 
-    public TrafficLight(int intersection,  double nbThroughRed, double nbThroughGreen, double nbLeftGreen, double nbLeftRed) {
+    public TrafficLight(int intersection, double nbLtG, double nbLtR, double nbTrG, double nbTrR) {
         this.intersection = intersection;
-        NORTH_BOUND_THROUGH_GREEN_DURATION = nbThroughGreen;
-        NORTH_BOUND_THROUGH_RED_DURATION = nbThroughRed;
-        NORTH_BOUND_LEFT_GREEN_DURATION = nbLeftGreen;
-        NORTH_BOUND_LEFT_RED_DURATION = nbLeftRed;
-        NORTH_BOUND_LEFT_TOTAL = nbLeftGreen + nbLeftRed;
-        NORTH_BOUND_THROUGH_TOTAL = nbThroughGreen + nbThroughRed;
+        NORTH_BOUND_THROUGH_GREEN_DURATION = nbTrG;
+        NORTH_BOUND_THROUGH_RED_DURATION = nbTrR;
+        NORTH_BOUND_LEFT_GREEN_DURATION = nbLtG;
+        NORTH_BOUND_LEFT_RED_DURATION = nbLtR;
+        NORTH_BOUND_LEFT_TOTAL = nbLtG + nbLtR;
+        NORTH_BOUND_THROUGH_TOTAL = nbTrG + nbTrR;
+        NORTH_BOUND_TOTAL =  NORTH_BOUND_THROUGH_TOTAL + NORTH_BOUND_LEFT_TOTAL;
+    }
+
+    public TrafficLight(int intersection,  double nbLtG, double nbLtR, double nbTrG, double nbTrR,
+                        double wbLtG, double wbLtR, double wbTrG, double wbTrR,
+                        double ebLtG, double ebLtR, double ebTrG, double ebTrR) {
+        this.intersection = intersection;
+        NORTH_BOUND_THROUGH_GREEN_DURATION = nbTrG;
+        NORTH_BOUND_THROUGH_RED_DURATION = nbTrR;
+        NORTH_BOUND_LEFT_GREEN_DURATION = nbLtG;
+        NORTH_BOUND_LEFT_RED_DURATION = nbLtR;
+        NORTH_BOUND_LEFT_TOTAL = nbLtG + nbLtR;
+        NORTH_BOUND_THROUGH_TOTAL = nbTrG + nbTrR;
         NORTH_BOUND_TOTAL =  NORTH_BOUND_THROUGH_TOTAL + NORTH_BOUND_LEFT_TOTAL;
     }
 
