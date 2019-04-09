@@ -38,12 +38,11 @@ public class Event implements Comparable<Event> {
     public String toString() {
         String str = "";
 
-        int vehId = (veh == null) ? -1 : veh.id;
-        str += String.format("%.2f", time) + " ";
-        str += type + " ";
-        str += intersection + " ";
-        str += direction + " ";
-        str += vehId + " ";
+        str += String.format("%.2f", time) + ",";
+        str += type + ",";
+        str += (intersection == 0 ? "null" : intersection) + ",";
+        str += direction + ",";
+        str += veh == null ? "null" : veh.id;
         return str;
     }
     @Override

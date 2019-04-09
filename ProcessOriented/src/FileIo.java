@@ -56,6 +56,8 @@ public class FileIo {
     public void initialEventWriter() {
         try {
             eventWriter = new BufferedWriter(new FileWriter(Parameter.OUTPUT_EVENT_FILE));
+            String header = "time,type,intersection,direction,vehicle";
+            eventWriter.write(header);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,13 +76,8 @@ public class FileIo {
             initialEventWriter();
         }
         try {
-            if (!wroteEvent) {
-                eventWriter.write(event.toString());
-                wroteEvent = true;
-            } else {
-                eventWriter.newLine();
-                eventWriter.write(event.toString());
-            }
+            eventWriter.newLine();
+            eventWriter.write(event.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,14 +91,11 @@ public class FileIo {
         try (BufferedWriter bw =
                      new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE))) {
             ArrayList<VehicleProcess> finishedVehs = EventHandler.getInstance().getFinishedVehs();
-            if (finishedVehs.size() > 0) {
-                VehicleProcess veh;
-                for (int i = 0; i < finishedVehs.size() - 1; i++) {
-                    veh = finishedVehs.get(i);
-                    bw.write(veh.toString());
-                    bw.newLine();
-                }
-                veh = finishedVehs.get(finishedVehs.size() - 1);
+            // Write header
+            String header = "id,enter_time,exit_time,entrance_intersection,entrance_direction,exit_intersection,exit_direction";
+            bw.write(header);
+            for (VehicleProcess veh : finishedVehs) {
+                bw.newLine();
                 bw.write(veh.toString());
             }
         } catch (IOException e) {

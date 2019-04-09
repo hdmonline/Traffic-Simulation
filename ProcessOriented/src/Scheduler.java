@@ -97,7 +97,8 @@ public class Scheduler implements Runnable {
 
         for (VehicleProcess veh : enteringVehs) {
             // Thread vehThread = new Thread(veh);
-            eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter, veh));
+            eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter,
+                    veh.entranceIntersection, veh.entranceDirection, veh));
         }
 
         // Generate turnRed and turnGreen events in northbound dir during the whole simulation time

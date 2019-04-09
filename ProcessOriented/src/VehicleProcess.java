@@ -33,12 +33,12 @@ public class VehicleProcess implements Runnable {
 
     public String toString() {
         String str = "";
-        str += id + " ";
-        str += String.format("%.2f", startTime) + " ";
-        str += String.format("%.2f", endTime) + " ";
-        str += entranceIntersection + " ";
-        str += entranceDirection + " ";
-        str += exitIntersection + " ";
+        str += id + ",";
+        str += String.format("%.2f", startTime) + ",";
+        str += String.format("%.2f", endTime) + ",";
+        str += entranceIntersection + ",";
+        str += entranceDirection + ",";
+        str += exitIntersection + ",";
         str += exitDirection;
         return str;
     }

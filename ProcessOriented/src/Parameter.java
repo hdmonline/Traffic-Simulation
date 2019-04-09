@@ -8,7 +8,7 @@
 public class Parameter {
 
     // Simulation time
-    static final double VEHICLE_TIME = 30 * 60;
+    static final double VEHICLE_TIME = 15 * 60;
     static final double SIMULATION_TIME = VEHICLE_TIME + 5 * 60;
 
     // Travelling time from starting point to Intersection 1
@@ -22,9 +22,9 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 0.5;
 
-    static final String INPUT_FILE = "process_input.txt";
-    static final String OUTPUT_VEHICLE_FILE = "process_vehicles.txt";
-    static final String OUTPUT_EVENT_FILE = "process_events.txt";
+    static final String INPUT_FILE = "process_input.csv";
+    static final String OUTPUT_VEHICLE_FILE = "process_vehicles.csv";
+    static final String OUTPUT_EVENT_FILE = "process_events.csv";
 
     public static double getBetweenIntersectionTime(int intersection) {
         switch(intersection) {
