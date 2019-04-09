@@ -27,7 +27,7 @@ public class Parameter {
     static final int COMFORT_ACC = 6; // feet/s^2
 
     // IO parameters
-    static final String INPUT_FILE = "ca_input.txt";
-    static final String OUTPUT_VEHICLE_FILE = "ca_vehicles.txt";
-    static final String OUTPUT_EVENT_FILE = "ca_events.txt";
+    static final String INPUT_FILE = "ca_input.csv";
+    static final String OUTPUT_VEHICLE_FILE = "ca_vehicles.csv";
+    static final String OUTPUT_EVENT_FILE = "ca_log.csv";
 }

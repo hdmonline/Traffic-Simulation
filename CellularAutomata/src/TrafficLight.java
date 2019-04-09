@@ -38,6 +38,10 @@ public class TrafficLight implements Comparable<TrafficLight> {
         return pos;
     }
 
+    public int getIntersection() {
+        return intersection;
+    }
+
     @Override
     public int compareTo(TrafficLight tl) {
         return tl.pos - this.pos;

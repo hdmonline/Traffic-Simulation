@@ -12,12 +12,11 @@ import java.util.Random;
 
 public class FileIo {
 
-    private static final String INPUT_FILE = "input.txt";
-    private static final String OUTPUT_FILE = "output.txt";
-
     private ArrayList<Distribution> distributions = new ArrayList<>();
-    static Random rand = new Random();
+    private BufferedWriter processWriter = null;
 
+    // Random generator, can be used by other class
+    static Random rand = new Random();
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -56,6 +55,49 @@ public class FileIo {
         }
     }
 
+    public void initialProcessWriter() {
+        try {
+            processWriter = new BufferedWriter(new FileWriter(Parameter.OUTPUT_EVENT_FILE));
+            String header = "time,vehicle,lane,pos,speed,leader,lagger,left_leader,left_lagger,right_leader,right_lagger,following_light";
+            processWriter.write(header);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeProcessWriter() {
+        try {
+            processWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeProcess(double time, Vehicle veh) {
+        if (processWriter == null) {
+            initialProcessWriter();
+        }
+        try {
+            processWriter.newLine();
+            String str = "";
+            str += String.format("%.0f", time) + ",";
+            str += veh.id + ",";
+            str += veh.lane + ",";
+            str += veh.pos + ",";
+            str += veh.speed + ",";
+            str += (veh.leader == null ? "null" : veh.leader.id) + ",";
+            str += (veh.lagger == null ? "null" : veh.lagger.id) + ",";
+            str += (veh.leftLeader == null ? "null" : veh.leftLeader.id) + ",";
+            str += (veh.leftLagger == null ? "null" : veh.leftLagger.id) + ",";
+            str += (veh.rightLeader == null ? "null" : veh.rightLeader.id) + ",";
+            str += (veh.rightLagger == null ? "null" : veh.rightLagger.id) + ",";
+            str += veh.isFollowingLight ? veh.trafficLight.getIntersection() : "null";
+            processWriter.write(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Write the results to output file
      */
@@ -64,14 +106,11 @@ public class FileIo {
         try (BufferedWriter bw =
                      new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE))) {
             ArrayList<Vehicle> finishedVehs = Ca.getFinishedVehs();
-            if (finishedVehs.size() > 0) {
-                Vehicle veh;
-                for (int i = 0; i < finishedVehs.size() - 1; i++) {
-                    veh = finishedVehs.get(i);
-                    bw.write(veh.toString());
-                    bw.newLine();
-                }
-                veh = finishedVehs.get(finishedVehs.size() - 1);
+            // Write header
+            String header = "id,lane,entrance_time,exit_time,entrance_intersection,entrance_direction,exit_intersection,exit_direction";
+            bw.write(header);
+            for (Vehicle veh : finishedVehs) {
+                bw.newLine();
                 bw.write(veh.toString());
             }
         } catch (IOException e) {

@@ -9,7 +9,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
 
 class Ca {
     static private ArrayList<Vehicle> vehs = new ArrayList<>();
@@ -53,10 +52,14 @@ class Ca {
 
             // Increase interval
             time += Parameter.TIME_INTERVAL;
+
+            // Write process
+            writeLog(time, ioHandler);
         }
 
         // Write the result to file
         ioHandler.writeVehicles();
+        ioHandler.closeProcessWriter();
     }
 
     // Put any vehicle entering the tracking area to the lane
@@ -121,6 +124,11 @@ class Ca {
         updateFollowingLight();
     }
 
+    private static void writeLog(double time, FileIo ioHandler) {
+        for (Vehicle veh : vehs) {
+            ioHandler.writeProcess(time, veh);
+        }
+    }
 
 
     /**
