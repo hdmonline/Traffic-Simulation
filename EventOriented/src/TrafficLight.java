@@ -41,8 +41,10 @@ public class TrafficLight {
     public void generateTrafficLights() {
         double time = 0;
         while (time < Parameter.SIMULATION_TIME) {
-            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL, EventType.TurnGreenSouth, id, Direction.S));
-            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION, EventType.TurnRedSouth, id, Direction.S));
+            ProcessEvents.getEventQueue().add(new Event(time, EventType.GreenSouth, id, Direction.E));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL, EventType.GreenSouth, id, Direction.S));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_GREEN_DURATION, EventType.RedSouth, id, Direction.E));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION, EventType.RedSouth, id, Direction.S));
             //TODO: may need to generate traffic lights events from other direcrions
             time += TOTAL;
         }
