@@ -1,5 +1,3 @@
-import java.util.PriorityQueue;
-
 /**
  * VehicleProcess.java
  * @author Group 41: Chong Ye, Dongmin Han, Shan Xiong
@@ -97,7 +95,7 @@ public class VehicleProcess implements Runnable {
                     e.printStackTrace();
                 }
                 // Leave the intersection, set availableSouth to true;
-                eventHandler.getAvailableSouth()[eventHandler.getIntersectionIndex(intersection)] = true;
+                eventHandler.getAvailableNorth()[eventHandler.getIntersectionIndex(intersection)] = true;
             }
         }
         // Exit to the North
