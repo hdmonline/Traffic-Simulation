@@ -21,7 +21,7 @@ class Ca {
     static private double time = 0; // in second
 
     public static void main(String[] args) {
-        // TODO: Initialize trafficLights
+        // Initialize trafficLights
         trafficLights.add(new TrafficLight(1, 144, 49.3, 38.3, 10.6, 2.2));
         trafficLights.add(new TrafficLight(2, 662, 55.4, 44.7, 0, 0));
         trafficLights.add(new TrafficLight(3, 1204, 35.7, 64.6, 0, 0));

@@ -98,7 +98,7 @@ class Vehicle implements Comparable<Vehicle> {
             }
         }
         int gap;
-        if (isFollowingLight && !trafficLight.isThroughGreen(now)) {
+        if (isFollowingLight && !trafficLight.isSouthThroughGreen(now)) {
             gap = trafficLight.getPos() - lastPos;
         } else {
             gap = leader == null ? Integer.MAX_VALUE : leader.lastPos - leader.len - lastPos;
