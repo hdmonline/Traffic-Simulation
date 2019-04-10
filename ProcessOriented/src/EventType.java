@@ -1,8 +1,10 @@
 public enum EventType {
     Enter,
     Exit,
-    TurnGreen,
-    TurnRed,
+    TurnGreenThrough,
+    TurnRedThrough,
+    TurnGreenLeft,
+    TurnRedLeft,
     WaitUntil,
     Resume
 }

@@ -91,11 +91,11 @@ public class EventHandler {
             case Exit:
                 exitArea(event);
                 break;
-            case TurnGreen:
-                turnLight(EventType.TurnGreen, event.intersection, event.direction);
+            case TurnGreenThrough:
+                turnLight(EventType.TurnGreenThrough, event.intersection, event.direction);
                 break;
-            case TurnRed:
-                turnLight(EventType.TurnRed, event.intersection, event.direction);
+            case TurnRedThrough:
+                turnLight(EventType.TurnRedThrough, event.intersection, event.direction);
                 break;
             default:
                 System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
@@ -193,17 +193,17 @@ public class EventHandler {
     /**
      * Handle traffic light events. Change the corresponding variables.
      *
-     * @param type TurnGreen or TurnRed
+     * @param type TurnGreenThrough or TurnRedThrough
      * @param intersection intersection of the event
      * @param direction direction of the event
      */
     private synchronized void turnLight(EventType type, int intersection, Direction direction) {
         boolean green;
         switch(type) {
-            case TurnGreen:
+            case TurnGreenThrough:
                 green = true;
                 break;
-            case TurnRed:
+            case TurnRedThrough:
                 green = false;
                 break;
             default:

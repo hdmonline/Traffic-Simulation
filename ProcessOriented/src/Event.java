@@ -18,7 +18,7 @@ public class Event implements Comparable<Event> {
         this.veh = veh;
     }
 
-    // TurnRed or TurnGrean
+    // TurnRedThrough or TurnGrean
     public Event(double time, EventType type, int intersection, Direction direction) {
         this.time = time;
         this.type = type;
