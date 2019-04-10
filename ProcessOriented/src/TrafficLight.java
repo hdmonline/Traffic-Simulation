@@ -43,10 +43,10 @@ public class TrafficLight {
     public void generateLightEvents() {
         double time = 0;
         while (time < Parameter.SIMULATION_TIME) {
-            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL, EventType.TurnGreen, intersection, Direction.N));
-            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL + NORTH_BOUND_THROUGH_GREEN_DURATION, EventType.TurnRed, intersection, Direction.N));
+            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL, EventType.TurnGreenThrough, intersection, Direction.N));
+            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL + NORTH_BOUND_THROUGH_GREEN_DURATION, EventType.TurnRedThrough, intersection, Direction.N));
+            EventHandler.getInstance().addScheduleEvent(new Event(time + ));
             // TODO: generate other directions
-
             time += NORTH_BOUND_TOTAL;
         }
     }
