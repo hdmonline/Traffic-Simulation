@@ -11,11 +11,13 @@ public class Event implements Comparable<Event> {
     int intersection;
     Direction direction;
     VehicleProcess veh;
+    boolean turningLeft;
 
     public Event(double time, EventType type, VehicleProcess veh) {
         this.time = time;
         this.type = type;
         this.veh = veh;
+        this.turningLeft = false;
     }
 
     // TurnRedThrough or TurnGrean
@@ -24,15 +26,29 @@ public class Event implements Comparable<Event> {
         this.type = type;
         this.intersection = intersection;
         this.direction = direction;
+        this.turningLeft = false;
     }
 
     // Resume
-    public Event(double time, EventType type, int intersection, Direction direction, VehicleProcess veh) {
+    public Event(double time, EventType type, int intersection,
+                 Direction direction, VehicleProcess veh) {
         this.time = time;
         this.type = type;
         this.intersection = intersection;
         this.direction = direction;
         this.veh = veh;
+        this.turningLeft = false;
+    }
+
+    // Wait until
+    public Event(double time, EventType type, int intersection,
+                 Direction direction, VehicleProcess veh, boolean turningLeft) {
+        this.time = time;
+        this.type = type;
+        this.intersection = intersection;
+        this.direction = direction;
+        this.veh = veh;
+        this.turningLeft = turningLeft;
     }
 
     public String toString() {

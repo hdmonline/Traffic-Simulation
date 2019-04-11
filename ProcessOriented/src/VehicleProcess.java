@@ -69,11 +69,15 @@ public class VehicleProcess implements Runnable {
                     delay = entered ? Parameter.getBetweenIntersectionTime(intersection) : 0;
                 }
                 // Schedule resume event
+                // TODO: add entrance from left/right
+                // Left turn if only vehicle is entering from west
+                boolean enteringLeft = direction == Direction.W;
                 eventHandler.addScheduleEvent(new Event(scheduler.getTime() + delay,
                         EventType.Resume,
                         intersection,
                         direction,
-                        this));
+                        this,
+                        enteringLeft));
                 // Wait for resuming (arrived intersection)
                 synchronized (scheduler) {
                     scheduler.notify();
@@ -83,8 +87,9 @@ public class VehicleProcess implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                entered = true;
+                // TODO: handle entering vehicles
                 eventHandler.addScheduleEvent(new Event(scheduler.getTime(), EventType.WaitUntil, intersection, direction, this));
+                entered = true;
                 // Wait for being able to cross the intersection
                 synchronized (scheduler) {
                     scheduler.notify();
@@ -95,7 +100,7 @@ public class VehicleProcess implements Runnable {
                     e.printStackTrace();
                 }
                 // Leave the intersection, set availableSouth to true;
-                eventHandler.getAvailableNorth()[eventHandler.getIntersectionIndex(intersection)] = true;
+                eventHandler.getAvailableThroughNorth()[eventHandler.getIntersectionIndex(intersection)] = true;
             }
         }
         // Exit to the North
