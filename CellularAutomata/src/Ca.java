@@ -97,8 +97,10 @@ class Ca {
         for (Vehicle veh : vehs) {
             veh.update(time);
             // If the vehicle is exiting the tracking area
+            // TODO: handle exiting from different intersection
             if (veh.pos > Parameter.END_POSITION) {
                 veh.endTime = time;
+                // TODO: assign exit direction and intersection
                 finished.add(veh);
                 finishedVehs.add(veh);
             }
