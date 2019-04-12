@@ -15,7 +15,7 @@ public class TrafficLight {
     private final double SOUTH_LEFT_GREEN_DURATION;
     private final double SOUTH_LEFT_TOTAL;
     private final double SOUTH_THROUGH_TOTAL;
-    private final double SOUTH_TOTAL;
+    private final double TOTAL;
 
     public TrafficLight(int id, double southThroughRed, double southThroughGreen, double southLeftGreen, double southLeftRed) {
         this.id = id;
@@ -25,7 +25,7 @@ public class TrafficLight {
         SOUTH_LEFT_RED_DURATION = southLeftRed;
         SOUTH_LEFT_TOTAL = southLeftGreen + southLeftRed;
         SOUTH_THROUGH_TOTAL = southThroughGreen + southThroughRed;
-        SOUTH_TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
+        TOTAL =  SOUTH_THROUGH_TOTAL + SOUTH_LEFT_TOTAL;
     }
 
     /**
@@ -37,58 +37,16 @@ public class TrafficLight {
      * @return the next green light time
      */
 
-    // Generate the flow of TurnGreenSouth & TurnRedSouth events in northbound dir
-    public void generateGreenSouth(double time, int id) {
+    // Generate the flow of traffic lights event
+    public void generateTrafficLights() {
+        double time = 0;
         while (time < Parameter.SIMULATION_TIME) {
-            Event turnGreen  = new Event(time, EventType.TurnGreenSouth, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnGreen);
-            double itrTime = getSouthTotal();
-            time += itrTime;
-        }
-    }
-
-    public void generateRedSouth(double time, int id) {
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnRed = new Event(time, EventType.TurnRedSouth, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnRed);
-            double itrTime = getSouthTotal();
-            time += itrTime;
-        }
-    }
-
-    public void generateGreenEast(double time, int id) {
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnGreen  = new Event(time, EventType.TurnGreenEast, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnGreen);
-            double itrTime = getSouthTotal();
-            time += itrTime;
-        }
-    }
-
-    public void generateRedeast(double time, int id) {
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnRed = new Event(time, EventType.TurnRedEast, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnRed);
-            double itrTime = getSouthTotal();
-            time += itrTime;
-        }
-    }
-
-    public void generateGreenWest(double time, int id) {
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnGreen  = new Event(time, EventType.TurnGreenWest, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnGreen);
-            double itrTime = getSouthTotal();
-            time += itrTime;
-        }
-    }
-
-    public void generateRedWest(double time, int id) {
-        while (time < Parameter.SIMULATION_TIME) {
-            Event turnRed = new Event(time, EventType.TurnRedWest, id, Direction.S);
-            ProcessEvents.getEventQueue().add(turnRed);
-            double itrTime = getSouthTotal();
-            time += itrTime;
+            ProcessEvents.getEventQueue().add(new Event(time, EventType.GreenSouth, id, Direction.E));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL, EventType.GreenSouth, id, Direction.S));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_GREEN_DURATION, EventType.RedSouth, id, Direction.E));
+            ProcessEvents.getEventQueue().add(new Event(time + SOUTH_LEFT_TOTAL + SOUTH_THROUGH_GREEN_DURATION, EventType.RedSouth, id, Direction.S));
+            //TODO: may need to generate traffic lights events from other direcrions
+            time += TOTAL;
         }
     }
 
@@ -122,6 +80,6 @@ public class TrafficLight {
     }
 
     public double getSouthTotal() {
-        return SOUTH_TOTAL;
+        return TOTAL;
     }
 }

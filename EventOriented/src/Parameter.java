@@ -21,6 +21,10 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 1.0;
 
+    // probability of turn right/left to exit at each intersection
+    static final double TURN_LEFT_PROB = 0.10;
+    static final double CUMUL_PROB = 0.25;
+
     static final String INPUT_FILE = "event_input.txt";
     static final String OUTPUT_VEHICLE_FILE = "event_vehicles.txt";
     static final String OUTPUT_EVENT_FILE = "event_events.txt";
