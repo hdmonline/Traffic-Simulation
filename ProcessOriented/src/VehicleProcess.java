@@ -55,6 +55,7 @@ public class VehicleProcess implements Runnable {
     @Override
     public synchronized void run() {
         // Iterate 4 intersections
+        boolean exitingToWestOrEast = false;
         for (int i = 1; i < 5; i++) {
             // Get intersection number from loop index
             int intersection = getIntersection(i);
@@ -64,12 +65,12 @@ public class VehicleProcess implements Runnable {
                 double delay;
                 if (intersection == 1) {
                     // If coming from south, it need to travel a distance to arrive intersection 1
-                    delay = entranceDirection == Direction.S ? Parameter.BETWEEN_START_INTERSECTION1 : 0;
+                    delay = entranceDirection == Direction.S ? Parameter.BETWEEN_START_INTERSECTION_1 : 0;
                 } else {
                     delay = entered ? Parameter.getBetweenIntersectionTime(intersection) : 0;
                 }
                 // Schedule resume event
-                eventHandler.addScheduleEvent(new Event(scheduler.getTime() + delay,
+                eventHandler.addEvent(new Event(scheduler.getTime() + delay,
                         EventType.Resume,
                         intersection,
                         direction,
@@ -83,15 +84,32 @@ public class VehicleProcess implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                // TODO: handle entering vehicles
-                // Left turn if only vehicle is entering from west
-                boolean enteringLeft = direction == Direction.W;
-                eventHandler.addScheduleEvent(new Event(scheduler.getTime(),
+                boolean turningLeft = false;
+                // If the vehicle is coming from south, it could be exiting to all 3 directions
+                if (direction == Direction.S) {
+                    double[] cumuProb = Parameter.getExitCumuProb(intersection);
+                    double r = FileIo.rand.nextDouble();
+                    if (r <= cumuProb[0]) {
+                        // Exiting to the west
+                        turningLeft = true;
+                        exitingToWestOrEast = true;
+                        exitIntersection = intersection;
+                        exitDirection = Direction.W;
+                    } else if (r <= cumuProb[1]) {
+                        // Exiting to the east
+                        exitingToWestOrEast = true;
+                        exitIntersection = intersection;
+                        exitDirection = Direction.E;
+                    }
+                }
+                // Left turn if the vehicle is entering from west or exiting to the west
+                turningLeft = turningLeft || direction == Direction.W;
+                eventHandler.addEvent(new Event(scheduler.getTime(),
                         EventType.WaitUntil,
                         intersection,
                         direction,
                         this,
-                        enteringLeft));
+                        turningLeft));
                 entered = true;
                 // Wait for being able to cross the intersection
                 synchronized (scheduler) {
@@ -103,15 +121,21 @@ public class VehicleProcess implements Runnable {
                     e.printStackTrace();
                 }
                 // Leave the intersection, set availableSouth to true;
-                eventHandler.getAvailableThroughNorth()[eventHandler.getIntersectionIndex(intersection)] = true;
+                eventHandler.getAvailable(turningLeft, direction)[eventHandler.getIntersectionIndex(intersection)] = true;
+                eventHandler.addEvent(new Event(Scheduler.getInstance().getTime(), EventType.CheckWait));
+                if (exitingToWestOrEast) {
+                    break;
+                }
             }
         }
-        // Exit to the North
-        double delay = Parameter.AFTER_INTERSECTION_5;
-        eventHandler.addScheduleEvent(new Event(scheduler.getTime() + delay,
+        // Exit
+        double delay = exitingToWestOrEast ? 0 : Parameter.AFTER_INTERSECTION_5;
+        exitIntersection = exitingToWestOrEast ? exitIntersection : 5;
+        exitDirection = exitingToWestOrEast ? exitDirection : Direction.N;
+        eventHandler.addEvent(new Event(scheduler.getTime() + delay,
                 EventType.Exit,
-                5,
-                Direction.N,
+                exitIntersection,
+                exitDirection,
                 this));
         // Resume the scheduler
         synchronized (scheduler) {

@@ -6,5 +6,6 @@ public enum EventType {
     TurnGreenLeft,
     TurnRedLeft,
     WaitUntil,
-    Resume
+    Resume,
+    CheckWait
 }

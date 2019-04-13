@@ -13,6 +13,14 @@ public class Event implements Comparable<Event> {
     VehicleProcess veh;
     boolean turningLeft;
 
+    // CheckWait
+    public Event(double time, EventType type) {
+        this.time = time;
+        this.type = type;
+        this.veh = null;
+        this.turningLeft = false;
+    }
+
     public Event(double time, EventType type, VehicleProcess veh) {
         this.time = time;
         this.type = type;
@@ -57,7 +65,8 @@ public class Event implements Comparable<Event> {
         str += String.format("%.2f", time) + ",";
         str += type + ",";
         str += (intersection == 0 ? "null" : intersection) + ",";
-        str += direction + ",";
+        str += (direction == null ? "null" : direction) + ",";
+        str += (type == EventType.WaitUntil ? turningLeft : "null") + ",";
         str += veh == null ? "null" : veh.id;
         return str;
     }

@@ -83,45 +83,45 @@ public class TrafficLight {
         while (time < Parameter.SIMULATION_TIME) {
             // North bound
             if (NORTH_BOUND_LEFT_TOTAL > 0) {
-                EventHandler.getInstance().addScheduleEvent(new Event(time, EventType.TurnGreenLeft, intersection, Direction.N));
-                EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_GREEN_DURATION,
+                EventHandler.getInstance().addEvent(new Event(time, EventType.TurnGreenLeft, intersection, Direction.N));
+                EventHandler.getInstance().addEvent(new Event(time + NORTH_BOUND_LEFT_GREEN_DURATION,
                         EventType.TurnRedLeft, intersection, Direction.N));
             }
-            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL,
+            EventHandler.getInstance().addEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL,
                     EventType.TurnGreenThrough, intersection, Direction.N));
-            EventHandler.getInstance().addScheduleEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL + NORTH_BOUND_THROUGH_GREEN_DURATION,
+            EventHandler.getInstance().addEvent(new Event(time + NORTH_BOUND_LEFT_TOTAL + NORTH_BOUND_THROUGH_GREEN_DURATION,
                     EventType.TurnRedThrough, intersection, Direction.N));
 
             // West bound
-            EventHandler.getInstance().addScheduleEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.W));
-            if (WEST_BOUND_LEFT_TOTAL > 0) {
-                EventHandler.getInstance().addScheduleEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION,
-                        EventType.TurnGreenLeft, intersection, Direction.W));
-                EventHandler.getInstance().addScheduleEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_GREEN_DURATION,
-                        EventType.TurnRedLeft, intersection, Direction.W));
-            }
-            EventHandler.getInstance().addScheduleEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_TOTAL,
+            EventHandler.getInstance().addEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.W));
+//            if (WEST_BOUND_LEFT_TOTAL > 0) {
+//                EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION,
+//                        EventType.TurnGreenLeft, intersection, Direction.W));
+//                EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_GREEN_DURATION,
+//                        EventType.TurnRedLeft, intersection, Direction.W));
+//            }
+            EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_TOTAL,
                     EventType.TurnGreenThrough, intersection, Direction.W));
             time += TOTAL_DURATION;
 
             // East bound
-            EventHandler.getInstance().addScheduleEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.E));
+            EventHandler.getInstance().addEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.E));
             if (EAST_BOUND_LEFT_TOTAL > 0) {
                 if (intersection == 5) {
-                    EventHandler.getInstance().addScheduleEvent(new Event(time,
+                    EventHandler.getInstance().addEvent(new Event(time,
                             EventType.TurnRedLeft, intersection, Direction.E));
-                    EventHandler.getInstance().addScheduleEvent(new Event(time + EAST_BOUND_LEFT_RED_DURATION,
+                    EventHandler.getInstance().addEvent(new Event(time + EAST_BOUND_LEFT_RED_DURATION,
                             EventType.TurnGreenLeft, intersection, Direction.E));
-                    EventHandler.getInstance().addScheduleEvent(new Event(time + EAST_BOUND_LEFT_TOTAL,
+                    EventHandler.getInstance().addEvent(new Event(time + EAST_BOUND_LEFT_TOTAL,
                             EventType.TurnRedLeft, intersection, Direction.E));
                 } else {
-                    EventHandler.getInstance().addScheduleEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION,
+                    EventHandler.getInstance().addEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION,
                             EventType.TurnGreenLeft, intersection, Direction.E));
-                    EventHandler.getInstance().addScheduleEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION + EAST_BOUND_LEFT_GREEN_DURATION,
+                    EventHandler.getInstance().addEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION + EAST_BOUND_LEFT_GREEN_DURATION,
                             EventType.TurnRedLeft, intersection, Direction.E));
                 }
             }
-            EventHandler.getInstance().addScheduleEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION + EAST_BOUND_LEFT_TOTAL,
+            EventHandler.getInstance().addEvent(new Event(time + EAST_BOUND_THROUGH_RED_DURATION + EAST_BOUND_LEFT_TOTAL,
                     EventType.TurnGreenThrough, intersection, Direction.E));
 
             time += TOTAL_DURATION;

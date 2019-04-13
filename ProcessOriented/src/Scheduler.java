@@ -8,6 +8,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class Scheduler implements Runnable {
@@ -62,18 +63,24 @@ public class Scheduler implements Runnable {
     public synchronized void run() {
         // Handle FEL, then PEL
         PriorityQueue<Event> eventQueue = eventHandler.getEventQueue();
-        while(!eventQueue.isEmpty() || time < Parameter.SIMULATION_TIME) {
-            Event currEvent = eventQueue.poll();
-            time = currEvent.time;
-            ioHandler.writeEvent(currEvent);
-            eventHandler.handleEvent(currEvent);
+        LinkedList<Event> waitingVehEvents = eventHandler.getWaitingVehEvents();
+        while(!eventQueue.isEmpty() || !waitingVehEvents.isEmpty() || time < Parameter.SIMULATION_TIME) {
+            if (time > Parameter.SIMULATION_TIME) {
+                eventHandler.turnAllGreens();
+            }
+            if (!eventQueue.isEmpty()) {
+                Event currEvent = eventQueue.poll();
+                time = currEvent.time;
+                ioHandler.writeEvent(currEvent);
+                eventHandler.handleEvent(currEvent);
 
-            // Wait for notifying from other processes
-            if (currEvent.type == EventType.Resume || currEvent.type == EventType.Enter) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                // Wait for notifying from other processes
+                if (currEvent.type == EventType.Resume || currEvent.type == EventType.Enter) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             // Check every waiting vehicles in the queue
@@ -95,16 +102,15 @@ public class Scheduler implements Runnable {
             return;
         }
 
-        for (VehicleProcess veh : enteringVehs) {
-            // Thread vehThread = new Thread(veh);
-            eventHandler.addScheduleEvent(new Event(veh.startTime, EventType.Enter,
-                    veh.entranceIntersection, veh.entranceDirection, veh));
-        }
-
         // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
         TrafficLight[] trafficLights = eventHandler.getTrafficLights();
         for (TrafficLight tl : trafficLights) {
             tl.generateLightEvents();
+        }
+
+        for (VehicleProcess veh : enteringVehs) {
+            eventHandler.addEvent(new Event(veh.startTime, EventType.Enter,
+                    veh.entranceIntersection, veh.entranceDirection, veh));
         }
     }
 

@@ -12,9 +12,8 @@ import java.util.Random;
 
 public class FileIo {
     private ArrayList<Distribution> distributions = new ArrayList<>();
-    private Random rand = new Random();
     private BufferedWriter eventWriter = null;
-    private boolean wroteEvent = false;
+    static Random rand = new Random();
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -56,7 +55,7 @@ public class FileIo {
     public void initialEventWriter() {
         try {
             eventWriter = new BufferedWriter(new FileWriter(Parameter.OUTPUT_EVENT_FILE));
-            String header = "time,type,intersection,direction,vehicle";
+            String header = "time,type,intersection,direction,turning_left,vehicle";
             eventWriter.write(header);
         } catch (IOException e) {
             e.printStackTrace();
