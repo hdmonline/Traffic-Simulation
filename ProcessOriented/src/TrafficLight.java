@@ -65,7 +65,7 @@ public class TrafficLight {
         WEST_BOUND_LEFT_GREEN_DURATION = wbLtG;
         WEST_BOUND_LEFT_TOTAL = WEST_BOUND_LEFT_GREEN_DURATION + WEST_BOUND_LEFT_RED_DURATION;
 
-        // West bound
+        // East bound
         EAST_BOUND_THROUGH_RED_DURATION = ebTrR;
         EAST_BOUND_THROUGH_GREEN_DURATION = ebTrG;
         EAST_BOUND_LEFT_RED_DURATION = ebLtR;
@@ -94,15 +94,8 @@ public class TrafficLight {
 
             // West bound
             EventHandler.getInstance().addEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.W));
-//            if (WEST_BOUND_LEFT_TOTAL > 0) {
-//                EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION,
-//                        EventType.TurnGreenLeft, intersection, Direction.W));
-//                EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_GREEN_DURATION,
-//                        EventType.TurnRedLeft, intersection, Direction.W));
-//            }
             EventHandler.getInstance().addEvent(new Event(time + WEST_BOUND_THROUGH_RED_DURATION + WEST_BOUND_LEFT_TOTAL,
                     EventType.TurnGreenThrough, intersection, Direction.W));
-            time += TOTAL_DURATION;
 
             // East bound
             EventHandler.getInstance().addEvent(new Event(time, EventType.TurnRedThrough, intersection, Direction.E));

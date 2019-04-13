@@ -29,7 +29,7 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 0.3;
 
-    static final String INPUT_FILE = "process_input_1.csv";
+    static final String INPUT_FILE = "process_input.csv";
     static final String OUTPUT_VEHICLE_FILE = "process_vehicles.csv";
     static final String OUTPUT_EVENT_FILE = "process_events.csv";
 

@@ -64,7 +64,7 @@ public class Scheduler implements Runnable {
         // Handle FEL, then PEL
         PriorityQueue<Event> eventQueue = eventHandler.getEventQueue();
         LinkedList<Event> waitingVehEvents = eventHandler.getWaitingVehEvents();
-        while(!eventQueue.isEmpty() || !waitingVehEvents.isEmpty() || time < Parameter.SIMULATION_TIME) {
+        while(!eventQueue.isEmpty() || !waitingVehEvents.isEmpty() && time < Parameter.SIMULATION_TIME) {
             if (time > Parameter.SIMULATION_TIME) {
                 eventHandler.turnAllGreens();
             }
