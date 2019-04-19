@@ -34,7 +34,7 @@ public class FileIo {
         int intersection, direction, numLines;
         try {
             while ((currLine = br.readLine()) != null) {
-                String[] strs = currLine.split(" ", 3);
+                String[] strs = currLine.split(",", 3);
                 intersection = Integer.parseInt(strs[0]);
                 direction = Integer.parseInt(strs[1]);
                 numLines = Integer.parseInt(strs[2]);
@@ -42,7 +42,7 @@ public class FileIo {
                 // Read distribution bins
                 for (int i = 0; i < numLines; i++) {
                     currLine = br.readLine();
-                    String[] pair = currLine.split(" ", 2);
+                    String[] pair = currLine.split(",", 2);
                     double time = Double.parseDouble(pair[0]);
                     double prob = Double.parseDouble(pair[1]);
                     distribution.interval[i] = time;

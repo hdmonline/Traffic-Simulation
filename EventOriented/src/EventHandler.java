@@ -24,8 +24,8 @@ public class EventHandler {
     // Status i.e. isGreen of triffic northbound traffic lights at the four intersections
     private boolean[] isGreenSouthThrough = new boolean[4];
     private boolean[] isGreenSouthTurnLeft = new boolean[4];
-    private boolean[] isGreenEastTurnLeft = new boolean[4];
-    private boolean[] isGreenWestTurnRight = new boolean[4];
+    private boolean[] isGreenEastTurnRight = new boolean[4];
+    private boolean[] isGreenWestTurnLeft = new boolean[4];
 
     private Random random = new Random();
 
@@ -49,8 +49,8 @@ public class EventHandler {
             westVehs.add(new LinkedList<>());
             isGreenSouthThrough[i] = false;
             isGreenSouthTurnLeft[i] = false;
-            isGreenEastTurnLeft[i] = false;
-            isGreenWestTurnRight[i] = false;
+            isGreenEastTurnRight[i] = false;
+            isGreenWestTurnLeft[i] = false;
         }
 
         // Initialize the traffic lights
@@ -172,7 +172,7 @@ public class EventHandler {
 
     private void greenEastTurnLeft(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
-        isGreenEastTurnLeft[index] = true;
+        isGreenEastTurnRight[index] = true;
         LinkedList<Vehicle> vehQueue = eastVehs.get(index);
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
@@ -183,12 +183,12 @@ public class EventHandler {
 
     private void redEastTurnLeft(int intersection) {
         int index = getIntersectionIndex(intersection);
-        isGreenEastTurnLeft[index] = false;
+        isGreenEastTurnRight[index] = false;
     }
 
     private void greenWestTurnRight(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
-        isGreenWestTurnRight[index] = true;
+        isGreenWestTurnLeft[index] = true;
         LinkedList<Vehicle> vehQueue = westVehs.get(index);
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
@@ -199,7 +199,7 @@ public class EventHandler {
 
     private void redWestTurnRight(int intersection) {
         int index = getIntersectionIndex(intersection);
-        isGreenWestTurnRight[index] = false;
+        isGreenWestTurnLeft[index] = false;
     }
 
     private void arrival(int intersection, Direction direction, double time, Vehicle veh) {
@@ -248,7 +248,7 @@ public class EventHandler {
         int index = getIntersectionIndex(intersection);
         westVehs.get(index).addFirst(veh);
         int numInQueue = westVehs.get(index).size();
-        if (numInQueue == 1 && isGreenWestTurnRight[index]) {
+        if (numInQueue == 1 && isGreenWestTurnLeft[index]) {
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection, Direction.W, veh));
         }
     }
@@ -257,7 +257,7 @@ public class EventHandler {
         int index = getIntersectionIndex(intersection);
         eastVehs.get(index).addFirst(veh);
         int numInQueue = eastVehs.get(index).size();
-        if (numInQueue == 1 && isGreenEastTurnLeft[index]) {
+        if (numInQueue == 1 && isGreenEastTurnRight[index]) {
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection, Direction.E, veh));
         }
     }
@@ -312,7 +312,7 @@ public class EventHandler {
         int nextIntersection;
         int index = getIntersectionIndex(intersection);
         LinkedList<Vehicle> queue = eastVehs.get(index);
-        if (isGreenEastTurnLeft[index]) {
+        if (isGreenEastTurnRight[index]) {
             if (intersection == 5) {
                 Event exit = new Event(time + getBetweenIntersectionTime(intersection), EventType.Exit, intersection, Direction.E, veh);
                 ProcessEvents.getEventQueue().add(exit);
@@ -333,7 +333,7 @@ public class EventHandler {
         int nextIntersection;
         int index = getIntersectionIndex(intersection);
         LinkedList<Vehicle> queue = westVehs.get(index);
-        if (isGreenWestTurnRight[index]) {
+        if (isGreenWestTurnLeft[index]) {
             if (intersection == 5) {
                 Event exit = new Event(time + getBetweenIntersectionTime(intersection), EventType.Exit, intersection, Direction.W, veh);
                 ProcessEvents.getEventQueue().add(exit);
