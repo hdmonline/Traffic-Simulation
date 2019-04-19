@@ -52,6 +52,9 @@ class Vehicle implements Comparable<Vehicle> {
         this.entranceIntersection = entranceIntersection;
         this.entranceDirection = entranceDirection;
         this.isFollowingLight = false;
+        // Default exit
+        this.exitDirection = Direction.N;
+        this.exitIntersection = 5;
     }
 
     /**

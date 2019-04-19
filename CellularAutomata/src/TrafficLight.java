@@ -33,6 +33,9 @@ public class TrafficLight implements Comparable<TrafficLight> {
         return isGreen;
     }
 
+
+    //
+
     // Getters
     public int getPos() {
         return pos;
