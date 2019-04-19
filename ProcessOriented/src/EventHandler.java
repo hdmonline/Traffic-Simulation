@@ -13,16 +13,7 @@ import java.util.PriorityQueue;
 
 public class EventHandler {
     private static EventHandler instance = null;
-
-    // Vehicle queues for going through, First -> In, Last -> Out
-    private ArrayList<LinkedList<VehicleProcess>> southThroughRightVehs, westThroughRightVehs, eastThroughRightVehs;
-    // Vehicle queues for turning left
-    private ArrayList<LinkedList<VehicleProcess>> southLeftVehs, westLeftVehs;
     private TrafficLight[] trafficLights;
-    private boolean[] isThroughRightSouthGreen, isThroughRightWestGreen, isThroughRightEastGreen;
-    private boolean[] isLeftSouthGreen, isLeftWestGreen;
-    private boolean[] availableThroughRightSouth, availableThroughRightWest, availableThroughRightEast;
-    private boolean[] availableLeftSouth, availableLeftWest;
 
 
     // Event queue to store all the event in the order of time
@@ -38,44 +29,10 @@ public class EventHandler {
      * Private constructor for this singleton class
      */
     private EventHandler() {
-        // Initialize the vehicle queues for each traffic light
-        southThroughRightVehs = new ArrayList<>();
-        westThroughRightVehs = new ArrayList<>();
-        eastThroughRightVehs = new ArrayList<>();
-        southLeftVehs = new ArrayList<>();
-        westLeftVehs = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            southThroughRightVehs.add(new LinkedList<>());
-            westThroughRightVehs.add(new LinkedList<>());
-            eastThroughRightVehs.add(new LinkedList<>());
-            southLeftVehs.add(new LinkedList<>());
-            westLeftVehs.add(new LinkedList<>());
-        }
-
         //Initialize FEL and PEL
         eventQueue = new PriorityQueue<>();
         waitingVehEvents = new LinkedList<>();
 
-        // Initialize traffic light status
-        isThroughRightSouthGreen = new boolean[4];
-        isThroughRightWestGreen = new boolean[4];
-        isThroughRightEastGreen = new boolean[4];
-        isLeftSouthGreen = new boolean[4];
-        isLeftWestGreen = new boolean[4];
-        Arrays.fill(isLeftWestGreen, true);
-        Arrays.fill(isLeftSouthGreen, true);
-
-        // Initialize intersection/direction status
-        availableThroughRightSouth = new boolean[4];
-        availableThroughRightWest = new boolean[4];
-        availableThroughRightEast = new boolean[4];
-        availableLeftSouth = new boolean[4];
-        availableLeftWest = new boolean[4];
-        Arrays.fill(availableThroughRightSouth, true);
-        Arrays.fill(availableThroughRightWest, true);
-        Arrays.fill(availableThroughRightEast, true);
-        Arrays.fill(availableLeftSouth, true);
-        Arrays.fill(availableLeftWest, true);
 
         // Initialize the traffic lights
         trafficLights = new TrafficLight[4];
@@ -157,51 +114,17 @@ public class EventHandler {
      */
     private synchronized void waitUntil(Event event) {
         int index = getIntersectionIndex(event.intersection);
-        boolean[] available = null;
-        boolean[] isGreen = null;
-        ArrayList<LinkedList<VehicleProcess>> vehs = null;
-        if (event.turningLeft) {
-            switch (event.direction) {
-                case S:
-                    available = availableLeftSouth;
-                    isGreen = isLeftSouthGreen;
-                    vehs = southLeftVehs;
-                    break;
-                case W:
-                    available = availableLeftWest;
-                    isGreen = isLeftWestGreen;
-                    vehs = westLeftVehs;
-                    break;
-                default:
-                    System.out.println("Error - EventHandler.checkWait: Wrong Direction!");
-            }
-        } else {
-            switch (event.direction) {
-                case S:
-                    available = availableThroughRightSouth;
-                    isGreen = isThroughRightSouthGreen;
-                    vehs = southThroughRightVehs;
-                    break;
-                case W:
-                    available = availableThroughRightWest;
-                    isGreen = isThroughRightWestGreen;
-                    vehs = westThroughRightVehs;
-                    break;
-                case E:
-                    available = availableThroughRightEast;
-                    isGreen = isThroughRightEastGreen;
-                    vehs = eastThroughRightVehs;
-                    break;
-                default:
-                    System.out.println("Error - EventHandler.checkWait: Wrong Direction!");
-            }
-        }
+        TrafficLight tl = trafficLights[index];
+        boolean available = tl.available(event.direction, event.turningLeft);
+        boolean isGreen = tl.isGreen(event.direction, event.turningLeft);
+        LinkedList<VehicleProcess> vehs = tl.getVehsQueue(event.direction, event.turningLeft);
+
         // If it's green light and free, pass immediately
-        if (available[index] && isGreen[index] && vehs.size() == 0) {
+        if (available && isGreen && vehs.size() == 0) {
             addEvent(new Event(Scheduler.getInstance().getTime(), EventType.Resume, event.veh));
         } else {
             waitingVehEvents.add(event);
-            vehs.get(index).addFirst(event.veh);
+            vehs.addFirst(event.veh);
         }
     }
 
@@ -212,53 +135,18 @@ public class EventHandler {
         ArrayList<Event> handled = new ArrayList<>();
         for (Event event : waitingVehEvents) {
             int index = getIntersectionIndex(event.intersection);
-            boolean[] available = null;
-            boolean[] isGreen = null;
-            ArrayList<LinkedList<VehicleProcess>> vehs = null;
-            if (event.turningLeft) {
-                switch (event.direction) {
-                    case S:
-                        available = availableLeftSouth;
-                        isGreen = isLeftSouthGreen;
-                        vehs = southLeftVehs;
-                        break;
-                    case W:
-                        available = availableLeftWest;
-                        isGreen = isLeftWestGreen;
-                        vehs = westLeftVehs;
-                        break;
-                    default:
-                        System.out.println("Error - EventHandler.checkWait: Wrong Direction!");
-                }
-            } else {
-                switch (event.direction) {
-                    case S:
-                        available = availableThroughRightSouth;
-                        isGreen = isThroughRightSouthGreen;
-                        vehs = southThroughRightVehs;
-                        break;
-                    case W:
-                        available = availableThroughRightWest;
-                        isGreen = isThroughRightWestGreen;
-                        vehs = westThroughRightVehs;
-                        break;
-                    case E:
-                        available = availableThroughRightEast;
-                        isGreen = isThroughRightEastGreen;
-                        vehs = eastThroughRightVehs;
-                        break;
-                    default:
-                        System.out.println("Error - EventHandler.checkWait: Wrong Direction!");
-                }
-            }
+            TrafficLight tl = trafficLights[index];
+            boolean available = tl.available(event.direction, event.turningLeft);
+            boolean isGreen = tl.isGreen(event.direction, event.turningLeft);
+            LinkedList<VehicleProcess> vehs = tl.getVehsQueue(event.direction, event.turningLeft);
 
-            assert(available != null && isGreen != null && vehs != null);
+            assert(vehs != null);
 
-            if (available[index] && isGreen[index]
-                    && vehs.get(index).indexOf(event.veh) == vehs.get(index).size() - 1) {
+            if (available && isGreen
+                    && vehs.indexOf(event.veh) == vehs.size() - 1) {
                 addEvent(new Event(Scheduler.getInstance().getTime() + Parameter.W, EventType.Resume, event.veh));
-                available[index] = false;
-                vehs.get(index).removeLast();
+                tl.setAvailable(event.direction, event.turningLeft, false);
+                vehs.removeLast();
                 handled.add(event);
             }
         }
@@ -296,19 +184,7 @@ public class EventHandler {
                 System.out.println("Error - EventHandler.turnThroughLight: Wrong Event!");
         }
         int index = getIntersectionIndex(intersection);
-        switch(direction) {
-            case N:
-                isThroughRightSouthGreen[index] = green;
-                break;
-            case W:
-                isThroughRightEastGreen[index] = green;
-                break;
-            case E:
-                isThroughRightWestGreen[index] = green;
-                break;
-            default:
-                System.out.println("Error - EventHandler.turnThroughLight: Wrong Direction!");
-        }
+        trafficLights[index].setLight(direction, false, green);
     }
 
     /**
@@ -332,16 +208,7 @@ public class EventHandler {
                 System.out.println("Error - EventHandler.turnLeftLight: Wrong Event!");
         }
         int index = getIntersectionIndex(intersection);
-        switch(direction) {
-            case N:
-                isLeftSouthGreen[index] = green;
-                break;
-            case E:
-                isLeftWestGreen[index] = green;
-                break;
-            default:
-                System.out.println("Error - EventHandler.turnLeftLight: Wrong Direction!");
-        }
+        trafficLights[index].setLight(direction, true, green);
     }
 
     /**
@@ -375,26 +242,20 @@ public class EventHandler {
         eventQueue.add(event);
     }
 
-    public boolean[] getAvailable(boolean left, Direction direction) {
-        switch (direction) {
-            case S:
-                return left ? availableLeftSouth : availableThroughRightSouth;
-            case W:
-                return left ? availableLeftWest : availableThroughRightWest;
-            case E:
-                return availableThroughRightEast;
-            default:
-                System.out.println("Error - EventHandler.getAvailable: Wrong direction!");
-                return new boolean[4];
-        }
+    public boolean getAvailable(int intersection, boolean left, Direction direction) {
+        int index = getIntersectionIndex(intersection);
+        return trafficLights[index].available(direction, left);
+    }
+
+    public void setAvailable(int intersection, boolean left, Direction direction, boolean available) {
+        int index = getIntersectionIndex(intersection);
+        trafficLights[index].setAvailable(direction, left, available);
     }
 
     public void turnAllGreens() {
-        Arrays.fill(isThroughRightSouthGreen, true);
-        Arrays.fill(isThroughRightWestGreen, true);
-        Arrays.fill(isThroughRightEastGreen, true);
-        Arrays.fill(isLeftSouthGreen, true);
-        Arrays.fill(isLeftWestGreen, true);
+        for (TrafficLight tl : trafficLights) {
+            tl.turnAllGreen();
+        }
     }
 
     public PriorityQueue<Event> getEventQueue() {

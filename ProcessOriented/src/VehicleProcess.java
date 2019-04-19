@@ -121,7 +121,7 @@ public class VehicleProcess implements Runnable {
                     e.printStackTrace();
                 }
                 // Leave the intersection, set availableSouth to true;
-                eventHandler.getAvailable(turningLeft, direction)[eventHandler.getIntersectionIndex(intersection)] = true;
+                eventHandler.setAvailable(intersection, turningLeft, direction, true);
                 eventHandler.addEvent(new Event(Scheduler.getInstance().getTime(), EventType.CheckWait));
                 if (exitingToWestOrEast) {
                     break;
