@@ -28,6 +28,12 @@ public class Event implements Comparable<Event> {
         this.direction = direction;
     }
 
+    public Event(double time, EventType type, int intersection) {
+        this.time = time;
+        this.type = type;
+        this.intersection = intersection;
+    }
+
     public String toString() {
         String str = "";
         str += String.format("%.2f", time) + " ";

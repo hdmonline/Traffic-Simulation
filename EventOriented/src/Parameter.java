@@ -8,7 +8,7 @@
 public class Parameter {
 
     // Simulation time
-    static final double SIMULATION_TIME = 100 * 60;
+    static final double SIMULATION_TIME = 15 * 60;
 
     // Travelling time from starting point to Intersection 1
     static final double BETWEEN_START_INTERSECTION1 = 14.136;
