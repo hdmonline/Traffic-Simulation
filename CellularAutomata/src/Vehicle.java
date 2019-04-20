@@ -29,6 +29,7 @@ class Vehicle implements Comparable<Vehicle> {
     double endTime;
 
     boolean isFollowingLight;
+    boolean exiting;
     TrafficLight trafficLight;
 
     /**
@@ -53,8 +54,7 @@ class Vehicle implements Comparable<Vehicle> {
         this.entranceDirection = entranceDirection;
         this.isFollowingLight = false;
         // Default exit
-        this.exitDirection = Direction.N;
-        this.exitIntersection = 5;
+        exiting = false;
     }
 
     /**
@@ -100,11 +100,14 @@ class Vehicle implements Comparable<Vehicle> {
                 }
             }
         }
-        int gap;
-        if (isFollowingLight && !trafficLight.isSouthThroughGreen(now)) {
-            gap = trafficLight.getPos() - lastPos;
-        } else {
-            gap = leader == null ? Integer.MAX_VALUE : leader.lastPos - leader.len - lastPos;
+        int gap = leader == null ? Integer.MAX_VALUE : leader.lastPos - leader.len - lastPos;
+        // TODO: find bug here!!!
+        if (isFollowingLight) {
+            if (exiting && exitDirection == Direction.W) {
+                gap = trafficLight.isSouthGreen(true, now) ? gap : trafficLight.getPos() - lastPos;
+            } else if (!trafficLight.isSouthGreen(false, now)) {
+                gap = trafficLight.getPos() - lastPos;
+            }
         }
         if (speed >= gap) {
             speed = gap - 1;

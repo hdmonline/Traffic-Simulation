@@ -9,7 +9,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Optional;
 
 class Ca {
     static private ArrayList<Vehicle> vehs = new ArrayList<>();
@@ -21,11 +20,23 @@ class Ca {
     static private double time = 0; // in second
 
     public static void main(String[] args) {
-        // Initialize trafficLights
-        trafficLights.add(new TrafficLight(1, 144, 49.3, 38.3, 10.6, 2.2));
-        trafficLights.add(new TrafficLight(2, 662, 55.4, 44.7, 0, 0));
-        trafficLights.add(new TrafficLight(3, 1204, 35.7, 64.6, 0, 0));
-        trafficLights.add(new TrafficLight(5, 2041, 46.1, 37.8, 12.4, 3.6));
+        // Initialize the traffic lights
+        trafficLights.add(new TrafficLight(1, 144,
+                10.6, 2.2, 38.3, 49.3,
+                8.6, 4.2, 31.8, 55,
+                9.8, 1.8, 33.8, 55));
+        trafficLights.add(new TrafficLight(2, 662,
+                0, 0, 44.7, 55.4,
+                0, 0, 23.9, 76.2,
+                0, 0, 23.9, 76.2));
+        trafficLights.add(new TrafficLight(3, 1204,
+                0, 0, 64.1, 35.7,
+                0, 0, 30.9, 69.2,
+                0, 0, 30.9, 69.2));
+        trafficLights.add(new TrafficLight(5, 2041,
+                12.4, 3.6, 37.8, 46.1,
+                0, 0, 26.1, 74,
+                13.4, 60, 40.6, 60.2));
 
         // Sort the traffic lights by position
         Collections.sort(trafficLights);
@@ -99,14 +110,21 @@ class Ca {
             veh.update(time);
             // If the vehicle is exiting the tracking area
             // TODO: handle exiting from different intersection
-            TrafficLight tl = trafficLights.stream().filter(t -> (t.getIntersection() == veh.exitIntersection)).findFirst().orElse(null);
-            assert(tl != null); // Must find the trafficlight
-            int pos = tl.getPos();
-            if (veh.pos > pos) {
+            if (veh.pos > Parameter.END_POSITION) {
+                veh.exitIntersection = 5;
+                veh.exitDirection = Direction.N;
                 veh.endTime = time;
-                // TODO: assign exit direction and intersection
                 finished.add(veh);
                 finishedVehs.add(veh);
+            } else if (veh.exiting) {
+                TrafficLight tl = trafficLights.stream().filter(t -> (t.getIntersection() == veh.exitIntersection)).findFirst().orElse(null);
+                assert(tl != null); // Must find the trafficlight
+                int exitPos = tl.getPos();
+                if (veh.pos > exitPos) {
+                    veh.endTime = time;
+                    finished.add(veh);
+                    finishedVehs.add(veh);
+                }
             }
         }
         vehs.removeAll(finished);
@@ -285,17 +303,21 @@ class Ca {
             // Update the found veh
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
-            // Decide the exit intersection and direction
-            double[] cumuProb = Parameter.getExitCumuProb(tl.getIntersection());
-            double r = FileIo.rand.nextDouble();
-            if ( r <= cumuProb[0]) {
-                // Exit to the west
-                vehs.get(i).exitIntersection = tl.getIntersection();
-                vehs.get(i).exitDirection = Direction.W;
-            } else if (r <= cumuProb[1]) {
-                // Exit to the east
-                vehs.get(i).exitIntersection = tl.getIntersection();
-                vehs.get(i).exitDirection = Direction.E;
+            // Decide the exit intersection and direction if it's not decided yet
+            if (!vehs.get(i).exiting) {
+                double[] cumuProb = Parameter.getExitCumuProb(tl.getIntersection());
+                double r = FileIo.rand.nextDouble();
+                if (r <= cumuProb[0]) {
+                    // Exit to the west
+                    vehs.get(i).exitIntersection = tl.getIntersection();
+                    vehs.get(i).exitDirection = Direction.W;
+                    vehs.get(i).exiting = true;
+                } else if (r <= cumuProb[1]) {
+                    // Exit to the east
+                    vehs.get(i).exitIntersection = tl.getIntersection();
+                    vehs.get(i).exitDirection = Direction.E;
+                    vehs.get(i).exiting = true;
+                }
             }
 
             // Find the first veh before light on the other lane
@@ -309,17 +331,21 @@ class Ca {
             // Update the found veh
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
-            // Decide the exit intersection and direction
-            cumuProb = Parameter.getExitCumuProb(tl.getIntersection());
-            r = FileIo.rand.nextDouble();
-            if ( r <= cumuProb[0]) {
-                // Exit to the west
-                vehs.get(i).exitIntersection = tl.getIntersection();
-                vehs.get(i).exitDirection = Direction.W;
-            } else if (r <= cumuProb[1]) {
-                // Exit to the east
-                vehs.get(i).exitIntersection = tl.getIntersection();
-                vehs.get(i).exitDirection = Direction.E;
+            // Decide the exit intersection and direction if it's not decided yet
+            if (!vehs.get(i).exiting) {
+                double[] cumuProb = Parameter.getExitCumuProb(tl.getIntersection());
+                double r = FileIo.rand.nextDouble();
+                if ( r <= cumuProb[0]) {
+                    // Exit to the west
+                    vehs.get(i).exitIntersection = tl.getIntersection();
+                    vehs.get(i).exitDirection = Direction.W;
+                    vehs.get(i).exiting = true;
+                } else if (r <= cumuProb[1]) {
+                    // Exit to the east
+                    vehs.get(i).exitIntersection = tl.getIntersection();
+                    vehs.get(i).exitDirection = Direction.E;
+                    vehs.get(i).exiting = true;
+                }
             }
         }
     }
