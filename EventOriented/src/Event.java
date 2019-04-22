@@ -34,6 +34,7 @@ public class Event implements Comparable<Event> {
         this.intersection = intersection;
     }
 
+    // Helper function to output event
     public String toString() {
         String str = "";
         str += String.format("%.2f", time) + " ";
