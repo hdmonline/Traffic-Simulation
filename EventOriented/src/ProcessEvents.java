@@ -20,13 +20,13 @@ public class ProcessEvents {
 
 
     public static void main(String[] args) {
-        // ProcessEvents processor = new ProcessEvents();
         // read the input file and generate the entering vehs/flow
         FileIo ioHandler = new FileIo();
         ioHandler.readFile();
         ioHandler.generateFlow();
 
         EventHandler handler = EventHandler.getInstance();
+        // Initialize the vehs arriving events and all traffic lights events
         initializeEventQueue(handler);
 
         // processing loop
@@ -47,7 +47,6 @@ public class ProcessEvents {
         return enteringVehs;
     }
 
-    // TODO: add traffic light events
     private static void initializeEventQueue(EventHandler eventHandler) {
         if (enteringVehs.isEmpty()) {
             return;
@@ -55,13 +54,13 @@ public class ProcessEvents {
 
         for (Vehicle veh : enteringVehs) {
             Event firstEvent;
-            // If it's entering from 10th south, add a traveling time (entering from south end of the area)
+            // If it's entering from south before 10th street, then add travelling time from start point to 10th street intersection
             double delay = (veh.entranceIntersection == 1 && veh.entranceDirection == Direction.S) ? Parameter.BETWEEN_START_INTERSECTION1 : 0;
             firstEvent = new Event(veh.startTime + delay, EventType.Arrival, veh.entranceIntersection, veh.entranceDirection, veh);
             eventQueue.add(firstEvent);
         }
 
-        // Generate turnRed and turnGreen events in northbound dir during the whole simulation time
+        // Generate traffic lights events during the whole simulation time
         TrafficLight[] trafficLights = eventHandler.getTrafficLights();
         for (TrafficLight tl : trafficLights) {
             tl.generateTrafficLights();

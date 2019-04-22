@@ -11,10 +11,10 @@ public enum EventType {
     Departure,
     RedSouth,
     GreenSouth,
-    RedEastTurnLeft,
-    GreenEastTurnLeft,
-    RedWestTurnRight,
-    GreenWestTurnRight,
+    RedEastTurnRight,
+    GreenEastTurnRight,
+    RedWestTurnLeft,
+    GreenWestTurnLeft,
     Exit
 }
 

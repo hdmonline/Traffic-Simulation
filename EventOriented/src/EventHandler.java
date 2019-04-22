@@ -13,7 +13,7 @@ import java.util.Random;
 public class EventHandler {
     private static EventHandler instance = null;
 
-    // Vehicle queues, First -> In, Last -> Out
+    // Vehicle queues, First -> In, First -> Out
     private ArrayList<LinkedList<Vehicle>> southVehsThrough;
     private ArrayList<LinkedList<Vehicle>> southVehsTurnLeft;
     private ArrayList<LinkedList<Vehicle>> southVehsTurnRight;
@@ -21,11 +21,11 @@ public class EventHandler {
     private ArrayList<LinkedList<Vehicle>> westVehs;
 
     private TrafficLight[] trafficLights;
-    // Status i.e. isGreen of triffic northbound traffic lights at the four intersections
+    // Status i.e. isGreen of traffic lights at the four intersections
     private boolean[] isGreenSouthThrough = new boolean[4];
     private boolean[] isGreenSouthTurnLeft = new boolean[4];
-    private boolean[] isGreenEastTurnLeft = new boolean[4];
-    private boolean[] isGreenWestTurnRight = new boolean[4];
+    private boolean[] isGreenEastTurnRight = new boolean[4];
+    private boolean[] isGreenWestTurnLeft = new boolean[4];
 
     private Random random = new Random();
 
@@ -33,32 +33,45 @@ public class EventHandler {
      * Private constructor for this singleton class
      */
     private EventHandler() {
-        // Initialize the vehicle queues for each traffic light from south, east and west
-        // Initialize isGreenSouthThrough in each intersection
+        // Initialize the vehicle queues at each intersection from south, east and west
+        // Initialize status of traffic lights in each intersection
         southVehsThrough = new ArrayList<>();
         southVehsTurnRight = new ArrayList<>();
         southVehsTurnLeft = new ArrayList<>();
         eastVehs = new ArrayList<>();
         westVehs = new ArrayList<>();
-
+        // Initialize vehs queues arriving each intersection
         for (int i = 0; i < 4; i++) {
             southVehsThrough.add(new LinkedList<>());
             southVehsTurnRight.add(new LinkedList<>());
             southVehsTurnLeft.add(new LinkedList<>());
             eastVehs.add(new LinkedList<>());
             westVehs.add(new LinkedList<>());
+
             isGreenSouthThrough[i] = false;
             isGreenSouthTurnLeft[i] = false;
-            isGreenEastTurnLeft[i] = false;
-            isGreenWestTurnRight[i] = false;
+            isGreenEastTurnRight[i] = false;
+            isGreenWestTurnLeft[i] = false;
         }
 
-        // Initialize the traffic lights
+        // Initialize the traffic lights at 10th street, 11th street, 12th street and 14th street
         trafficLights = new TrafficLight[4];
-        trafficLights[0] = new TrafficLight(1, 49.3, 38.3, 10.6, 2.2);
-        trafficLights[1] = new TrafficLight(2, 55.4, 44.7, 0, 0);
-        trafficLights[2] = new TrafficLight(3, 35.7, 64.6, 0, 0);
-        trafficLights[3] = new TrafficLight(5, 46.1, 37.8, 12.4, 3.6);
+        trafficLights[0] = new TrafficLight(1,
+                10.6, 2.2, 38.3, 49.3,
+                8.6, 4.2, 31.8, 55,
+                9.8, 1.8, 33.8, 55);
+        trafficLights[1] = new TrafficLight(2,
+                0, 0, 44.7, 55.4,
+                0, 0, 23.9, 76.2,
+                0, 0, 23.9, 76.2);
+        trafficLights[2] = new TrafficLight(3,
+                0, 0, 64.1, 35.7,
+                0, 0, 30.9, 69.2,
+                0, 0, 30.9, 69.2);
+        trafficLights[3] = new TrafficLight(5,
+                12.4, 3.6, 37.8, 46.1,
+                0, 0, 26.1, 74,
+                13.4, 60, 40.6, 60.2);
     }
 
     public static EventHandler getInstance() {
@@ -68,7 +81,7 @@ public class EventHandler {
         return instance;
     }
 
-// TODO: may need to handle arrival and exit from west and east direction
+    // Handle event based on the event type
     public void handleEvent(Event event) {
         switch(event.type) {
             case Arrival:
@@ -77,23 +90,26 @@ public class EventHandler {
             case Departure:
                 departure(event.intersection, event.time, event.vehicle, event.direction);
                 break;
+            // Northbound traffic light events
             case GreenSouth:
                 greenSouth(event.intersection, event.direction, event.time);
                 break;
             case RedSouth:
                 redSouth(event.intersection, event.direction, event.time);
                 break;
-            case GreenEastTurnLeft:
-                greenEastTurnLeft(event.intersection, event.time);
+            // Westbound traffic light turn right
+            case GreenEastTurnRight:
+                greenEastTurnRight(event.intersection, event.time);
                 break;
-            case RedEastTurnLeft:
-                redEastTurnLeft(event.intersection);
+            case RedEastTurnRight:
+                redEastTurnRight(event.intersection);
                 break;
-            case GreenWestTurnRight:
-                greenWestTurnRight(event.intersection, event.time);
+            // Eastbound traffic light turn left
+            case GreenWestTurnLeft:
+                greenWestTurnLeft(event.intersection, event.time);
                 break;
-            case RedWestTurnRight:
-                redWestTurnRight(event.intersection);
+            case RedWestTurnLeft:
+                redWestTurnLeft(event.intersection);
                 break;
             case Exit:
                 exit(event.intersection, event.time, event.vehicle, event.direction);
@@ -103,12 +119,15 @@ public class EventHandler {
         }
     }
 
+    // Northbound traffic light event
     private void greenSouth(int intersection, Direction direction, double time) {
         switch (direction) {
-            case S:
+            // Northbound through green
+            case N:
                 greenSouthThrough(intersection, time);
                 break;
-            case E:
+            // Northbound turn left green
+            case W:
                 greenSouthTurnLeft(intersection, time);
                 break;
             default:
@@ -118,10 +137,12 @@ public class EventHandler {
 
     private void redSouth(int intersection, Direction direction, double time) {
         switch (direction) {
-            case S:
+            // Northbound through red
+            case N:
                 redSouthThrough(intersection);
                 break;
-            case E:
+            // Northbound turn left red
+            case W:
                 redSouthTurnLeft(intersection);
                 break;
             default:
@@ -129,8 +150,10 @@ public class EventHandler {
         }
     }
 
-    // TODO: may need to handle west/east departures
-    // TODO: follow the logic of the example in the slides instead of hard coding the departure time.
+    /*
+    Schedule departure event for the first vehicle in the southVehsThrough queue
+    schedule Exit to East event for the first vehicle in the southVehsTurnRight queue
+    */
     private void greenSouthThrough(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
         isGreenSouthThrough[index] = true;
@@ -145,10 +168,11 @@ public class EventHandler {
         if (!vehQueueTurnRight.isEmpty()) {
             Vehicle firstVehTurnRight = vehQueueTurnRight.getLast();
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection,
-                    Direction.W, firstVehTurnRight));
+                    Direction.E, firstVehTurnRight));
         }
     }
 
+    // Set the northbound turn left light green, schedule exit to west event for the first veh in the queue
     private void greenSouthTurnLeft(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
         isGreenSouthTurnLeft[index] = true;
@@ -156,23 +180,26 @@ public class EventHandler {
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection,
-                    Direction.E, firstVeh));
+                    Direction.W, firstVeh));
         }
     }
 
+    // Set the northbound through light red
     private void redSouthThrough(int intersection) {
         int index = getIntersectionIndex(intersection);
         isGreenSouthThrough[index] = false;
     }
 
+    // Set the northbound turn left light red
     private void redSouthTurnLeft(int intersection) {
         int index = getIntersectionIndex(intersection);
         isGreenSouthTurnLeft[index] = false;
     }
 
-    private void greenEastTurnLeft(int intersection, double time) {
+    // Set westbound turn right light green, schedule departure from east event for 1st veh in the queue
+    private void greenEastTurnRight(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
-        isGreenEastTurnLeft[index] = true;
+        isGreenEastTurnRight[index] = true;
         LinkedList<Vehicle> vehQueue = eastVehs.get(index);
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
@@ -181,14 +208,16 @@ public class EventHandler {
         }
     }
 
-    private void redEastTurnLeft(int intersection) {
+    // Set Westbound turn right light red
+    private void redEastTurnRight(int intersection) {
         int index = getIntersectionIndex(intersection);
-        isGreenEastTurnLeft[index] = false;
+        isGreenEastTurnRight[index] = false;
     }
 
-    private void greenWestTurnRight(int intersection, double time) {
+    // Set eastbound turn left light green, schedule departure from west event for 1st veh in the queue
+    private void greenWestTurnLeft(int intersection, double time) {
         int index = getIntersectionIndex(intersection);
-        isGreenWestTurnRight[index] = true;
+        isGreenWestTurnLeft[index] = true;
         LinkedList<Vehicle> vehQueue = westVehs.get(index);
         if (!vehQueue.isEmpty()) {
             Vehicle firstVeh = vehQueue.getLast();
@@ -197,11 +226,13 @@ public class EventHandler {
         }
     }
 
-    private void redWestTurnRight(int intersection) {
+    // Set eastbound turn left light red
+    private void redWestTurnLeft(int intersection) {
         int index = getIntersectionIndex(intersection);
-        isGreenWestTurnRight[index] = false;
+        isGreenWestTurnLeft[index] = false;
     }
 
+    // Vehs arrive before traffic light from south, west and east
     private void arrival(int intersection, Direction direction, double time, Vehicle veh) {
         switch (direction) {
             case S:
@@ -218,22 +249,27 @@ public class EventHandler {
         }
     }
 
+    // Vehs arrive from south, possible to go straight, turn left (exit) and turn right (exit)
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         double r;
         r = random.nextDouble();
-        if (r < Parameter.TURN_LEFT_PROB) {
+        double exitProb[] = Parameter.getExitCumuProb(intersection);
+        // Vehs turn left and exit to West
+        if (r < exitProb[0]) {
             southVehsTurnLeft.get(index).addFirst(veh);
             int numInQuene = southVehsTurnLeft.get(index).size();
             if (numInQuene == 1 && isGreenSouthTurnLeft[index]) {
-                ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection, Direction.E, veh));
+                ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection, Direction.W, veh));
             }
-        } else if (r > Parameter.TURN_LEFT_PROB && r < Parameter.CUMUL_PROB){
+        // Vehs turn right and exit to East
+        } else if (r > exitProb[0] && r < exitProb[1]){
             southVehsTurnRight.get(index).addFirst(veh);
             int numInQuene = southVehsTurnRight.get(index).size();
             if (numInQuene == 1 && isGreenSouthThrough[index]) {
-                ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection, Direction.W, veh));
+                ProcessEvents.getEventQueue().add(new Event(time, EventType.Exit, intersection, Direction.E, veh));
             }
+        // Vehs go straight and travel through the intersection
         } else {
             southVehsThrough.get(index).addFirst(veh);
             int numInQuene = southVehsThrough.get(index).size();
@@ -243,21 +279,22 @@ public class EventHandler {
         }
     }
 
-    // TODO: handle arrival from other directions (west/east)
+    // Vehs arrive from west, and turn left into Peachtree street if traffic light is green
     private void arrivalWest(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         westVehs.get(index).addFirst(veh);
         int numInQueue = westVehs.get(index).size();
-        if (numInQueue == 1 && isGreenWestTurnRight[index]) {
+        if (numInQueue == 1 && isGreenWestTurnLeft[index]) {
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection, Direction.W, veh));
         }
     }
 
+    // Vehs arrive from east, and turn right into Peachtree street if traffic light is green
     private void arrivalEast(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         eastVehs.get(index).addFirst(veh);
         int numInQueue = eastVehs.get(index).size();
-        if (numInQueue == 1 && isGreenEastTurnLeft[index]) {
+        if (numInQueue == 1 && isGreenEastTurnRight[index]) {
             ProcessEvents.getEventQueue().add(new Event(time, EventType.Departure, intersection, Direction.E, veh));
         }
     }
@@ -269,7 +306,7 @@ public class EventHandler {
      * @param time current time
      * @param veh current vehicle
      */
-    // TODO: schedule next departure if the queue is not empty.
+    // Vehs depart from south, east and west to north
     private void departure(int intersection, double time, Vehicle veh, Direction direction) {
         // Last departure -> exit
         switch (direction) {
@@ -287,72 +324,85 @@ public class EventHandler {
         }
     }
 
+    // Departure from South to North, if arrives 14th street, then exit
     private void departureFromSouth(int intersection, double time, Vehicle veh) {
         int nextIntersection;
         int index = getIntersectionIndex(intersection);
         LinkedList<Vehicle> queue = southVehsThrough.get(index);
         if (isGreenSouthThrough[index]) {
             if (intersection == 5) {
-                Event exit = new Event(time + getBetweenIntersectionTime(intersection), EventType.Exit, intersection, Direction.S, veh);
+                Event exit = new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Exit, intersection, Direction.N, veh);
                 ProcessEvents.getEventQueue().add(exit);
             } else {
                 nextIntersection = intersection == 3 ? 5 : intersection + 1;
-                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.S, veh));
+                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Arrival, nextIntersection, Direction.S, veh));
             }
             queue.removeLast();
             if (!queue.isEmpty()) {
                 Vehicle firstInQueue = queue.getLast();
-                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.S, firstInQueue);
+                Event depart = new Event(time + Parameter.W,
+                        EventType.Departure, intersection, Direction.S, firstInQueue);
                 ProcessEvents.getEventQueue().add(depart);
             }
         }
     }
 
+    // Departure from East
     private void departureFromEast(int intersection, double time, Vehicle veh) {
         int nextIntersection;
         int index = getIntersectionIndex(intersection);
         LinkedList<Vehicle> queue = eastVehs.get(index);
-        if (isGreenEastTurnLeft[index]) {
+        if (isGreenEastTurnRight[index]) {
             if (intersection == 5) {
-                Event exit = new Event(time + getBetweenIntersectionTime(intersection), EventType.Exit, intersection, Direction.E, veh);
+                Event exit = new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Exit, intersection, Direction.N, veh);
                 ProcessEvents.getEventQueue().add(exit);
             } else {
                 nextIntersection = intersection == 3 ? 5 : intersection + 1;
-                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.E, veh));
+                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Arrival, nextIntersection, Direction.S, veh));
             }
             queue.removeLast();
             if (!queue.isEmpty()) {
                 Vehicle firstInQueue = queue.getLast();
-                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.E, firstInQueue);
+                Event depart = new Event(time + Parameter.W,
+                        EventType.Departure, intersection, Direction.E, firstInQueue);
                 ProcessEvents.getEventQueue().add(depart);
             }
         }
     }
 
+    // Departure from West
     private void departureFromWest(int intersection, double time, Vehicle veh) {
         int nextIntersection;
         int index = getIntersectionIndex(intersection);
         LinkedList<Vehicle> queue = westVehs.get(index);
-        if (isGreenWestTurnRight[index]) {
+        if (isGreenWestTurnLeft[index]) {
             if (intersection == 5) {
-                Event exit = new Event(time + getBetweenIntersectionTime(intersection), EventType.Exit, intersection, Direction.W, veh);
+                Event exit = new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Exit, intersection, Direction.N, veh);
                 ProcessEvents.getEventQueue().add(exit);
             } else {
                 nextIntersection = intersection == 3 ? 5 : intersection + 1;
-                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection), EventType.Arrival, nextIntersection, Direction.W, veh));
+                ProcessEvents.getEventQueue().add(new Event(time + getBetweenIntersectionTime(intersection),
+                        EventType.Arrival, nextIntersection, Direction.S, veh));
             }
             queue.removeLast();
             if (!queue.isEmpty()) {
                 Vehicle firstInQueue = queue.getLast();
-                Event depart = new Event(time + Parameter.W, EventType.Departure, intersection, Direction.W, firstInQueue);
+                Event depart = new Event(time + Parameter.W,
+                        EventType.Departure, intersection, Direction.W, firstInQueue);
                 ProcessEvents.getEventQueue().add(depart);
             }
         }
     }
 
+    // Exit from 14th street to north, exit from other intersections to west or east
     private void exit(int intersection, double time, Vehicle veh, Direction direction) {
         switch (direction) {
-            case S:
+            case N:
                 exitFromSouth(intersection, time, veh);
                 break;
             case E:
@@ -365,8 +415,9 @@ public class EventHandler {
                 System.out.println("Error - EventHandler.exit: No such direction!");
         }
     }
+    // exit from 14th street to north
      private void exitFromSouth(int intersection, double time, Vehicle veh) {
-        exitFromAll(intersection, time, veh, Direction.S);
+        exitFromAll(intersection, time, veh, Direction.N);
      }
     private void exitFromAll(int intersection, double time, Vehicle veh, Direction direction) {
         veh.endTime = time;
@@ -375,10 +426,11 @@ public class EventHandler {
         ProcessEvents.addFinishedvehs(veh);
     }
 
+    // exit to east (northbound vehs turn right and exit to east)
     private void exitFromEast(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
-        LinkedList<Vehicle> queue = southVehsTurnLeft.get(index);
-        if (isGreenSouthTurnLeft[index]) {
+        LinkedList<Vehicle> queue = southVehsTurnRight.get(index);
+        if (isGreenSouthThrough[index]) {
             exitFromAll(intersection, time, veh, Direction.E);
             queue.removeLast();
             if (!queue.isEmpty()) {
@@ -389,10 +441,11 @@ public class EventHandler {
         }
     }
 
+    // exit to west (northbound vehs turn left and exit to west)
     private void exitFromWest (int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
-        LinkedList<Vehicle> queue = southVehsTurnRight.get(index);
-        if (isGreenSouthThrough[index]) {
+        LinkedList<Vehicle> queue = southVehsTurnLeft.get(index);
+        if (isGreenSouthTurnLeft[index]) {
             exitFromAll(intersection, time, veh, Direction.W);
             queue.removeLast();
             if (!queue.isEmpty()) {
