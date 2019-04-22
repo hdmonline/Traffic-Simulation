@@ -63,12 +63,10 @@ public class Scheduler implements Runnable {
      */
     private static void parseArguments(String[] args) {
 
-        String arg, inputPath, logPath, vehsPath;
-        boolean hasSeed;
-        int simulationTime;
+        String arg;
 
         // The number of input arguments can only be 8 or 10
-        if (args.length < 8 && args.length >10) {
+        if (args.length < 8 || args.length >10) {
             System.err.println("Usage: -input <file_path> -log <log_file_path> -vehs <veh_file_path> " +
                     "-time <simulation_time_in_seconds> [-seed <random_seed>]");
             System.exit(1);
@@ -82,8 +80,7 @@ public class Scheduler implements Runnable {
             // -input
             if (arg.equals("-input")) {
                 if (i < args.length) {
-                    inputPath = args[i++];
-                    Parameter.INPUT_FILE = inputPath;
+                    Parameter.INPUT_FILE = args[i++];
                 } else {
                     System.err.println("-inst requires a input path");
                     System.exit(1);
