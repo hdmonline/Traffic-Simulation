@@ -17,14 +17,14 @@ class Ca {
 
     static private ArrayList<TrafficLight> trafficLights = new ArrayList<>();
 
-    static private double now = 0; // in second
+    static private double time = 0; // in second
 
-    static private final int END_POSITION = 300;
-    static private final double TIME_INTERVAL = 1;
-    static public final double SIMULATION_TIME = 15; // minute
-
-    public static void main() {
-        // TODO: Initialize trafficLights
+    public static void main(String[] args) {
+        // Initialize trafficLights
+        trafficLights.add(new TrafficLight(1, 144, 49.3, 38.3, 10.6, 2.2));
+        trafficLights.add(new TrafficLight(2, 662, 55.4, 44.7, 0, 0));
+        trafficLights.add(new TrafficLight(3, 1204, 35.7, 64.6, 0, 0));
+        trafficLights.add(new TrafficLight(5, 2041, 46.1, 37.8, 12.4, 3.6));
 
         // Sort the traffic lights by position
         Collections.sort(trafficLights);
@@ -33,12 +33,14 @@ class Ca {
         FileIo ioHandler = new FileIo();
         ioHandler.readFile();
         ioHandler.generateFlow();
+//        enteringVehs.add(new Vehicle(0, Parameter.VEH_LEN, 1,
+//                0, 25, 10.1, 1, Direction.S));
 
         // Sort the enteringVehs by startTime in descending order
         enteringVehs.sort(Comparator.comparing((Vehicle v) -> v.startTime));
 
         // Terminate when the interval is over 15min, no car on the street, and no car is about to start
-        while (now < SIMULATION_TIME * 60 || vehs.size() > 0 || enteringVehs.size() > 0) {
+        while (time < Parameter.SIMULATION_TIME || vehs.size() > 0 || enteringVehs.size() > 0) {
             // Put entering cars to the lanes
             enteringVehs();
 
@@ -49,11 +51,15 @@ class Ca {
             updateEnvironment();
 
             // Increase interval
-            now += TIME_INTERVAL;
+            time += Parameter.TIME_INTERVAL;
+
+            // Write process
+            writeLog(time, ioHandler);
         }
 
-        // TODO: Write the result to file
-
+        // Write the result to file
+        ioHandler.writeVehicles();
+        ioHandler.closeProcessWriter();
     }
 
     // Put any vehicle entering the tracking area to the lane
@@ -65,12 +71,13 @@ class Ca {
         ArrayList<Vehicle> found = new ArrayList<>();
         for (int i = 0; i < enteringVehs.size(); i++) {
             veh = enteringVehs.get(i);
+            if (veh.startTime > time) {
+                break;
+            }
             // Check if the entering pos is taken or not.
             if (posAvailable(veh.pos, veh.lane)) {
-                // Remove vehicle from enteringVehs
-                enteringVehs.remove(veh);
                 // Put the vehicle on road
-                veh.startTime = now;
+                veh.startTime = time;
                 vehs.add(veh);
                 found.add(veh);
             }
@@ -82,17 +89,23 @@ class Ca {
      * Update each vehicle's position, speed and lane
      */
     private static void updateVehs() {
+        ArrayList<Vehicle> finished = new ArrayList<>();
         for (Vehicle veh : vehs) {
-            veh.update();
+            veh.lastPos = veh.pos;
+            veh.lastSpeed = veh.speed;
+        }
+        for (Vehicle veh : vehs) {
+            veh.update(time);
             // If the vehicle is exiting the tracking area
-            if (veh.pos > END_POSITION) {
-                veh.endTime = now;
-                vehs.remove(veh);
+            // TODO: handle exiting from different intersection
+            if (veh.pos > Parameter.END_POSITION) {
+                veh.endTime = time;
+                // TODO: assign exit direction and intersection
+                finished.add(veh);
                 finishedVehs.add(veh);
             }
         }
-
-        // TODO: check if this is the best place to sort the vehicle array
+        vehs.removeAll(finished);
         Collections.sort(vehs);
     }
 
@@ -113,6 +126,11 @@ class Ca {
         updateFollowingLight();
     }
 
+    private static void writeLog(double time, FileIo ioHandler) {
+        for (Vehicle veh : vehs) {
+            ioHandler.writeProcess(time, veh);
+        }
+    }
 
 
     /**
@@ -188,7 +206,7 @@ class Ca {
             veh.rightLagger = null;
             return;
         }
-        int lagger = i - 1;
+        int lagger = i + 1;
         boolean success = vehs.get(lagger).lane == 1;
         while (!success) {
             if (lagger == n - 1) {
@@ -204,7 +222,7 @@ class Ca {
 
     private static void updateLeaderLeft(int i) {
         Vehicle veh = vehs.get(i);
-        if (i == 1 || veh.lane == 0) {
+        if (i == 0 || veh.lane == 0) {
             veh.leftLeader = null;
             return;
         }
@@ -229,7 +247,7 @@ class Ca {
             veh.leftLagger = null;
             return;
         }
-        int lagger = i - 1;
+        int lagger = i + 1;
         boolean success = vehs.get(lagger).lane == 0;
         while (!success) {
             if (lagger == n - 1) {
@@ -243,21 +261,41 @@ class Ca {
         veh.leftLagger = vehs.get(lagger);
     }
 
-    // Update isFollowingLight for ith vehicle
+    /**
+     * Update isFollowingLight for ith vehicle
+     */
     private static void updateFollowingLight() {
-        int i = 0;
-        int n = vehs.size();
         for (TrafficLight tl : trafficLights) {
-            while (vehs.get(i).pos >= tl.getPos()) {
+            // Traverse vehs (descending pos)
+            int i = 0;
+            int n = vehs.size();
+            // Find first veh before light
+            while (i < n && vehs.get(i).pos >= tl.getPos()) {
                 i++;
             }
+            // If not found
+            if (i == n) {
+                break;
+            }
+            // Update the found veh
+            vehs.get(i).isFollowingLight = true;
+            vehs.get(i).trafficLight = tl;
+            // Find the first veh before light on the other lane
+            int lane = 1 - vehs.get(i).lane;
+            while(i < n && vehs.get(i).lane != lane) {
+                i++;
+            }
+            if (i == n){
+                continue;
+            }
+            // Update the found veh
             vehs.get(i).isFollowingLight = true;
             vehs.get(i).trafficLight = tl;
         }
     }
 
     private static boolean posAvailable(int pos, int lane) {
-        return vehs.stream().filter(v -> v.pos == pos && v.lane == lane).findFirst().isPresent();
+        return !vehs.stream().filter(v -> v.pos >= pos && v.pos - v.len < pos && v.lane == lane).findFirst().isPresent();
     }
 
     public static ArrayList<Vehicle> getEnteringVehs() {

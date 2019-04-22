@@ -11,39 +11,63 @@ public class Event implements Comparable<Event> {
     int intersection;
     Direction direction;
     VehicleProcess veh;
+    boolean turningLeft;
+
+    // CheckWait
+    public Event(double time, EventType type) {
+        this.time = time;
+        this.type = type;
+        this.veh = null;
+        this.turningLeft = false;
+    }
 
     public Event(double time, EventType type, VehicleProcess veh) {
         this.time = time;
         this.type = type;
         this.veh = veh;
+        this.turningLeft = false;
     }
 
-    // TurnRed or TurnGrean
+    // TurnRedThrough or TurnGrean
     public Event(double time, EventType type, int intersection, Direction direction) {
         this.time = time;
         this.type = type;
         this.intersection = intersection;
         this.direction = direction;
+        this.turningLeft = false;
     }
 
     // Resume
-    public Event(double time, EventType type, int intersection, Direction direction, VehicleProcess veh) {
+    public Event(double time, EventType type, int intersection,
+                 Direction direction, VehicleProcess veh) {
         this.time = time;
         this.type = type;
         this.intersection = intersection;
         this.direction = direction;
         this.veh = veh;
+        this.turningLeft = false;
+    }
+
+    // Wait until
+    public Event(double time, EventType type, int intersection,
+                 Direction direction, VehicleProcess veh, boolean turningLeft) {
+        this.time = time;
+        this.type = type;
+        this.intersection = intersection;
+        this.direction = direction;
+        this.veh = veh;
+        this.turningLeft = turningLeft;
     }
 
     public String toString() {
         String str = "";
 
-        int vehId = (veh == null) ? -1 : veh.id;
-        str += String.format("%.2f", time) + " ";
-        str += type + " ";
-        str += intersection + " ";
-        str += direction + " ";
-        str += vehId + " ";
+        str += String.format("%.2f", time) + ",";
+        str += type + ",";
+        str += (intersection == 0 ? "null" : intersection) + ",";
+        str += (direction == null ? "null" : direction) + ",";
+        str += (type == EventType.WaitUntil ? turningLeft : "null") + ",";
+        str += veh == null ? "null" : veh.id;
         return str;
     }
     @Override
