@@ -133,7 +133,7 @@ public class TrafficLight {
             case E:
                 return availableThroughRightEast;
             default:
-                System.out.println("Error - TrafficLight.available: Wrong Direction!");
+                System.err.println("Error - TrafficLight.available: Wrong Direction!");
                 return false;
         }
     }
@@ -155,7 +155,7 @@ public class TrafficLight {
             case E:
                 return isThroughRightEastGreen;
             default:
-                System.out.println("Error - TrafficLight.isGreen: Wrong Direction!");
+                System.err.println("Error - TrafficLight.isGreen: Wrong Direction!");
                 return false;
         }
     }
@@ -173,7 +173,7 @@ public class TrafficLight {
             case E:
                 return eastThroughRightVehs;
             default:
-                System.out.println("Error - TrafficLight.getVehsQueue: Wrong Direction!");
+                System.err.println("Error - TrafficLight.getVehsQueue: Wrong Direction!");
                 return null;
         }
     }
@@ -194,7 +194,7 @@ public class TrafficLight {
                 availableThroughRightEast = available;
                 break;
             default:
-                System.out.println("Error - TrafficLight.setAvailable: Wrong Direction!");
+                System.err.println("Error - TrafficLight.setAvailable: Wrong Direction!");
         }
     }
 
@@ -218,7 +218,7 @@ public class TrafficLight {
                 isThroughRightEastGreen = green;
                 break;
             default:
-                System.out.println("Error - TrafficLight.setLight: Wrong Direction!");
+                System.err.println("Error - TrafficLight.setLight: Wrong Direction!");
         }
     }
 

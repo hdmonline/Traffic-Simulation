@@ -8,8 +8,8 @@
 public class Parameter {
 
     // Simulation time
-    static final double VEHICLE_TIME = 15 * 60;
-    static final double SIMULATION_TIME = VEHICLE_TIME + 10 * 60;
+    static double VEHICLE_TIME = 15 * 60;
+    static double SIMULATION_TIME = VEHICLE_TIME + 10 * 60;
 
     // Travelling time from starting point to Intersection 1
     static final double BETWEEN_START_INTERSECTION_1 = 14.136;
@@ -29,9 +29,14 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 0.3;
 
-    static final String INPUT_FILE = "process_input.csv";
-    static final String OUTPUT_VEHICLE_FILE = "process_vehicles.csv";
-    static final String OUTPUT_EVENT_FILE = "process_events.csv";
+    // File paths
+    static String INPUT_FILE = "process_input.csv";
+    static String OUTPUT_VEHICLE_FILE = "process_vehicles.csv";
+    static String OUTPUT_EVENT_FILE = "process_events.csv";
+
+    // Random seed
+    static long RANDOM_SEED = 100;
+    static boolean HAS_SEED = false;
 
     public static double getBetweenIntersectionTime(int intersection) {
         switch(intersection) {
@@ -46,7 +51,7 @@ public class Parameter {
             case 6:
                 return AFTER_INTERSECTION_5;
             default:
-                System.out.println("Error - Parameter.getBetweenIntersectionTime: Wrong Intersection!");
+                System.err.println("Error - Parameter.getBetweenIntersectionTime: Wrong Intersection!");
                 return -1;
         }
     }
@@ -62,7 +67,7 @@ public class Parameter {
             case 5:
                 return EXIT_CUMU_PROB_5;
             default:
-                System.out.println("Error - Parameter.getExitProb: Wrong Intersection!");
+                System.err.println("Error - Parameter.getExitProb: Wrong Intersection!");
                 return new double[] {-1, -1, -1};
         }
     }

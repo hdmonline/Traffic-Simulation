@@ -13,7 +13,15 @@ import java.util.Random;
 public class FileIo {
     private ArrayList<Distribution> distributions = new ArrayList<>();
     private BufferedWriter eventWriter = null;
-    static Random rand = new Random();
+    static Random rand;
+
+    public FileIo() {
+        if (Parameter.HAS_SEED) {
+            rand = new Random(Parameter.RANDOM_SEED);
+        } else {
+            rand = new Random();
+        }
+    }
 
     /**
      * Read input file and load distributions to every intersection/direction
@@ -34,7 +42,7 @@ public class FileIo {
                 // Read distribution bins
                 for (int i = 0; i < numLines; i++) {
                     currLine = br.readLine();
-                    String[] pair = currLine.split(",", 2);
+                    String[] pair = currLine.split(",");
                     double time = Double.parseDouble(pair[0]);
                     double prob = Double.parseDouble(pair[1]);
                     distribution.interval[i] = time;
@@ -140,7 +148,7 @@ public class FileIo {
             case 3:
                 return Direction.E;
             default:
-                System.out.println("Error - FileIo.parseDirection: Wrong direction!");
+                System.err.println("Error - FileIo.parseDirection: Wrong direction!");
                 return null;
         }
     }

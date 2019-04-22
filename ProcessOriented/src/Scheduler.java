@@ -14,11 +14,8 @@ import java.util.PriorityQueue;
 public class Scheduler implements Runnable {
 
     private static Scheduler instance = null;
-
     private EventHandler eventHandler;
-
     private FileIo ioHandler;
-
     private double time;
 
     ArrayList<VehicleProcess> enteringVehs;
@@ -47,6 +44,9 @@ public class Scheduler implements Runnable {
         Scheduler scheduler = getInstance();
         Thread schedulerThread = new Thread(scheduler);
 
+        // Parse arguments
+        parseArguments(args);
+
         // read the input file and generate the entering vehs/flow
         scheduler.ioHandler.readFile();
         scheduler.ioHandler.generateFlow();
@@ -54,6 +54,85 @@ public class Scheduler implements Runnable {
 
         // Run the main thread
         schedulerThread.start();
+    }
+
+    /**
+     * Parse the arguments.
+     *
+     * @param args Input arguments
+     */
+    private static void parseArguments(String[] args) {
+
+        String arg, inputPath, logPath, vehsPath;
+        boolean hasSeed;
+        int simulationTime;
+
+        // The number of input arguments can only be 8 or 10
+        if (args.length < 8 && args.length >10) {
+            System.err.println("Usage: -input <file_path> -log <log_file_path> -vehs <veh_file_path> " +
+                    "-time <simulation_time_in_seconds> [-seed <random_seed>]");
+            System.exit(1);
+        }
+
+        // Iterate through the arguments
+        int i = 0;
+        while (i < args.length && args[i].startsWith("-")) {
+            arg = args[i++];
+
+            // -input
+            if (arg.equals("-input")) {
+                if (i < args.length) {
+                    inputPath = args[i++];
+                    Parameter.INPUT_FILE = inputPath;
+                } else {
+                    System.err.println("-inst requires a input path");
+                    System.exit(1);
+                }
+            }
+
+            // -log
+            if (arg.equals("-log")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_EVENT_FILE = args[i++];
+                } else {
+                    System.err.println("-algo requires a algorithm name");
+                    System.exit(1);
+                }
+            }
+
+            // -vehs
+            if (arg.equals("-vehs")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_VEHICLE_FILE = args[i++];
+                } else {
+                    System.err.println("-algo requires a algorithm name");
+                    System.exit(1);
+                }
+            }
+
+            // -time
+            if (arg.equals("-time")) {
+                if (i < args.length) {
+                    Parameter.VEHICLE_TIME = Integer.parseInt(args[i++]);
+                    Parameter.SIMULATION_TIME = Parameter.VEHICLE_TIME + 10 * 60;
+                } else {
+                    System.err.println("-time requires a integer");
+                    System.exit(1);
+                }
+            }
+
+            // -seed
+            if (arg.equals("-seed")) {
+                if (i < args.length) {
+                    Parameter.HAS_SEED = true;
+                    Parameter.RANDOM_SEED = Long.parseLong(args[i++]);
+                } else {
+                    System.err.println("-time requires a integer");
+                    System.exit(1);
+                }
+            }
+
+        }
     }
 
     /**

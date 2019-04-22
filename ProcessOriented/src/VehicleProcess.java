@@ -47,7 +47,7 @@ public class VehicleProcess implements Runnable {
         } else if (i == 4) {
             return 5;
         } else {
-            System.out.println("Error - VehicleProcess.getIntersection: Wrong intersection index!");
+            System.err.println("Error - VehicleProcess.getIntersection: Wrong intersection index!");
             return -1;
         }
     }

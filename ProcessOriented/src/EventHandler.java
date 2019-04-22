@@ -93,7 +93,7 @@ public class EventHandler {
                 turnLeftLight(EventType.TurnRedLeft, event.intersection, event.direction);
                 break;
             default:
-                System.out.println("Error - EventHandler.handleEvent: Wrong Event!");
+                System.err.println("Error - EventHandler.handleEvent: Wrong Event!");
         }
     }
 
@@ -181,7 +181,7 @@ public class EventHandler {
                 break;
             default:
                 green = false;
-                System.out.println("Error - EventHandler.turnThroughLight: Wrong Event!");
+                System.err.println("Error - EventHandler.turnThroughLight: Wrong Event!");
         }
         int index = getIntersectionIndex(intersection);
         trafficLights[index].setLight(direction, false, green);
@@ -205,7 +205,7 @@ public class EventHandler {
                 break;
             default:
                 green = false;
-                System.out.println("Error - EventHandler.turnLeftLight: Wrong Event!");
+                System.err.println("Error - EventHandler.turnLeftLight: Wrong Event!");
         }
         int index = getIntersectionIndex(intersection);
         trafficLights[index].setLight(direction, true, green);
@@ -228,7 +228,7 @@ public class EventHandler {
             case 5:
                 return 3;
             default:
-                System.out.println("Error - EventHandler.getIntersectionIndex: Wrong Intersection!");
+                System.err.println("Error - EventHandler.getIntersectionIndex: Wrong Intersection!");
                 return -1;
         }
     }
