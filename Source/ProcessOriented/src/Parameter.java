@@ -29,6 +29,9 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 0.3;
 
+    // Traffic delay offset in seconds
+    static double TRAFFIC_LIGHT_DELAY = 0;
+
     // File paths
     static String INPUT_FILE = "process_input.csv";
     static String OUTPUT_VEHICLE_FILE = "process_vehicles.csv";

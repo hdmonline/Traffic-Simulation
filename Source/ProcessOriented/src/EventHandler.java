@@ -7,14 +7,12 @@
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class EventHandler {
     private static EventHandler instance = null;
     private TrafficLight[] trafficLights;
-
 
     // Event queue to store all the event in the order of time
     private PriorityQueue<Event> eventQueue;
@@ -33,22 +31,21 @@ public class EventHandler {
         eventQueue = new PriorityQueue<>();
         waitingVehEvents = new LinkedList<>();
 
-
         // Initialize the traffic lights
         trafficLights = new TrafficLight[4];
-        trafficLights[0] = new TrafficLight(1,
+        trafficLights[0] = new TrafficLight(1, 0,
                 10.6, 2.2, 38.3, 49.3,
                 8.6, 4.2, 31.8, 55,
                 9.8, 1.8, 33.8, 55);
-        trafficLights[1] = new TrafficLight(2,
+        trafficLights[1] = new TrafficLight(2, Parameter.TRAFFIC_LIGHT_DELAY,
                 0, 0, 44.7, 55.4,
                 0, 0, 23.9, 76.2,
                 0, 0, 23.9, 76.2);
-        trafficLights[2] = new TrafficLight(3,
+        trafficLights[2] = new TrafficLight(3, Parameter.TRAFFIC_LIGHT_DELAY * 2,
                 0, 0, 64.1, 35.7,
                 0, 0, 30.9, 69.2,
                 0, 0, 30.9, 69.2);
-        trafficLights[3] = new TrafficLight(5,
+        trafficLights[3] = new TrafficLight(5, Parameter.TRAFFIC_LIGHT_DELAY * 3,
                 12.4, 3.6, 37.8, 46.1,
                 0, 0, 26.1, 74,
                 13.4, 60, 40.6, 60.2);
