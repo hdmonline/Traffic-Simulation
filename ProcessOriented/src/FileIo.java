@@ -133,6 +133,9 @@ public class FileIo {
                 double lowerLimit = i == 0 ? 0 : inter[i - 1];
                 double interval = rand.nextDouble() * (inter[i] - lowerLimit) + lowerLimit;
                 time += interval;
+                if (time > Parameter.VEHICLE_TIME) {
+                    break;
+                }
                 EventHandler.getInstance().getEnteringVehs().add(new VehicleProcess(
                         id++, time, intersection, direction));
             }

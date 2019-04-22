@@ -41,11 +41,11 @@ public class Scheduler implements Runnable {
     }
 
     public static void main(String args[]) {
-        Scheduler scheduler = getInstance();
-        Thread schedulerThread = new Thread(scheduler);
-
         // Parse arguments
         parseArguments(args);
+
+        Scheduler scheduler = getInstance();
+        Thread schedulerThread = new Thread(scheduler);
 
         // read the input file and generate the entering vehs/flow
         scheduler.ioHandler.readFile();

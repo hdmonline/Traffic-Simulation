@@ -52,7 +52,7 @@ public class TrafficLight {
     public void generateTrafficLights() {
         double time = 0;
 
-        while (time < Parameter.SIMULATION_TIME) {
+        while (time < Parameter.SIMULATION_TIME + 10*60) {
             // North bound
             if (NORTH_BOUND_LEFT_TOTAL > 0) {
                 ProcessEvents.getEventQueue().add(new Event(time, EventType.GreenSouth, intersection, Direction.W));
