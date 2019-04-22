@@ -6,7 +6,6 @@
  * Class for traffic lights. Yellow lights are counted into greens.
  */
 
-// TODO: add generateEvent(), move queue to this class, get rid of nextGreen() etc.
 public class TrafficLight {
     private int intersection;
     private final double NORTH_BOUND_THROUGH_RED_DURATION, NORTH_BOUND_THROUGH_GREEN_DURATION,

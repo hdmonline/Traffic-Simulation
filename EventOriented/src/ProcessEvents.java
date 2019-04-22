@@ -20,6 +20,9 @@ public class ProcessEvents {
 
 
     public static void main(String[] args) {
+        // Parse arguments
+        parseArguments(args);
+
         // read the input file and generate the entering vehs/flow
         FileIo ioHandler = new FileIo();
         ioHandler.readFile();
@@ -69,6 +72,81 @@ public class ProcessEvents {
         // Delete enteringVehs
         enteringVehs = null;
         System.gc();
+    }
+
+    /**
+     * Parse the arguments.
+     *
+     * @param args Input arguments
+     */
+    private static void parseArguments(String[] args) {
+
+        String arg;
+
+        // The number of input arguments can only be 8 or 10
+        if (args.length < 8 || args.length >10) {
+            System.err.println("Usage: -input <file_path> -log <log_file_path> -vehs <veh_file_path> " +
+                    "-time <simulation_time_in_seconds> [-seed <random_seed>]");
+            System.exit(1);
+        }
+
+        // Iterate through the arguments
+        int i = 0;
+        while (i < args.length && args[i].startsWith("-")) {
+            arg = args[i++];
+
+            // -input
+            if (arg.equals("-input")) {
+                if (i < args.length) {
+                    Parameter.INPUT_FILE = args[i++];
+                } else {
+                    System.err.println("-inst requires a input path");
+                    System.exit(1);
+                }
+            }
+
+            // -log
+            if (arg.equals("-log")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_EVENT_FILE = args[i++];
+                } else {
+                    System.err.println("-algo requires a algorithm name");
+                    System.exit(1);
+                }
+            }
+
+            // -vehs
+            if (arg.equals("-vehs")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_VEHICLE_FILE = args[i++];
+                } else {
+                    System.err.println("-algo requires a algorithm name");
+                    System.exit(1);
+                }
+            }
+
+            // -time
+            if (arg.equals("-time")) {
+                if (i < args.length) {
+                    Parameter.SIMULATION_TIME = Integer.parseInt(args[i++]);
+                } else {
+                    System.err.println("-time requires a integer");
+                    System.exit(1);
+                }
+            }
+
+            // -seed
+            if (arg.equals("-seed")) {
+                if (i < args.length) {
+                    Parameter.HAS_SEED = true;
+                    Parameter.RANDOM_SEED = Long.parseLong(args[i++]);
+                } else {
+                    System.err.println("-time requires a integer");
+                    System.exit(1);
+                }
+            }
+
+        }
     }
 
     public static PriorityQueue<Event> getEventQueue() {

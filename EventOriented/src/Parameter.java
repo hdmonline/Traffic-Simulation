@@ -8,7 +8,7 @@
 public class Parameter {
 
     // Simulation time
-    static final double SIMULATION_TIME = 15 * 60;
+    static double SIMULATION_TIME = 15 * 60;
 
     // Travelling time from starting point to Intersection 1
     static final double BETWEEN_START_INTERSECTION1 = 14.136;
@@ -28,13 +28,13 @@ public class Parameter {
     // Waiting time for going through a traffic light per vehicle in (s)
     static final double W = 0.3;
 
-    // probability of turn right/left to exit at each intersection
-    static final double TURN_LEFT_PROB = 0.10;
-    static final double CUMUL_PROB = 0.25;
+    static String INPUT_FILE = "event_input.csv";
+    static String OUTPUT_VEHICLE_FILE = "event_vehicles.csv";
+    static String OUTPUT_EVENT_FILE = "event_events.csv";
 
-    static final String INPUT_FILE = "event_input.csv";
-    static final String OUTPUT_VEHICLE_FILE = "event_vehicles.csv";
-    static final String OUTPUT_EVENT_FILE = "event_events.csv";
+    // Random seed
+    static long RANDOM_SEED = 100;
+    static boolean HAS_SEED = false;
 
 
     public static double[] getExitCumuProb(int intersection) {

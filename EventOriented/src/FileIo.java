@@ -12,27 +12,27 @@ import java.util.Random;
 
 public class FileIo {
     private ArrayList<Distribution> distributions = new ArrayList<>();
-    private Random rand = new Random();
+    private Random rand;
     private BufferedWriter eventWriter = null;
-    private boolean wroteEvent = false;
+
+    public FileIo() {
+        if (Parameter.HAS_SEED) {
+            rand = new Random(Parameter.RANDOM_SEED);
+        } else {
+            rand = new Random();
+        }
+    }
 
     /**
      * Read input file and load distributions to every intersection/direction
      */
     public void readFile() {
         // Open the file and read inter arrival interval of each intersection and direction
-        BufferedReader br = null;
-        try {
-            FileReader fr = new FileReader(Parameter.INPUT_FILE);
-            br = new BufferedReader(fr);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String currLine;
-
-        // Get read all lines
-        int intersection, direction, numLines;
-        try {
+        try (BufferedReader br =
+                     new BufferedReader(new FileReader(Parameter.INPUT_FILE))) {
+            String currLine;
+            int intersection, direction, numLines;
+            // Get read all lines
             while ((currLine = br.readLine()) != null) {
                 String[] strs = currLine.split(",", 3);
                 intersection = Integer.parseInt(strs[0]);
@@ -42,7 +42,7 @@ public class FileIo {
                 // Read distribution bins
                 for (int i = 0; i < numLines; i++) {
                     currLine = br.readLine();
-                    String[] pair = currLine.split(",", 2);
+                    String[] pair = currLine.split(",");
                     double time = Double.parseDouble(pair[0]);
                     double prob = Double.parseDouble(pair[1]);
                     distribution.interval[i] = time;
@@ -55,8 +55,6 @@ public class FileIo {
                 }
                 distributions.add(distribution);
             }
-            // fr.close();
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,6 +63,8 @@ public class FileIo {
     public void initialEventWriter() {
         try {
             eventWriter = new BufferedWriter(new FileWriter(Parameter.OUTPUT_EVENT_FILE));
+            String header = "time,type,intersection,direction,vehicle";
+            eventWriter.write(header);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,41 +83,28 @@ public class FileIo {
             initialEventWriter();
         }
         try {
-            if (!wroteEvent) {
-                eventWriter.write(event.toString());
-                wroteEvent = true;
-            } else {
-                eventWriter.newLine();
-                eventWriter.write(event.toString());
-            }
+            eventWriter.newLine();
+            eventWriter.write(event.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Write results to file
+    /**
+     * Write vehicles to file
+     */
     public void writeVehicles() {
         // Open the file and write finished vehicles
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
+        try (BufferedWriter bw =
+                     new BufferedWriter(new FileWriter(Parameter.OUTPUT_VEHICLE_FILE))) {
             ArrayList<Vehicle> finishedVehs = ProcessEvents.getFinishedVehs();
-            if (finishedVehs.size() > 0) {
-                Vehicle veh;
-                for (int i = 0; i < finishedVehs.size() - 1; i++) {
-                    veh = finishedVehs.get(i);
-                    bw.write(veh.toString());
-                    bw.newLine();
-                }
-                veh = finishedVehs.get(finishedVehs.size() - 1);
+            // Write header
+            String header = "id,enter_time,exit_time,entrance_intersection,entrance_direction,exit_intersection,exit_direction";
+            bw.write(header);
+            for (Vehicle veh : finishedVehs) {
+                bw.newLine();
                 bw.write(veh.toString());
             }
-            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

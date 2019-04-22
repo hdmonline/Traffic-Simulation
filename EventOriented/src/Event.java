@@ -37,12 +37,12 @@ public class Event implements Comparable<Event> {
     // Helper function to output event
     public String toString() {
         String str = "";
-        str += String.format("%.2f", time) + " ";
-        str += type + " ";
-        str += intersection + " ";
-        str += direction + " ";
+        str += String.format("%.2f", time) + ",";
+        str += type + ",";
+        str += intersection + ",";
+        str += direction + ",";
         if (vehicle == null) {
-            str += -1;
+            str += "null";
         } else {
             str += vehicle.id;
         }
