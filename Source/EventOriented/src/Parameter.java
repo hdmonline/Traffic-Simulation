@@ -26,7 +26,10 @@ public class Parameter {
             EXIT_CUMU_PROB_5 = {0.338, 0.338 + 0.058, 1};
 
     // Waiting time for going through a traffic light per vehicle in (s)
-    static final double W = 0.3;
+    static final double W = 1.8;
+
+    // Traffic delay offset in seconds
+    static double TRAFFIC_LIGHT_DELAY = 0;
 
     static String INPUT_FILE = "event_input.csv";
     static String OUTPUT_VEHICLE_FILE = "event_vehicles.csv";
