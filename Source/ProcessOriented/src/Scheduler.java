@@ -119,11 +119,11 @@ public class Scheduler implements Runnable {
             }
 
             // -offset
-                if (arg.equals("-offset")) {
+                if (arg.equals("-delay")) {
                     if (i < args.length) {
                         Parameter.TRAFFIC_LIGHT_DELAY = Double.parseDouble(args[i++]);
                     } else {
-                        System.err.println("-offset requires a float number");
+                        System.err.println("-delay requires a float number");
                         System.exit(1);
                     }
             }
