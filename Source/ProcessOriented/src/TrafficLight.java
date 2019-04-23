@@ -21,7 +21,7 @@ public class TrafficLight {
             EAST_BOUND_LEFT_TOTAL;
     private final double TOTAL_DURATION;
 
-    private final double delay;
+    private final double DELAY;
 
     // Status variables
     private boolean isThroughRightSouthGreen, isThroughRightWestGreen, isThroughRightEastGreen;
@@ -66,7 +66,7 @@ public class TrafficLight {
         // TODO: Check if durations can be aligned correctly
         assert(true);
 
-        this.delay = delay % TOTAL_DURATION;
+        this.DELAY = delay % TOTAL_DURATION;
 
         // Initialize traffic light status
         availableThroughRightSouth = true;
@@ -82,14 +82,13 @@ public class TrafficLight {
     }
 
     /**
-     * Generate all traffic light events with delay offset. delay <= TOTAL_DURATION
+     * Generate all traffic light events with delay offset. DELAY <= TOTAL_DURATION
      * The time line can be splitted into two parts:
-     * [0 : delay] -> [(TOTAL_DURATION - delay) : TOTAL_DURATION]
+     * [0 : delay] -> [(TOTAL_DURATION - DELAY) : TOTAL_DURATION]
      * [delay : end] -> normal cyecles with offset
      */
     public void generateLightEvents() {
-        double time = TOTAL_DURATION - delay;
-        // North bound
+        double time = TOTAL_DURATION - DELAY;
         // North bound
         if (NORTH_BOUND_LEFT_TOTAL > 0) {
             if (time == 0) {
@@ -156,7 +155,7 @@ public class TrafficLight {
                     EventType.TurnGreenThrough, intersection, Direction.E));
         }
 
-        time = delay;
+        time = DELAY;
         while (time < Parameter.SIMULATION_TIME) {
             // North bound
             if (NORTH_BOUND_LEFT_TOTAL > 0) {

@@ -66,7 +66,7 @@ public class Scheduler implements Runnable {
         String arg;
 
         // The number of input arguments can only be 8 or 10
-        if (args.length < 8 || args.length >12) {
+        if (args.length < 8 || args.length > 12) {
             System.err.println("Usage: -input <file_path> -log <log_file_path> -vehs <veh_file_path> " +
                     "-time <simulation_time_in_seconds> [-seed <random_seed>]");
             System.exit(1);
@@ -118,7 +118,7 @@ public class Scheduler implements Runnable {
                 }
             }
 
-            // -offset
+            // -delay
                 if (arg.equals("-delay")) {
                     if (i < args.length) {
                         Parameter.TRAFFIC_LIGHT_DELAY = Double.parseDouble(args[i++]);
