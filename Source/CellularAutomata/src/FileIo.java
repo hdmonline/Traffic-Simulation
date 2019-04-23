@@ -18,6 +18,15 @@ public class FileIo {
     // Random generator, can be used by other class
     static Random rand = new Random();
 
+    public FileIo() {
+        if (Parameter.HAS_SEED) {
+            rand = new Random(Parameter.RANDOM_SEED);
+        } else {
+            rand = new Random();
+        }
+    }
+
+
     /**
      * Read input file and load distributions to every intersection/direction
      */
@@ -37,7 +46,7 @@ public class FileIo {
                 // Read distribution bins
                 for (int i = 0; i < numLines; i++) {
                     currLine = br.readLine();
-                    String[] pair = currLine.split(",", 2);
+                    String[] pair = currLine.split(",");
                     double time = Double.parseDouble(pair[0]);
                     double prob = Double.parseDouble(pair[1]);
                     distribution.interval[i] = time;

@@ -20,6 +20,9 @@ class Ca {
     static private double time = 0; // in second
 
     public static void main(String[] args) {
+
+        parseArguments(args);
+
         // Initialize trafficLights
         trafficLights.add(new TrafficLight(1, 144, 49.3, 38.3, 10.6, 2.2));
         trafficLights.add(new TrafficLight(2, 662, 55.4, 44.7, 0, 0));
@@ -62,6 +65,80 @@ class Ca {
         ioHandler.closeProcessWriter();
     }
 
+    /**
+     * Parse the arguments.
+     *
+     * @param args Input arguments
+     */
+    private static void parseArguments(String[] args) {
+
+        String arg;
+
+        // The number of input arguments can only be 8 or 10
+        if (args.length < 8 || args.length > 12) {
+            System.err.println("Usage: -input <file_path> -log <log_file_path> -vehs <veh_file_path> " +
+                    "-time <simulation_time_in_seconds> [-seed <random_seed>]");
+            System.exit(1);
+        }
+
+        // Iterate through the arguments
+        int i = 0;
+        while (i < args.length && args[i].startsWith("-")) {
+            arg = args[i++];
+
+            // -input
+            if (arg.equals("-input")) {
+                if (i < args.length) {
+                    Parameter.INPUT_FILE = args[i++];
+                } else {
+                    System.err.println("-input requires a input path");
+                    System.exit(1);
+                }
+            }
+
+            // -log
+            if (arg.equals("-log")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_EVENT_FILE = args[i++];
+                } else {
+                    System.err.println("-vehs requires a event output path");
+                    System.exit(1);
+                }
+            }
+
+            // -vehs
+            if (arg.equals("-vehs")) {
+                if (i < args.length) {
+                    Parameter.OUTPUT_VEHICLE_FILE = args[i++];
+                } else {
+                    System.err.println("-vehs requires a vehicle output paths");
+                    System.exit(1);
+                }
+            }
+
+            // -time
+            if (arg.equals("-time")) {
+                if (i < args.length) {
+                    Parameter.SIMULATION_TIME = Double.parseDouble(args[i++]);
+                } else {
+                    System.err.println("-time requires a float number");
+                    System.exit(1);
+                }
+            }
+
+            // -seed
+            if (arg.equals("-seed")) {
+                if (i < args.length) {
+                    Parameter.HAS_SEED = true;
+                    Parameter.RANDOM_SEED = Long.parseLong(args[i++]);
+                } else {
+                    System.err.println("-seed requires a integer");
+                    System.exit(1);
+                }
+            }
+
+        }
+    }
     // Put any vehicle entering the tracking area to the lane
     private static void enteringVehs() {
         if (enteringVehs.isEmpty()) {
@@ -101,6 +178,8 @@ class Ca {
             if (veh.pos > Parameter.END_POSITION) {
                 veh.endTime = time;
                 // TODO: assign exit direction and intersection
+                veh.exitDirection = Direction.N;
+                veh.exitIntersection = 5;
                 finished.add(veh);
                 finishedVehs.add(veh);
             }

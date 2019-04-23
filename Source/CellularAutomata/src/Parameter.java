@@ -8,7 +8,7 @@
 public class Parameter {
 
     // Simulation parameters
-    static final double SIMULATION_TIME = 15 * 60; // second
+    static double SIMULATION_TIME = 15 * 60; // second
     static final int END_POSITION = 2191;
     static final double TIME_INTERVAL = 1; // second
 
@@ -26,8 +26,15 @@ public class Parameter {
     static final double PROB_CHANGE_LANE = 0.5;
     static final int COMFORT_ACC = 6; // feet/s^2
 
+    // Traffic delay offset in seconds
+    static double TRAFFIC_LIGHT_DELAY = 0;
+
     // IO parameters
-    static final String INPUT_FILE = "ca_input.csv";
-    static final String OUTPUT_VEHICLE_FILE = "ca_vehicles.csv";
-    static final String OUTPUT_EVENT_FILE = "ca_log.csv";
+    static String INPUT_FILE = "ca_input.csv";
+    static String OUTPUT_VEHICLE_FILE = "ca_vehicles.csv";
+    static String OUTPUT_EVENT_FILE = "ca_log.csv";
+
+    // Random seed
+    static long RANDOM_SEED = 100;
+    static boolean HAS_SEED = false;
 }
