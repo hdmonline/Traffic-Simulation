@@ -7,7 +7,7 @@ time=900
 for input in "${distributes[@]}"
 do
 	inputFile=./data/$input.csv
-	echo "$inputFiles"
+	echo "Running: $input"
 
 	mkdir -p results/event/
 	mkdir -p results/event/$input
