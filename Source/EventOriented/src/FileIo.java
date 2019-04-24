@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class FileIo {
     private ArrayList<Distribution> distributions = new ArrayList<>();
-    private Random rand;
+    static Random rand;
     private BufferedWriter eventWriter = null;
 
     public FileIo() {

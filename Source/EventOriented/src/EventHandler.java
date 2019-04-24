@@ -27,8 +27,6 @@ public class EventHandler {
     private boolean[] isGreenEastTurnRight = new boolean[4];
     private boolean[] isGreenWestTurnLeft = new boolean[4];
 
-    private Random random = new Random();
-
     /**
      * Private constructor for this singleton class
      */
@@ -253,7 +251,7 @@ public class EventHandler {
     private void arrivalSouth(int intersection, double time, Vehicle veh) {
         int index = getIntersectionIndex(intersection);
         double r;
-        r = random.nextDouble();
+        r = FileIo.rand.nextDouble();
         double exitProb[] = Parameter.getExitCumuProb(intersection);
         // Vehs turn left and exit to West
         if (r < exitProb[0]) {
