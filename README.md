@@ -1,5 +1,4 @@
 # Traffic-Simulation
-## Introduction
 This project is to assess the average travel time for vehicles to traverse a portion of Peachtree Street, the corridor from 10th to 14th street, in midtown Atlanta.
 
 Three different simulation model are developed for the road network.
