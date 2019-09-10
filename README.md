@@ -8,8 +8,7 @@ The Peachtree corridor is modeled as a queueing network where each intersection 
 the intersection.
 
 ## Cellular automata model
-The corridor is modeled as a cellular automata where each section of each lane of the road is modeled as a cell that is either empty, or contains a single vehicle.
-Vehicles move from cell to cell in traveling through the road network using certain movement rules that are encoded into the simulation.
+In the event-oriented model, the traffic flow is driven by sequence of events. In the simulation engine, we have a priority queue data structure, i.e., future event list (FEL) to hold all unprocessed events. In each simulation loop, the event with the smallest time stamp would be removed and handled. Each event can change the state variables and schedule new events.
 
 ## Process-oriented queueing model
-This model is similar to the eventoriented queueing model described above, and should produce identical or nearly identical results, but is implemented using either the activity scanning or process-oriented world view.
+This model is similar to the event-oriented queueing model described above. In this model, the traffic flow is driven by pausing and resuming each vehicle thread. In the thread of the scheduler, there are two list. One is the event list (FEL) implemented in a priority queue, the other is the waiting vehicle list which is implemented bya a LinkedList. Even though this model is implemented by multi-thread programming, there is only one thread running at a time, either a vehicle thread or the scheduler thread.
